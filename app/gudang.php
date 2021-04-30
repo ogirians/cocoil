@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class gudang extends Model
 {
-    //
+    protected $guarded = [];
 }
