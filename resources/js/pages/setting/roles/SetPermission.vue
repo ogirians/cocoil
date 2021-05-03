@@ -152,11 +152,11 @@
             //KETIKA LIST PERMISSION DI CENTANG, MAKA FUNGSI INI BERJALAN
             addPermission(name) {
                 //DICEK KE NEW_PERMISSION BERDASARKAN NAME
-                let index = this.new_permission.findIndex(x => x == name)
+                let index = this.new_permission.findIndex(x => x.name == name)
                 //APABIL TIDAK TERSEDIA, INDEXNYA -1
                 if (index == -1) {
                     //MAKA TAMBAHKAN KE LIST
-                    this.new_permission.push(name)
+                    this.new_permission.push({name : name})
                 } else {
                     //JIKA SUDAH ADA, MAKA HAPUS DARI LIST
                     this.new_permission.splice(index, 1)

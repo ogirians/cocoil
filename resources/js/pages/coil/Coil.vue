@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="panel">
             <div class="panel-heading">
-                <router-link :to="{ name: 'gudang.add' }" class="btn btn-primary btn-sm btn-flat">Tambah</router-link>
+                <router-link :to="{ name: 'gudang.add' }" class="btn btn-primary btn-sm btn-flat">Import</router-link>
                 <div class="pull-right">
                     <input type="text" class="form-control" placeholder="Cari..." v-model="search">
                 </div>
@@ -54,12 +54,13 @@ export default {
             //FIELD UNTUK B-TABLE, PASTIKAN KEY NYA SESUAI DENGAN FIELD DATABASE
             //AGAR OTOMATIS DI-RENDER
             fields: [
-                { key: 'code', label: 'Kode Outlet' },
-                { key: 'name', label: 'Nama Outlet' },
-                { key: 'address', label: 'Alamat' },
-                { key: 'phone', label: 'Telp' },
-                { key: 'status', label: 'Status' },
-                { key: 'actions', label: 'Aksi' }
+                { key: 'item_category', label: 'Kategori' },
+                { key: 'item_type', label: 'Tipe' },
+                { key: 'item_code', label: 'item_code' },
+                { key: 'item_description', label: 'deskripsi' },
+                { key: 'serial_code', label: 'Serial_code' },
+                { key: 'ID_coil', label: 'ID Coil' },
+                { key: 'balance', label: 'balance' }
             ],
             search: ''
         }
