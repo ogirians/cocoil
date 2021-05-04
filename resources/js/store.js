@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 import auth from './stores/auth.js'
 import gudang from './stores/gudang.js'
 import user from './stores/user.js'
+import employee from './stores/employee.js'
 
 Vue.use(Vuex)
 
@@ -14,7 +15,8 @@ const store = new Vuex.Store({
     modules: {
         auth,
         gudang,
-        user
+        user,
+        employee
     },
   	//STATE HAMPIR SERUPA DENGAN PROPERTY DATA DARI COMPONENT HANYA SAJA DAPAT DIGUNAKAN SECARA GLOBAL
     state: {

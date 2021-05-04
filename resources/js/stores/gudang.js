@@ -12,6 +12,7 @@ const state = () => ({
         address: '',
         phone: ''
     },
+
     page: 1 //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
 })
 

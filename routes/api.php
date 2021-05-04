@@ -25,4 +25,7 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     Route::get('user-authenticated', 'API\UserController@getUserLogin')->name('user.authenticated');
     Route::get('user-lists', 'API\UserController@userLists')->name('user.index');
+
+    Route::resource('/Employees', 'API\UserController')->except(['create', 'show', 'update']);
+    Route::post('/Employees/{id}', 'API\UserController@update')->name('Employees.update');
 });

@@ -2,7 +2,7 @@
     <div>
         <div class="form-group" :class="{ 'has-error': errors.code }">
             <label for="">Kode gudang</label>
-            <input type="text" class="form-control" v-model="gudang.code" :readonly="$route.name == 'gudangs.edit'">
+            <input type="text" class="form-control" v-model="gudang.code" :readonly="$route.name == 'gudang.edit'">
             <p class="text-danger" v-if="errors.code">{{ errors.code[0] }}</p>
         </div>
         <div class="form-group" :class="{ 'has-error': errors.name }">

@@ -17,6 +17,11 @@ import SetPermission from './pages/setting/roles/SetPermission.vue'
 import IndexCoil from './pages/coil/Index.vue'
 import DataCoil from './pages/coil/Coil.vue'
 
+import IndexEmployee from './pages/Employee/Index.vue'
+import DataEmployee from './pages/Employee/Employee.vue'
+import AddEmployee from './pages/Employee/Add.vue'
+import EditEmployee from './pages/Employee/Edit.vue'
+
 Vue.use(Router)
 
 //DEFINE ROUTE
@@ -84,7 +89,32 @@ const router = new Router({
                     meta: { title: 'Coil data' }
                 },
             ]
-        }
+        },
+        {
+            path: '/employee',
+            component: IndexEmployee,
+            meta: { requiresAuth: true },
+            children: [
+                {
+                    path: '',
+                    name: 'employee.data',
+                    component: DataEmployee,
+                    meta: { title: 'employee data' }
+                },
+                {
+                    path: 'add',
+                    name: 'employee.add',
+                    component: AddEmployee,
+                    meta: { title: 'Add New Employee' }
+                },
+                {
+                    path: 'edit/:id',
+                    name: 'employee.edit',
+                    component: EditEmployee,
+                    meta: { title: 'Edit Employee' }
+                }
+            ]
+        },
     ]
 });
 

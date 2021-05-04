@@ -35,4 +35,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getNameAttribute($value)
+    {
+        return ucfirst($value);
+    }
+
+    public function gudang()
+    {
+        return $this->belongsTo(Gudang::class);
+    }
+
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
 }

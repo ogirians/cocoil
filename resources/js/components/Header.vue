@@ -14,6 +14,7 @@
                         <li><router-link to="/">Home <span class="sr-only">(current)</span></router-link></li>
                         <li v-if="$can('read gudangs')"><router-link :to="{ name: 'gudang.data' }">Gudang</router-link></li>
                         <li v-if="$can('import coil')"><router-link :to="{ name: 'coil.data' }">Coil</router-link></li>
+                        <li ><router-link :to="{ name: 'employee.data' }">Employee</router-link></li>
                             <li class="dropdown" v-if="authenticated.role == 0">
                                 <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Settings <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
