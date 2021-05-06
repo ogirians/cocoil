@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->string('photo')->nullable();
             $table->string('api_token')->nullable();
-            $table->char('role', 1)->comment('0: superadmin, 1: admin, 2: finance, 3: courier');
+            $table->char('role', 1)->comment('0: superadmin, 1: admin');
             $table->unsignedBigInteger('gudang_id')->nullable();
             $table->timestamps();
         });

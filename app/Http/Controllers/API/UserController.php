@@ -14,8 +14,8 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with(['gudang'])->orderBy('created_at', 'DESC');
-        //$gudang = gudang::orderBy('created_at', 'DESC');
+        $users = User::with(['gudang'])->orderBy('created_at', 'DESC')->Admin();
+    //$gudang = gudang::orderBy('created_at', 'DESC');
         if (request()->q != '') {
             $users = $users->where('name', 'LIKE', '%' . request()->q . '%');
         }
@@ -25,7 +25,7 @@ class UserController extends Controller
 
     public function userLists()
     {
-        $user = User::where('role', '=', 0)->get();
+        $user = User::where('role', '!=', null)->get();
         return new UserCollection($user);
     }
 
@@ -35,7 +35,7 @@ class UserController extends Controller
             'name' => 'required|string|max:150',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|string',
-            'outlet_id' => 'required|exists:outlets,id',
+            'gudang_id' => 'required|exists:gudangs,id',
             'photo' => 'required|image'
         ]);
 
@@ -45,7 +45,7 @@ class UserController extends Controller
             if ($request->hasFile('photo')) {
                 $file = $request->file('photo');
                 $name = $request->email . '-' . time() . '.' . $file->getClientOriginalExtension();
-                $file->storeAs('public/couriers', $name);
+                $file->storeAs('public/admin', $name);
             }
             $user = User::create([
                 'name' => $request->name,
@@ -53,10 +53,10 @@ class UserController extends Controller
                 'password' => $request->password,
                 'role' => $request->role,
                 'photo' => $name,
-                'outlet_id' => $request->outlet_id,
-                'role' => 3
+                'gudang_id' => $request->gudang_id,
+                'role' => 1
             ]);
-            $user->assignRole('courier');
+            $user->assignRole('admin');
             DB::commit();
             return response()->json(['status' => 'success'], 200);
         } catch (\Exception $e) {
@@ -77,7 +77,7 @@ class UserController extends Controller
             'name' => 'required|string|max:150',
             'email' => 'required|email',
             'password' => 'nullable|min:6|string',
-            'outlet_id' => 'required|exists:outlets,id',
+            'gudang_id' => 'required|exists:gudangs,id',
             'photo' => 'nullable|image'
         ]);
 
@@ -97,7 +97,7 @@ class UserController extends Controller
                 'name' => $request->name,
                 'password' => $password,
                 'photo' => $filename,
-                'outlet_id' => $request->outlet_id
+                'gudang_id' => $request->gudang_id
             ]);
             return response()->json(['status' => 'success'], 200);
         } catch (\Exception $e) {

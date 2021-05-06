@@ -46,6 +46,11 @@ class User extends Authenticatable
         return $this->belongsTo(Gudang::class);
     }
 
+    public function scopeAdmin($query)
+    {
+        return $query->where('role', 1);
+    }
+
 
     public function setPasswordAttribute($value)
     {

@@ -15,7 +15,7 @@
                     </template>
                     <template slot="actions" slot-scope="row">
                         <router-link :to="{ name: 'gudang.edit', params: {id: row.item.code} }" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i></router-link>
-                        <button class="btn btn-danger btn-sm" @click="deleteGudang(row.item.id)"><i class="fa fa-trash"></i></button>
+                        <button class="btn btn-danger btn-sm" @click="deleteGudang(row. item.id)"><i class="fa fa-trash"></i></button>
                     </template>
                 </b-table>
 
@@ -67,7 +67,7 @@ export default {
     computed: {
         //MENGAMBIL DATA OUTLETS DARI STATE OUTLETS
         ...mapState('gudang', {
-            gudangs: state => state.gudangs
+            gudangs : state => state.gudangs
         }),
 
         page: {

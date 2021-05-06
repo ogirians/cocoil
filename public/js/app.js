@@ -2215,10 +2215,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'AddCourier',
+  name: 'AddEmployee',
   methods: {
     submit: function submit() {
-      this.$refs.formCourier.submit();
+      this.$refs.FormEmployee.submit();
     }
   },
   components: {
@@ -2451,81 +2451,81 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'FormCourier',
+  name: 'FormEmployee',
   created: function created() {
     var _this = this;
 
-    this.getOutlets();
+    this.getGudangs();
 
-    if (this.$route.name == 'couriers.edit') {
-      this.editCourier(this.$route.params.id).then(function (res) {
-        _this.courier = {
+    if (this.$route.name == 'employee.edit') {
+      this.editEmployee(this.$route.params.id).then(function (res) {
+        _this.employee = {
           name: res.data.name,
           email: res.data.email,
           password: '',
           photo: '',
-          outlet_id: res.data.outlet_id
+          gudang_id: res.data.gudang_id
         };
       });
     }
   },
   data: function data() {
     return {
-      courier: {
+      employee: {
         name: '',
         email: '',
         password: '',
         photo: '',
-        outlet_id: ''
+        gudang_id: ''
       }
     };
   },
-  computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['errors'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('outlet', {
-    outlets: function outlets(state) {
-      return state.outlets;
+  computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['errors'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('gudang', {
+    gudangs: function gudangs(state) {
+      return state.gudangs;
     }
   })),
-  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('outlet', ['getOutlets'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('courier', ['submitCourier', 'editCourier', 'updateCourier'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])('courier', ['SET_ID_UPDATE'])), {}, {
+  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('gudang', ['getGudangs'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('employee', ['submitEmployee', 'editEmployee', 'updateEmployee'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])('employee', ['SET_ID_UPDATE'])), {}, {
     uploadImage: function uploadImage(event) {
-      this.courier.photo = event.target.files[0];
+      this.employee.photo = event.target.files[0];
     },
     submit: function submit() {
       var _this2 = this;
 
       var form = new FormData();
-      form.append('name', this.courier.name);
-      form.append('email', this.courier.email);
-      form.append('password', this.courier.password);
-      form.append('outlet_id', this.courier.outlet_id);
-      form.append('photo', this.courier.photo);
+      form.append('name', this.employee.name);
+      form.append('email', this.employee.email);
+      form.append('password', this.employee.password);
+      form.append('gudang_id', this.employee.gudang_id);
+      form.append('photo', this.employee.photo);
 
-      if (this.$route.name == 'couriers.add') {
-        this.submitCourier(form).then(function () {
-          _this2.courier = {
+      if (this.$route.name == 'employee.add') {
+        this.submitEmployee(form).then(function () {
+          _this2.employee = {
             name: '',
             email: '',
             password: '',
             photo: '',
-            outlet_id: ''
+            gudang_id: ''
           };
 
           _this2.$router.push({
-            name: 'couriers.data'
+            name: 'employee.data'
           });
         });
-      } else if (this.$route.name == 'couriers.edit') {
+      } else if (this.$route.name == 'employee.edit') {
         this.SET_ID_UPDATE(this.$route.params.id);
-        this.updateCourier(form).then(function () {
-          _this2.courier = {
+        this.updateEmployee(form).then(function () {
+          _this2.employee = {
             name: '',
             email: '',
             password: '',
             photo: '',
-            outlet_id: ''
+            gudang_id: ''
           };
 
           _this2.$router.push({
-            name: 'couriers.data'
+            name: 'employee.data'
           });
         });
       }
@@ -35568,7 +35568,7 @@ var render = function() {
         "div",
         { staticClass: "panel-body" },
         [
-          _c("courier-form", { ref: "formEmployee" }),
+          _c("employee-form", { ref: "FormEmployee" }),
           _vm._v(" "),
           _c("div", { staticClass: "form-group" }, [
             _c(
@@ -35700,7 +35700,7 @@ var render = function() {
             "router-link",
             {
               staticClass: "btn btn-primary btn-sm btn-flat",
-              attrs: { to: { name: "Employees.add" } }
+              attrs: { to: { name: "employee.add" } }
             },
             [_vm._v("Tambah")]
           ),
@@ -35876,19 +35876,19 @@ var render = function() {
             {
               name: "model",
               rawName: "v-model",
-              value: _vm.courier.name,
-              expression: "courier.name"
+              value: _vm.employee.name,
+              expression: "employee.name"
             }
           ],
           staticClass: "form-control",
-          attrs: { type: "text", readonly: _vm.$route.name == "outlets.edit" },
-          domProps: { value: _vm.courier.name },
+          attrs: { type: "text", readonly: _vm.$route.name == "gudangs.edit" },
+          domProps: { value: _vm.employee.name },
           on: {
             input: function($event) {
               if ($event.target.composing) {
                 return
               }
-              _vm.$set(_vm.courier, "name", $event.target.value)
+              _vm.$set(_vm.employee, "name", $event.target.value)
             }
           }
         }),
@@ -35912,19 +35912,19 @@ var render = function() {
             {
               name: "model",
               rawName: "v-model",
-              value: _vm.courier.email,
-              expression: "courier.email"
+              value: _vm.employee.email,
+              expression: "employee.email"
             }
           ],
           staticClass: "form-control",
           attrs: { type: "text" },
-          domProps: { value: _vm.courier.email },
+          domProps: { value: _vm.employee.email },
           on: {
             input: function($event) {
               if ($event.target.composing) {
                 return
               }
-              _vm.$set(_vm.courier, "email", $event.target.value)
+              _vm.$set(_vm.employee, "email", $event.target.value)
             }
           }
         }),
@@ -35951,19 +35951,19 @@ var render = function() {
             {
               name: "model",
               rawName: "v-model",
-              value: _vm.courier.password,
-              expression: "courier.password"
+              value: _vm.employee.password,
+              expression: "employee.password"
             }
           ],
           staticClass: "form-control",
           attrs: { type: "password" },
-          domProps: { value: _vm.courier.password },
+          domProps: { value: _vm.employee.password },
           on: {
             input: function($event) {
               if ($event.target.composing) {
                 return
               }
-              _vm.$set(_vm.courier, "password", $event.target.value)
+              _vm.$set(_vm.employee, "password", $event.target.value)
             }
           }
         }),
@@ -35984,10 +35984,10 @@ var render = function() {
       "div",
       {
         staticClass: "form-group",
-        class: { "has-error": _vm.errors.outlet_id }
+        class: { "has-error": _vm.errors.gudang_id }
       },
       [
-        _c("label", { attrs: { for: "" } }, [_vm._v("Outlet")]),
+        _c("label", { attrs: { for: "" } }, [_vm._v("gudang")]),
         _vm._v(" "),
         _c(
           "select",
@@ -35996,12 +35996,12 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.courier.outlet_id,
-                expression: "courier.outlet_id"
+                value: _vm.employee.gudang_id,
+                expression: "employee.gudang_id"
               }
             ],
             staticClass: "form-control",
-            attrs: { name: "outlet_id" },
+            attrs: { name: "gudang_id" },
             on: {
               change: function($event) {
                 var $$selectedVal = Array.prototype.filter
@@ -36013,8 +36013,8 @@ var render = function() {
                     return val
                   })
                 _vm.$set(
-                  _vm.courier,
-                  "outlet_id",
+                  _vm.employee,
+                  "gudang_id",
                   $event.target.multiple ? $$selectedVal : $$selectedVal[0]
                 )
               }
@@ -36023,7 +36023,7 @@ var render = function() {
           [
             _c("option", { attrs: { value: "" } }, [_vm._v("Pilih")]),
             _vm._v(" "),
-            _vm._l(_vm.outlets.data, function(row, index) {
+            _vm._l(_vm.gudangs.data, function(row, index) {
               return _c("option", { key: index, domProps: { value: row.id } }, [
                 _vm._v(_vm._s(row.name))
               ])
@@ -36032,9 +36032,9 @@ var render = function() {
           2
         ),
         _vm._v(" "),
-        _vm.errors.outlet_id
+        _vm.errors.gudang_id
           ? _c("p", { staticClass: "text-danger" }, [
-              _vm._v(_vm._s(_vm.errors.outlet_id[0]))
+              _vm._v(_vm._s(_vm.errors.gudang_id[0]))
             ])
           : _vm._e()
       ]
