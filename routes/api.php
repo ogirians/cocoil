@@ -28,4 +28,6 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     Route::resource('/Employees', 'API\UserController')->except(['create', 'show', 'update']);
     Route::post('/Employees/{id}', 'API\UserController@update')->name('Employees.update');
+
+    Route::post('/import','ImportController@import')->name('import');
 });

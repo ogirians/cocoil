@@ -1,12 +1,14 @@
 <template>
     <div class="col-md-12">
         <div class="panel">
-            <div class="panel-heading">
-                <router-link :to="{ name: 'gudang.add' }" class="btn btn-primary btn-sm btn-flat">Import</router-link>
-                <div class="pull-right">
+            <!--<div class="panel-heading">
+                <div class="col-md-3">
                     <input type="text" class="form-control" placeholder="Cari..." v-model="search">
                 </div>
-            </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" placeholder="Cari..." v-model="search">
+                </div>
+            </div>-->
             <div class="panel-body">
                 <b-table responsive striped hover bordered :items="gudangs.data" :fields="fields" show-empty>
                     <template slot="status" slot-scope="row">

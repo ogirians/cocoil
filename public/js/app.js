@@ -2786,6 +2786,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'DataGudang',
@@ -2887,6 +2889,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Breadcrumb_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/Breadcrumb.vue */ "./resources/js/components/Breadcrumb.vue");
+/* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../api.js */ "./resources/js/api.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2904,10 +2919,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'IndexGudang',
   components: {
     'breadcrumb': _components_Breadcrumb_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      error: {},
+      import_file: ''
+    };
+  },
+  methods: {
+    onFileChange: function onFileChange(e) {
+      this.import_file = e.target.files[0];
+    },
+    proceedAction: function proceedAction() {
+      var _this = this;
+
+      var formData = new FormData();
+      formData.append('import_file', this.import_file);
+      _api_js__WEBPACK_IMPORTED_MODULE_1__["default"].post('/import', formData, {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      }).then(function (response) {
+        if (response.status === 200) {// codes here after the file is upload successfully
+        }
+      })["catch"](function (error) {
+        // code here when an upload is not valid
+        _this.uploading = false;
+        _this.error = error.response.data;
+        console.log('check error: ', _this.error);
+      });
+    }
   }
 });
 
@@ -36421,46 +36467,6 @@ var render = function() {
     _c("div", { staticClass: "panel" }, [
       _c(
         "div",
-        { staticClass: "panel-heading" },
-        [
-          _c(
-            "router-link",
-            {
-              staticClass: "btn btn-primary btn-sm btn-flat",
-              attrs: { to: { name: "gudang.add" } }
-            },
-            [_vm._v("Import")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "pull-right" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.search,
-                  expression: "search"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { type: "text", placeholder: "Cari..." },
-              domProps: { value: _vm.search },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.search = $event.target.value
-                }
-              }
-            })
-          ])
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
         { staticClass: "panel-body" },
         [
           _c("b-table", {
@@ -36595,16 +36601,59 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
-    _c(
-      "section",
-      { staticClass: "content-header" },
-      [
-        _c("h1", [_vm._v("\n            Manage Coil\n        ")]),
+    _c("section", { staticClass: "content-header" }, [
+      _c(
+        "label",
+        {
+          staticClass: "form-control-label",
+          attrs: { for: "input-file-import" }
+        },
+        [_vm._v("Upload Excel File")]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "div",
+          { staticClass: "col-md-5", staticStyle: { "margin-bottom": "5px" } },
+          [
+            _c("input", {
+              ref: "import_file",
+              staticClass: "form-control",
+              class: { " is-invalid": _vm.error.message },
+              attrs: {
+                type: "file",
+                id: "input-file-import",
+                name: "file_import"
+              },
+              on: { change: _vm.onFileChange }
+            }),
+            _vm._v(" "),
+            _vm.error.message
+              ? _c("div", { staticClass: "invalid-feedback" })
+              : _vm._e()
+          ]
+        ),
         _vm._v(" "),
-        _c("breadcrumb")
-      ],
-      1
-    ),
+        _c("div", { staticClass: "col-md-3" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary btn-sm btn-flat",
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.proceedAction($event)
+                }
+              }
+            },
+            [
+              _c("i", { staticClass: "fa fa-save" }),
+              _vm._v(" import data\n                    ")
+            ]
+          )
+        ])
+      ])
+    ]),
     _vm._v(" "),
     _c("section", { staticClass: "content" }, [
       _c("div", { staticClass: "row" }, [_c("router-view")], 1)
@@ -55833,8 +55882,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _stores_gudang_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./stores/gudang.js */ "./resources/js/stores/gudang.js");
 /* harmony import */ var _stores_user_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./stores/user.js */ "./resources/js/stores/user.js");
 /* harmony import */ var _stores_employee_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./stores/employee.js */ "./resources/js/stores/employee.js");
+/* harmony import */ var _stores_import_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./stores/import.js */ "./resources/js/stores/import.js");
 
  //IMPORT MODULE SECTION
+
 
 
 
@@ -55848,7 +55899,8 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     auth: _stores_auth_js__WEBPACK_IMPORTED_MODULE_2__["default"],
     gudang: _stores_gudang_js__WEBPACK_IMPORTED_MODULE_3__["default"],
     user: _stores_user_js__WEBPACK_IMPORTED_MODULE_4__["default"],
-    employee: _stores_employee_js__WEBPACK_IMPORTED_MODULE_5__["default"]
+    employee: _stores_employee_js__WEBPACK_IMPORTED_MODULE_5__["default"],
+    importExcel: _stores_import_js__WEBPACK_IMPORTED_MODULE_6__["default"]
   },
   //STATE HAMPIR SERUPA DENGAN PROPERTY DATA DARI COMPONENT HANYA SAJA DAPAT DIGUNAKAN SECARA GLOBAL
   state: {
@@ -56199,6 +56251,33 @@ var actions = {
     });
   }
 };
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: state,
+  actions: actions,
+  mutations: mutations
+});
+
+/***/ }),
+
+/***/ "./resources/js/stores/import.js":
+/*!***************************************!*\
+  !*** ./resources/js/stores/import.js ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api.js */ "./resources/js/api.js");
+
+
+var state = function state() {
+  return {};
+};
+
+var mutations = {};
+var actions = {};
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: state,
