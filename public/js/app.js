@@ -3110,8 +3110,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       import_ok: false
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['errors'])),
-  methods: _objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('coil', ['getcoils'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])('coil', ['ASSIGN_DATA'])), {}, {
+  methods: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('coil', ['getcoils'])), {}, {
     onFileChange: function onFileChange(e) {
       this.import_file = e.target.files[0];
     },
@@ -3131,6 +3130,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
           _this.$refs.import_file.value = null;
           _this.import_file = '';
+          _this.error = [];
 
           _this.getcoils();
 

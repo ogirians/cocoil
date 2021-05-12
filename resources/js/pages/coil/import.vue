@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations} from 'vuex'
+import { mapActions} from 'vuex'
 import $axios from '../../api.js'
 export default {
     data() {
@@ -31,17 +31,11 @@ export default {
                 import_ok: false,
              }
         },
-        computed : {
-            ...mapState(['errors']),
-        },
 
         methods: {
 
             ...mapActions('coil',   [
                 'getcoils'
-            ]),
-            ...mapMutations('coil',[
-                'ASSIGN_DATA'
             ]),
 
             onFileChange(e) {
@@ -61,6 +55,7 @@ export default {
                             this.import_ok = true //AKTIFKAN ALERT JIKA BERHASIL
                             this.$refs.import_file.value = null
                             this.import_file = '';
+                            this.error = [];
                             this.getcoils()
                             setTimeout(() => {
                                 //BEBERAPA DETIK KEMUDIAN, SET DEFAULT ROLE USER
