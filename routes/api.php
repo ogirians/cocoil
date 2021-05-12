@@ -16,6 +16,7 @@ Route::post('/login', 'Auth\LoginController@login');
 
 Route::group(['middleware' => 'auth:api'], function() {
     Route::resource('/gudangs', 'API\GudangController')->except(['show']);
+    Route::resource('/coils', 'API\CoilController')->except(['show']);
 
     Route::get('roles', 'API\RolePermissionController@getAllRole')->name('roles');
     Route::get('permissions', 'API\RolePermissionController@getAllPermission')->name('permission');

@@ -16,6 +16,8 @@ import SetPermission from './pages/setting/roles/SetPermission.vue'
 
 import IndexCoil from './pages/coil/Index.vue'
 import DataCoil from './pages/coil/Coil.vue'
+import EditCoil from './pages/coil/Edit.vue'
+
 
 import IndexEmployee from './pages/Employee/Index.vue'
 import DataEmployee from './pages/Employee/Employee.vue'
@@ -88,6 +90,12 @@ const router = new Router({
                     component: DataCoil,
                     meta: { title: 'Coil data' }
                 },
+                {
+                    path: 'edit/:id',
+                    name: 'coil.edit',
+                    component: EditCoil,
+                    meta: { title: 'Edit Coil' }
+                }
             ]
         },
         {

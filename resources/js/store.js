@@ -7,6 +7,7 @@ import gudang from './stores/gudang.js'
 import user from './stores/user.js'
 import employee from './stores/employee.js'
 import importExcel from './stores/import.js'
+import coil from './stores/coil.js'
 
 Vue.use(Vuex)
 
@@ -18,7 +19,8 @@ const store = new Vuex.Store({
         gudang,
         user,
         employee,
-        importExcel
+        importExcel,
+        coil
     },
   	//STATE HAMPIR SERUPA DENGAN PROPERTY DATA DARI COMPONENT HANYA SAJA DAPAT DIGUNAKAN SECARA GLOBAL
     state: {

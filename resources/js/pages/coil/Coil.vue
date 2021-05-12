@@ -1,38 +1,32 @@
 <template>
     <div class="col-md-12">
         <div class="panel">
-            <!--<div class="panel-heading">
-                <div class="col-md-3">
+            <div class="panel-heading">
+                <div class="pull-right">
                     <input type="text" class="form-control" placeholder="Cari..." v-model="search">
                 </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" placeholder="Cari..." v-model="search">
-                </div>
-            </div>-->
+            </div><br>
             <div class="panel-body">
-                <b-table responsive striped hover bordered :items="gudangs.data" :fields="fields" show-empty>
-                    <template slot="status" slot-scope="row">
-                        <span class="label label-success" v-if="row.item.status == 1">Active</span>
-                        <span class="label label-default" v-else>Inactive</span>
-                    </template>
+                <b-table responsive striped hover bordered :items="coils.data" :fields="fields" show-empty>
+
                     <template slot="actions" slot-scope="row">
-                        <router-link :to="{ name: 'gudang.edit', params: {id: row.item.code} }" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i></router-link>
-                        <button class="btn btn-danger btn-sm" @click="deleteGudang(row.item.id)"><i class="fa fa-trash"></i></button>
+                        <router-link :to="{ name: 'coil.edit', params: {id: row.item.id} }" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i></router-link>
+                        <button class="btn btn-danger btn-sm" @click="deletecoil(row.item.id)"><i class="fa fa-trash"></i></button>
                     </template>
                 </b-table>
 
                 <div class="row">
                     <div class="col-md-6">
-                        <p v-if="gudangs.data"><i class="fa fa-bars"></i> {{ gudangs.data.length }} item dari {{ gudangs.meta.total }} total data</p>
+                        <p v-if="coils.data"><i class="fa fa-bars"></i> {{ coils.data.length }} item dari {{ coils.meta.total }} total data</p>
                     </div>
                     <div class="col-md-6">
                         <div class="pull-right">
                             <b-pagination
                                 v-model="page"
-                                :total-rows="gudangs.meta.total"
-                                :per-page="gudangs.meta.per_page"
-                                aria-controls="gudangs"
-                                v-if="gudangs.data && gudangs.data.length > 0"
+                                :total-rows="coils.meta.total"
+                                :per-page="coils.meta.per_page"
+                                aria-controls="coils"
+                                v-if="coils.data && coils.data.length > 0"
                                 ></b-pagination>
                         </div>
                     </div>
@@ -46,10 +40,10 @@
 import { mapActions, mapState } from 'vuex'
 
 export default {
-    name: 'DataGudang',
+    name: 'Datacoil',
     created() {
         //SEBELUM COMPONENT DI-LOAD, REQUEST DATA DARI SERVER
-        this.getGudangs()
+        this.getcoils()
     },
     data() {
         return {
@@ -60,47 +54,48 @@ export default {
                 { key: 'item_type', label: 'Tipe' },
                 { key: 'item_code', label: 'item_code' },
                 { key: 'item_description', label: 'deskripsi' },
-                { key: 'serial_code', label: 'Serial_code' },
-                { key: 'ID_coil', label: 'ID Coil' },
-                { key: 'balance', label: 'balance' }
+                { key: 'serial_Code', label: 'Serial_code' },
+                { key: 'id_coil', label: 'ID Coil' },
+                { key: 'balance', label: 'balance' },
+                { key: 'actions', label: 'aksi' }
             ],
             search: ''
         }
     },
     computed: {
         //MENGAMBIL DATA OUTLETS DARI STATE OUTLETS
-        ...mapState('gudang', {
-            gudangs: state => state.gudangs
+        ...mapState('coil', {
+            coils: state => state.coils
         }),
 
         page: {
             get() {
                 //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
-                return this.$store.state.gudang.page
+                return this.$store.state.coil.page
             },
             set(val) {
                 //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
                 //DI VUEX JUGA AKAN DIUBAH
-                this.$store.commit('gudang/SET_PAGE', val)
+                this.$store.commit('coil/SET_PAGE', val)
             }
         }
     },
     watch: {
         page() {
             //APABILA VALUE DARI PAGE BERUBAH, MAKA AKAN MEMINTA DATA DARI SERVER
-            this.getGudangs()
+            this.getcoils()
         },
         search() {
             //APABILA VALUE DARI SEARCH BERUBAH MAKA AKAN MEMINTA DATA
             //SESUAI DENGAN DATA YANG SEDANG DICARI
-            this.getGudangs(this.search)
+            this.getcoils(this.search)
         }
     },
     methods: {
         //MENGAMBIL FUNGSI DARI VUEX MODULE outlet
-        ...mapActions('gudang', ['getGudangs', 'removeGudang']),
+        ...mapActions('coil', ['getcoils', 'removecoil']),
         //KETIKA TOMBOL HAPUS DICLICK, MAKA AKAN MENJALANKAN METHOD INI
-        deleteGudang(id) {
+        deletecoil(id) {
             //AKAN MENAMPILKAN JENDELA KONFIRMASI
             this.$swal({
                 title: 'Kamu Yakin?',
@@ -114,7 +109,7 @@ export default {
                 //JIKA DISETUJUI
                 if (result.value) {
                     //MAKA FUNGSI removeOutlet AKAN DIJALANKAN
-                    this.removeGudang(id)
+                    this.removecoil(id)
                 }
             })
         }
