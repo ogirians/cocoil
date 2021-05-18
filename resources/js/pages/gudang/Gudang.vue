@@ -3,6 +3,7 @@
         <div class="panel">
             <div class="panel-heading">
                 <router-link :to="{ name: 'gudang.add' }" class="btn btn-primary btn-sm btn-flat">Tambah</router-link>
+                <router-link :to="{ name: 'gudang.view' }" class="btn btn-success btn-sm btn-flat"><i class="fa fa-eye"></i> View Gudang</router-link>
                 <div class="pull-right">
                     <input type="text" class="form-control" placeholder="Cari..." v-model="search">
                 </div>

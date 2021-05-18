@@ -22,7 +22,12 @@ class CreateCoilDetailsTable extends Migration
             $table->string('serial_Code');
             $table->string('ID_coil');
             $table->integer('balance');
+            $table->unsignedBigInteger('gudang_id')->nullable();
+            $table->unsignedBigInteger('blok_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('gudang_id')->references('id')->on('gudangs');
+            $table->foreign('blok_id')->references('id')->on('bloks');
         });
     }
 

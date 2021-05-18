@@ -10,10 +10,10 @@
 
                     <div class="col-md-3">
                         <button class="btn btn-primary btn-sm btn-flat" @click.prevent="proceedAction">
-                        <i class="fa fa-save"></i> import data
+                        <i class="fa fa-save"></i> {{ loading ? 'Importing...':'Import data' }}
                         </button>
+                         <a class="btn btn-primary btn-sm btn-flat" href="/import.xlsx">download .xlsx</a>
                     </div><br>
-
 
             </div>
 
@@ -29,6 +29,7 @@ export default {
                 error:[],
                 import_file: '',
                 import_ok: false,
+                loading: false,
              }
         },
 
@@ -43,15 +44,19 @@ export default {
             },
 
             proceedAction() {
+                this.loading = true;
                 let formData = new FormData();
                 formData.append('import_file', this.import_file);
+
 
                 $axios.post('/import', formData, {
                     headers: { 'content-type': 'multipart/form-data' }
                     })
                     .then(response => {
+                        this.loading = false;
                         if(response.status === 200) {
                         // codes here after the file is upload successfully
+
                             this.import_ok = true //AKTIFKAN ALERT JIKA BERHASIL
                             this.$refs.import_file.value = null
                             this.import_file = '';
@@ -63,14 +68,18 @@ export default {
                                 //MATIKAN ALERT
                                 this.import_ok = false
                             }, 3000)
+
                         }
+
                     })
                     .catch(error => {
                         // code here when an upload is not valid
                         this.uploading = false
                         this.error = error.response.data
                         console.log('check error: ', this.error)
+
                     });
+
                 },
         }
 

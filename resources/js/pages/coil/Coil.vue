@@ -57,7 +57,10 @@ export default {
                 { key: 'serial_Code', label: 'Serial_code' },
                 { key: 'id_coil', label: 'ID Coil' },
                 { key: 'balance', label: 'balance' },
+                { key: 'gudang_id', label: 'gudang' },
+                { key: 'blok_id', label: 'blok' },
                 { key: 'actions', label: 'aksi' }
+
             ],
             search: ''
         }

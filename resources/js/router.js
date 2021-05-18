@@ -9,6 +9,7 @@ import Indexgudang from './pages/gudang/Index.vue'
 import AddGudang from './pages/gudang/Add.vue'
 import DataGudang from './pages/gudang/Gudang.vue'
 import EditGudang from './pages/gudang/Edit.vue'
+import ViewGudang from './pages/gudang/View.vue'
 
 
 import Setting from './pages/setting/Index.vue'
@@ -23,6 +24,7 @@ import IndexEmployee from './pages/Employee/Index.vue'
 import DataEmployee from './pages/Employee/Employee.vue'
 import AddEmployee from './pages/Employee/Add.vue'
 import EditEmployee from './pages/Employee/Edit.vue'
+
 
 Vue.use(Router)
 
@@ -63,7 +65,13 @@ const router = new Router({
                     name: 'gudang.edit',
                     component: EditGudang,
                     meta: { title: 'Edit gudang' }
-                }
+                },
+                {
+                    path: 'view',
+                    name: 'gudang.view',
+                    component: ViewGudang,
+                    meta: { title: 'View gudang'}
+                },
             ]
         },
         {
@@ -123,6 +131,7 @@ const router = new Router({
                 }
             ]
         },
+
     ]
 });
 
