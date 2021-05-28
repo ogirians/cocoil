@@ -15,7 +15,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with(['gudang'])->orderBy('created_at', 'DESC')->Admin();
-    //$gudang = gudang::orderBy('created_at', 'DESC');
+    //$gudang = gudang::orderBy('created_at', 'DESC');  
         if (request()->q != '') {
             $users = $users->where('name', 'LIKE', '%' . request()->q . '%');
         }

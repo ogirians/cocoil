@@ -4,9 +4,11 @@ import store from './store.js'
 import App from './App.vue'
 import BootstrapVue from 'bootstrap-vue'
 import VueSweetalert2 from 'vue-sweetalert2'
+import VueKonva from 'vue-konva';
 
 Vue.use(VueSweetalert2)
 Vue.use(BootstrapVue)
+Vue.use(VueKonva);
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
