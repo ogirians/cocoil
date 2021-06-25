@@ -3547,16 +3547,13 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _map_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./map.vue */ "./resources/js/pages/gudang/map.vue");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -3597,7 +3594,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  //el : listgudang,
+  name: 'viewGudang',
+  created: function created() {
+    this.getGudangs();
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])('gudang', {
+    gudangs: function gudangs(state) {
+      return state.gudangs;
+    }
+  })),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('gudang', ['getGudangs'])),
   components: {
     'maps-gudang': _map_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
@@ -50068,7 +50077,60 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row" }, [
-      _vm._m(0),
+      _c("div", { staticClass: "col-md-3" }, [
+        _c(
+          "nav",
+          {
+            staticClass: "navbar navbar-inverse sidebar",
+            attrs: { role: "navigation" }
+          },
+          [
+            _c("div", { staticClass: "container-fluid" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "collapse navbar-collapse",
+                  attrs: { id: "bs-sidebar-navbar-collapse-1" }
+                },
+                [
+                  _c(
+                    "ul",
+                    {
+                      staticClass: "nav navbar-nav",
+                      attrs: { id: "listgudang" }
+                    },
+                    _vm._l(_vm.gudangs.data, function(gudang, index) {
+                      return _c("li", { key: index }, [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "dropdown-toggle",
+                            attrs: { href: "#", "data-toggle": "dropdown" }
+                          },
+                          [
+                            _vm._v(" " + _vm._s(gudang.name) + "  "),
+                            _c("span", { staticClass: "caret" }),
+                            _c("span", {
+                              staticClass:
+                                "pull-right hidden-xs showopacity glyphicon glyphicon-cog",
+                              staticStyle: { "font-size": "16px" }
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _vm._m(1, true)
+                      ])
+                    }),
+                    0
+                  )
+                ]
+              )
+            ])
+          ]
+        )
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-md-8" }, [_c("maps-gudang")], 1)
     ])
@@ -50079,146 +50141,51 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-3" }, [
+    return _c("div", { staticClass: "navbar-header" }, [
       _c(
-        "nav",
+        "button",
         {
-          staticClass: "navbar navbar-inverse sidebar",
-          attrs: { role: "navigation" }
+          staticClass: "navbar-toggle",
+          attrs: {
+            type: "button",
+            "data-toggle": "collapse",
+            "data-target": "#bs-sidebar-navbar-collapse-1"
+          }
         },
         [
-          _c("div", { staticClass: "container-fluid" }, [
-            _c("div", { staticClass: "navbar-header" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "navbar-toggle",
-                  attrs: {
-                    type: "button",
-                    "data-toggle": "collapse",
-                    "data-target": "#bs-sidebar-navbar-collapse-1"
-                  }
-                },
-                [
-                  _c("span", { staticClass: "sr-only" }, [
-                    _vm._v("Toggle navigation")
-                  ]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "icon-bar" }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "icon-bar" }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "icon-bar" })
-                ]
-              ),
-              _vm._v(" "),
-              _c("a", { staticClass: "navbar-brand", attrs: { href: "#" } }, [
-                _vm._v("gudang/block")
-              ])
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "collapse navbar-collapse",
-                attrs: { id: "bs-sidebar-navbar-collapse-1" }
-              },
-              [
-                _c("ul", { staticClass: "nav navbar-nav" }, [
-                  _c("li", { staticClass: "dropdown" }, [
-                    _c(
-                      "a",
-                      {
-                        staticClass: "dropdown-toggle",
-                        attrs: { href: "#", "data-toggle": "dropdown" }
-                      },
-                      [
-                        _vm._v("gudang 1 "),
-                        _c("span", { staticClass: "caret" }),
-                        _c("span", {
-                          staticClass:
-                            "pull-right hidden-xs showopacity glyphicon glyphicon-cog",
-                          staticStyle: { "font-size": "16px" }
-                        })
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "ul",
-                      {
-                        staticClass: "dropdown-menu forAnimate",
-                        attrs: { role: "menu" }
-                      },
-                      [
-                        _c("li", [
-                          _c("a", { attrs: { href: "#" } }, [_vm._v("blok 1")])
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c("a", { attrs: { href: "#" } }, [_vm._v("blok 2")])
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c("a", { attrs: { href: "#" } }, [_vm._v("blok 3")])
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c("a", { attrs: { href: "#" } }, [_vm._v("blok 4")])
-                        ])
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "dropdown" }, [
-                    _c(
-                      "a",
-                      {
-                        staticClass: "dropdown-toggle",
-                        attrs: { href: "#", "data-toggle": "dropdown" }
-                      },
-                      [
-                        _vm._v("Gudang 2 "),
-                        _c("span", { staticClass: "caret" }),
-                        _c("span", {
-                          staticClass:
-                            "pull-right hidden-xs showopacity glyphicon glyphicon-cog",
-                          staticStyle: { "font-size": "16px" }
-                        })
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "ul",
-                      {
-                        staticClass: "dropdown-menu forAnimate",
-                        attrs: { role: "menu" }
-                      },
-                      [
-                        _c("li", [
-                          _c("a", { attrs: { href: "#" } }, [_vm._v("blok 1")])
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c("a", { attrs: { href: "#" } }, [_vm._v("blok 2")])
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c("a", { attrs: { href: "#" } }, [_vm._v("blok 3")])
-                        ]),
-                        _vm._v(" "),
-                        _c("li", [
-                          _c("a", { attrs: { href: "#" } }, [_vm._v("blok 4")])
-                        ])
-                      ]
-                    )
-                  ])
-                ])
-              ]
-            )
-          ])
+          _c("span", { staticClass: "sr-only" }, [_vm._v("Toggle navigation")]),
+          _vm._v(" "),
+          _c("span", { staticClass: "icon-bar" }),
+          _vm._v(" "),
+          _c("span", { staticClass: "icon-bar" }),
+          _vm._v(" "),
+          _c("span", { staticClass: "icon-bar" })
         ]
-      )
+      ),
+      _vm._v(" "),
+      _c("a", { staticClass: "navbar-brand", attrs: { href: "#" } }, [
+        _vm._v("gudang/block")
+      ])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "ul",
+      { staticClass: "dropdown-menu forAnimate", attrs: { role: "menu" } },
+      [
+        _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("blok 1")])]),
+        _vm._v(" "),
+        _c("li", [
+          _c("a", { attrs: { href: "#" } }, [
+            _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+            _vm._v(" tambah blok baru")
+          ])
+        ])
+      ]
+    )
   }
 ]
 render._withStripped = true
@@ -69292,8 +69259,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _stores_employee_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./stores/employee.js */ "./resources/js/stores/employee.js");
 /* harmony import */ var _stores_import_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./stores/import.js */ "./resources/js/stores/import.js");
 /* harmony import */ var _stores_coil_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./stores/coil.js */ "./resources/js/stores/coil.js");
+/* harmony import */ var _stores_blok_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./stores/blok.js */ "./resources/js/stores/blok.js");
+/* harmony import */ var _stores_blok_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_stores_blok_js__WEBPACK_IMPORTED_MODULE_8__);
 
  //IMPORT MODULE SECTION
+
 
 
 
@@ -69311,7 +69281,8 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     user: _stores_user_js__WEBPACK_IMPORTED_MODULE_4__["default"],
     employee: _stores_employee_js__WEBPACK_IMPORTED_MODULE_5__["default"],
     importExcel: _stores_import_js__WEBPACK_IMPORTED_MODULE_6__["default"],
-    coil: _stores_coil_js__WEBPACK_IMPORTED_MODULE_7__["default"]
+    coil: _stores_coil_js__WEBPACK_IMPORTED_MODULE_7__["default"],
+    blok: _stores_blok_js__WEBPACK_IMPORTED_MODULE_8___default.a
   },
   //STATE HAMPIR SERUPA DENGAN PROPERTY DATA DARI COMPONENT HANYA SAJA DAPAT DIGUNAKAN SECARA GLOBAL
   state: {
@@ -69411,6 +69382,17 @@ var actions = {
   actions: actions,
   mutations: mutations
 });
+
+/***/ }),
+
+/***/ "./resources/js/stores/blok.js":
+/*!*************************************!*\
+  !*** ./resources/js/stores/blok.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
 
 /***/ }),
 
@@ -70040,8 +70022,8 @@ var actions = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Cocoil project\Cocoil\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\Cocoil project\Cocoil\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\project\cocoil\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\project\cocoil\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

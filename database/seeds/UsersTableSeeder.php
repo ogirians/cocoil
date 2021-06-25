@@ -16,7 +16,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'indoberka@gmail.com',
             'email_verified_at' => now(),
-            'password' => bcrypt('123456'),
+            'password' => '123456',
             'role' => 0
         ]);
     }
