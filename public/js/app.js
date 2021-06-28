@@ -2809,7 +2809,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         key: 'serial_Code',
         label: 'Serial_code'
       }, {
-        key: 'id_coil',
+        key: 'ID_coil',
         label: 'ID Coil'
       }, {
         key: 'balance',
@@ -3548,6 +3548,10 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _map_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./map.vue */ "./resources/js/pages/gudang/map.vue");
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var vuex_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex-modal */ "./node_modules/vuex-modal/dist/vuex-modal.cjs.js");
+/* harmony import */ var vuex_modal__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vuex_modal__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var vuex_modal_dist_vuex_modal_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuex-modal/dist/vuex-modal.css */ "./node_modules/vuex-modal/dist/vuex-modal.css");
+/* harmony import */ var vuex_modal_dist_vuex_modal_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vuex_modal_dist_vuex_modal_css__WEBPACK_IMPORTED_MODULE_3__);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -3593,6 +3597,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3606,9 +3617,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return state.gudangs;
     }
   })),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('gudang', ['getGudangs'])),
+  methods: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('gudang', ['getGudangs'])), {}, {
+    open: function open() {
+      this.$store.dispatch(vuex_modal__WEBPACK_IMPORTED_MODULE_2__["PUSH"], {
+        name: 'example'
+      });
+    },
+    close: function close() {
+      this.$store.dispatch(vuex_modal__WEBPACK_IMPORTED_MODULE_2__["POP"]);
+    }
+  }),
   components: {
-    'maps-gudang': _map_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    'maps-gudang': _map_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    Modal: vuex_modal__WEBPACK_IMPORTED_MODULE_2__["Modal"]
   }
 });
 
@@ -30930,6 +30951,25 @@ exports.push([module.i, "@-webkit-keyframes swal2-show{0%{transform:scale(.7)}45
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/vuex-modal/dist/vuex-modal.css":
+/*!*************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vuex-modal/dist/vuex-modal.css ***!
+  \*************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "@charset \"utf-8\";\n\n.modal-open {\n  overflow: hidden;\n}\n\n.modal-open .modal-wrapper {\n  display: block;\n}\n\n.modal-wrapper {\n  display: none;\n  position: absolute;\n  top: 0;\n  left: 0;\n}\n\n/*  Backdrop\n----------------------------------------*/\n.modal-backdrop {\n  opacity: 1;\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background-color: rgba(0, 0, 0, 0.5);\n  z-index: 1000;\n}\n\n.modal-backdrop-enter-active,\n.modal-backdrop-leave-active {\n  transition: opacity 300ms ease-out;\n}\n\n.modal-backdrop-enter,\n.modal-backdrop-leave-active {\n  opacity: 0;\n}\n\n/*  Content\n----------------------------------------*/\n.modal-content-wrapper {\n  overflow: auto;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 100%;\n  z-index: 1001;\n}\n\n.modal-content {\n  position: absolute;\n  left: 0;\n  right: 0;\n  opacity: 1;\n  margin: 30px auto;\n  padding: 30px;\n  width: 800px;\n  background-color: #fff;\n  transform: translateY(0);\n}\n\n.modal-content-enter-active,\n.modal-content-leave-active {\n  transition: 300ms cubic-bezier(0.51, 0.21, 0.38, 0.98);\n  transition-property: opacity, transform;\n}\n\n.modal-content-enter,\n.modal-content-leave-active {\n  opacity: 0;\n  transform: translateY(-50px);\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/setting/roles/SetPermission.vue?vue&type=style&index=0&lang=css&":
 /*!****************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/pages/setting/roles/SetPermission.vue?vue&type=style&index=0&lang=css& ***!
@@ -50090,6 +50130,30 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "div",
+                [
+                  _c("modal", { attrs: { name: "example" } }, [
+                    _c("div", { staticClass: "basic-modal" }, [
+                      _c("h1", { staticClass: "title" }, [
+                        _vm._v("Modal Title")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "button",
+                          attrs: { type: "button" },
+                          on: { click: _vm.close }
+                        },
+                        [_vm._v("Close Modal")]
+                      )
+                    ])
+                  ])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
                 {
                   staticClass: "collapse navbar-collapse",
                   attrs: { id: "bs-sidebar-navbar-collapse-1" }
@@ -50120,7 +50184,32 @@ var render = function() {
                           ]
                         ),
                         _vm._v(" "),
-                        _vm._m(1, true)
+                        _c(
+                          "ul",
+                          {
+                            staticClass: "dropdown-menu forAnimate",
+                            attrs: { role: "menu" }
+                          },
+                          [
+                            _vm._m(1, true),
+                            _vm._v(" "),
+                            _c("li", [
+                              _c(
+                                "button",
+                                {
+                                  attrs: { type: "button", href: "#" },
+                                  on: { click: _vm.open }
+                                },
+                                [
+                                  _c("i", {
+                                    staticClass: "glyphicon glyphicon-plus"
+                                  }),
+                                  _vm._v(" tambah blok baru")
+                                ]
+                              )
+                            ])
+                          ]
+                        )
                       ])
                     }),
                     0
@@ -50142,50 +50231,14 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "navbar-header" }, [
-      _c(
-        "button",
-        {
-          staticClass: "navbar-toggle",
-          attrs: {
-            type: "button",
-            "data-toggle": "collapse",
-            "data-target": "#bs-sidebar-navbar-collapse-1"
-          }
-        },
-        [
-          _c("span", { staticClass: "sr-only" }, [_vm._v("Toggle navigation")]),
-          _vm._v(" "),
-          _c("span", { staticClass: "icon-bar" }),
-          _vm._v(" "),
-          _c("span", { staticClass: "icon-bar" }),
-          _vm._v(" "),
-          _c("span", { staticClass: "icon-bar" })
-        ]
-      ),
-      _vm._v(" "),
-      _c("a", { staticClass: "navbar-brand", attrs: { href: "#" } }, [
-        _vm._v("gudang/block")
-      ])
+      _c("h3", {}, [_vm._v("gudang/block")])
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "ul",
-      { staticClass: "dropdown-menu forAnimate", attrs: { role: "menu" } },
-      [
-        _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("blok 1")])]),
-        _vm._v(" "),
-        _c("li", [
-          _c("a", { attrs: { href: "#" } }, [
-            _c("i", { staticClass: "glyphicon glyphicon-plus" }),
-            _vm._v(" tambah blok baru")
-          ])
-        ])
-      ]
-    )
+    return _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("blok 1")])])
   }
 ]
 render._withStripped = true
@@ -65899,6 +65952,571 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./node_modules/vuex-modal/dist/vuex-modal.cjs.js":
+/*!********************************************************!*\
+  !*** ./node_modules/vuex-modal/dist/vuex-modal.cjs.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*!
+ * vuex-modal v0.2.1
+ * https://github.com/ktsn/vuex-modal
+ *
+ * Copyright (c) 2016-2017 katashin
+ * Released under the MIT license
+ * https://github.com/ktsn/vuex-modal/blob/master/LICENSE
+ */
+
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var Vue = _interopDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
+
+/*!
+ * vue-thin-modal v1.1.0
+ * https://github.com/ktsn/vue-thin-modal
+ *
+ * Copyright (c) 2017-present katashin
+ * Released under the MIT license
+ * https://github.com/ktsn/vue-thin-modal/blob/master/LICENSE
+ */
+function addStaticClass(data, staticClass) {
+  if (!data.staticClass) {
+    data.staticClass = staticClass;
+  } else {
+    data.staticClass += ' ' + staticClass;
+  }
+}
+
+function assert(value, message) {
+  if (!value) {
+    throw new Error('[vue-modal] ' + message);
+  }
+}
+
+var Modal = {
+  name: 'modal',
+
+  props: {
+    name: {
+      type: String,
+      required: true
+    },
+    disableBackdrop: Boolean,
+    preMount: Boolean,
+    backdropTransition: {
+      type: Object,
+      default: function _default() {
+        return { name: 'modal-backdrop' };
+      }
+    },
+    contentTransition: {
+      type: Object,
+      default: function _default() {
+        return { name: 'modal-content' };
+      }
+    }
+  },
+
+  computed: {
+    current: function current() {
+      return this.$modal.currentName;
+    },
+    eventListners: function eventListners() {
+      var _this = this;
+
+      var events = ['before-open', 'opened', 'before-close', 'closed'];
+      var listeners = {};
+      events.forEach(function (event) {
+        listeners[event] = function (name) {
+          if (_this.name === name) {
+            _this.$emit(event, name);
+          }
+        };
+      });
+      return listeners;
+    }
+  },
+
+  mounted: function mounted() {
+    var _this2 = this;
+
+    var portal = this.$modal._getPortal();
+    Object.keys(this.eventListners).forEach(function (event) {
+      portal.$on(event, _this2.eventListners[event]);
+    });
+
+    portal.update.apply(portal, this._modalDataForPortal);
+  },
+  updated: function updated() {
+    var portal = this.$modal._getPortal();
+    portal.update.apply(portal, this._modalDataForPortal);
+  },
+  beforeDestroy: function beforeDestroy() {
+    var _this3 = this;
+
+    var portal = this.$modal._getPortal();
+
+    portal.unregister(this.name);
+    Object.keys(this.eventListners).forEach(function (event) {
+      portal.$off(event, _this3.eventListners[event]);
+    });
+  },
+  render: function render(h) {
+    // Gather the data for sending portal in render function
+    // so that rerendering will be triggered when dependencies are updated.
+    this._modalDataForPortal = [this.name, {
+      show: true,
+      backdropTransition: this.backdropTransition,
+      contentTransition: this.contentTransition,
+      disableBackdrop: this.disableBackdrop
+    }, this.$slots];
+
+    return this.preMount && this.current !== this.name ? h('div', {
+      style: {
+        display: 'none'
+      }
+    }, this.$slots.default) : h();
+  }
+};
+
+var Backdrop = {
+  functional: true,
+  name: 'backdrop',
+
+  props: {
+    show: Boolean,
+    backdropTransition: Object
+  },
+
+  render: function render(h, _ref) {
+    var props = _ref.props,
+        slots = _ref.slots;
+    var show = props.show,
+        backdropTransition = props.backdropTransition;
+
+
+    var transitionData = {
+      props: backdropTransition
+    };
+
+    return h('transition', transitionData, [show && (slots().default || h('div', { staticClass: 'modal-backdrop' }))]);
+  }
+};
+
+var ModalContent = {
+  functional: true,
+  name: 'modal-content',
+
+  props: {
+    show: Boolean,
+    disableBackdrop: Boolean,
+    contentTransition: Object
+  },
+
+  render: function render(h, _ref) {
+    var props = _ref.props,
+        data = _ref.data,
+        slots = _ref.slots;
+
+    var listeners = data.on || {};
+    var show = props.show,
+        disableBackdrop = props.disableBackdrop,
+        contentTransition = props.contentTransition;
+
+    var child = ensureOnlyChild(slots().default || []);
+
+    if (child) {
+      addStaticClass(child.data, 'modal-content');
+    }
+
+    var transitionData = {
+      props: contentTransition,
+      on: listeners
+    };
+
+    return h('div', {
+      staticClass: 'modal-content-wrapper',
+      attrs: {
+        role: 'dialog',
+        'aria-hidden': String(!show)
+      },
+      on: {
+        click: function click(event) {
+          if (disableBackdrop) return;
+          if (event.target !== event.currentTarget) return;
+
+          if (listeners['click-backdrop']) {
+            listeners['click-backdrop']();
+          }
+        }
+      }
+    }, [h('transition', transitionData, [show && child])]);
+  }
+};
+
+function ensureOnlyChild(children) {
+  var domChildren = children.filter(function (c) {
+    return c.tag;
+  });
+  assert(domChildren.length <= 1, 'Modal must have only one child');
+  return domChildren[0];
+}
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+/* eslint-env browser */
+
+var isBrowser = (typeof window === 'undefined' ? 'undefined' : _typeof(window)) !== undefined;
+
+function addBodyClass(className) {
+  if (isBrowser) {
+    document.body.classList.add(className);
+  }
+}
+
+function removeBodyClass(className) {
+  if (isBrowser) {
+    document.body.classList.remove(className);
+  }
+}
+
+function setBodyCss(name, value) {
+  if (isBrowser) {
+    var s = document.body.style;
+    s[name] = value;
+  }
+}
+
+function getScrollBarWidth() {
+  if (!isBrowser) {
+    return null;
+  }
+  return window.innerWidth - document.documentElement.offsetWidth;
+}
+
+function activeElement() {
+  if (isBrowser) {
+    return document.activeElement;
+  }
+}
+
+var openClassBody = 'modal-open';
+
+var ModalPortal = {
+  name: 'modal-portal',
+
+  data: function data() {
+    return {
+      modals: {}
+    };
+  },
+
+
+  computed: {
+    prev: function prev() {
+      return this.$modal.prevName;
+    },
+    current: function current() {
+      return this.$modal.currentName;
+    }
+  },
+
+  methods: {
+    update: function update(name, props, slots) {
+      var children = slots.default || [];
+
+      // Inject key into children vnode
+      children.forEach(function (child) {
+        if (child.key) return;
+
+        if (!child.data) {
+          child.data = {};
+        }
+        child.key = child.data.key = name;
+      });
+
+      this.$set(this.modals, name, {
+        props: props,
+        children: children,
+        backdrop: slots.backdrop
+      });
+    },
+    unregister: function unregister(name) {
+      this.$delete(this.modals, name);
+    }
+  },
+
+  beforeCreate: function beforeCreate() {
+    this.$modal._setPortal(this);
+  },
+  beforeMount: function beforeMount() {
+    var _this = this;
+
+    this.$on('click-backdrop', function () {
+      _this.$modal.pop();
+    });
+
+    this.$on('before-open', function () {
+      if (_this.current != null) {
+        var padding = getScrollBarWidth();
+        if (padding) {
+          setBodyCss('paddingRight', padding + 'px');
+        }
+        addBodyClass(openClassBody);
+      }
+    });
+
+    this.$on('closed', function () {
+      if (_this.current == null) {
+        setBodyCss('paddingRight', '');
+        removeBodyClass(openClassBody);
+      }
+    });
+  },
+  beforeDestroy: function beforeDestroy() {
+    assert(false, '<modal-portal> should not be destroyed. If you are using v-if on <modal-portal>, use v-show instead.');
+  },
+  render: function render(h) {
+    var _this2 = this;
+
+    var modal = this.modals[this.current];
+
+    var events = {
+      // Only react the first transition event.
+      'before-enter': function beforeEnter() {
+        return _this2.$emit('before-open', _this2.current);
+      },
+      'before-leave': function beforeLeave() {
+        return _this2.$emit('before-close', _this2.prev);
+      },
+
+      // Need to wait until all transition element are completed
+      'after-enter': function afterEnter() {
+        return _this2.$emit('opened', _this2.current);
+      },
+      'after-leave': function afterLeave() {
+        return _this2.$emit('closed', _this2.prev);
+      },
+
+      'click-backdrop': function clickBackdrop() {
+        return _this2.$emit('click-backdrop');
+      }
+    };
+
+    if (modal) {
+      return createModalVNode(h, {
+        props: modal.props,
+        on: events
+      }, modal.children, modal.backdrop);
+    } else {
+      return createModalVNode(h, { on: events }, []);
+    }
+  }
+};
+
+function createModalVNode(h, data, children, backdrop) {
+  return h('div', { staticClass: 'modal-wrapper' }, [h(Backdrop, data, backdrop), h(ModalContent, data, children)]);
+}
+
+function generateMediator(Vue$$1) {
+  var state = {
+    portal: null
+  };
+
+  return new Vue$$1({
+    data: {
+      stack: [],
+      prevName: null
+    },
+
+    computed: {
+      currentName: function currentName() {
+        var stack = this.stack;
+        var modal = stack[stack.length - 1];
+        return modal && modal.name;
+      }
+    },
+
+    methods: {
+      push: function push(name) {
+        var focusedElement = activeElement();
+        if (focusedElement) {
+          focusedElement.blur();
+        }
+
+        var item = {
+          name: name,
+          focusedElement: focusedElement
+
+          // Prevent to make reactive
+        };Object.freeze(item);
+
+        this.stack.push(item);
+      },
+      pop: function pop() {
+        var _stack$pop = this.stack.pop(),
+            focusedElement = _stack$pop.focusedElement;
+
+        if (focusedElement) {
+          focusedElement.focus();
+        }
+      },
+      replace: function replace(name) {
+        this.pop();
+        this.push(name);
+      },
+      _setPortal: function _setPortal(portal) {
+        assert(!state.portal, '<modal-portal> is already created.');
+        state.portal = portal;
+      },
+      _getPortal: function _getPortal() {
+        assert(state.portal, 'You need to put <modal-portal> or set `autoMountPortal: true` plugin option.');
+        return state.portal;
+      }
+    },
+
+    watch: {
+      currentName: function currentName(_, prevName) {
+        this.prevName = prevName;
+      }
+    }
+  });
+}
+
+var defineProperty = function (obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+};
+
+var PUSH = 'modal/PUSH';
+var POP = 'modal/POP';
+var REPLACE = 'modal/REPLACE';
+
+// eslint-disable-line
+
+function generateModule(mediator) {
+  var _actions, _mutations;
+
+  return {
+    state: { // eslint-disable-line
+      stack: []
+    },
+
+    getters: {
+      currentModal: function currentModal(_ref) {
+        var stack = _ref.stack;
+
+        return stack[stack.length - 1];
+      }
+    },
+
+    actions: (_actions = {}, defineProperty(_actions, PUSH, function (_ref2, data) {
+      var commit = _ref2.commit;
+
+      mediator.push(data.name);
+      commit(PUSH, data);
+    }), defineProperty(_actions, POP, function (_ref3) {
+      var commit = _ref3.commit;
+
+      mediator.pop();
+      commit(POP);
+    }), defineProperty(_actions, REPLACE, function (_ref4, data) {
+      var commit = _ref4.commit;
+
+      mediator.replace(data.name);
+      commit(REPLACE, data);
+    }), _actions),
+
+    mutations: (_mutations = {}, defineProperty(_mutations, PUSH, function (_ref5, data) {
+      var stack = _ref5.stack;
+
+      stack.push(data);
+    }), defineProperty(_mutations, POP, function (_ref6) {
+      var stack = _ref6.stack;
+
+      stack.pop();
+    }), defineProperty(_mutations, REPLACE, function (_ref7, data) {
+      var stack = _ref7.stack;
+
+      stack.pop();
+      stack.push(data);
+    }), _mutations)
+  };
+}
+
+/* eslint-env browser */
+
+var mediator = Vue.prototype.$modal = generateMediator(Vue);
+
+var Portal = Vue.extend(ModalPortal);
+var portal = new Portal();
+if (typeof window !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', function () {
+    portal.$mount();
+    document.body.appendChild(portal.$el);
+  });
+}
+
+var modalModule = generateModule(mediator);
+
+exports.modalModule = modalModule;
+exports.Modal = Modal;
+exports.PUSH = PUSH;
+exports.POP = POP;
+exports.REPLACE = REPLACE;
+
+
+/***/ }),
+
+/***/ "./node_modules/vuex-modal/dist/vuex-modal.css":
+/*!*****************************************************!*\
+  !*** ./node_modules/vuex-modal/dist/vuex-modal.css ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../css-loader??ref--6-1!../../postcss-loader/src??ref--6-2!./vuex-modal.css */ "./node_modules/css-loader/index.js?!./node_modules/postcss-loader/src/index.js?!./node_modules/vuex-modal/dist/vuex-modal.css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/vuex/dist/vuex.esm.js":
 /*!********************************************!*\
   !*** ./node_modules/vuex/dist/vuex.esm.js ***!
@@ -69253,14 +69871,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _stores_auth_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./stores/auth.js */ "./resources/js/stores/auth.js");
-/* harmony import */ var _stores_gudang_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./stores/gudang.js */ "./resources/js/stores/gudang.js");
-/* harmony import */ var _stores_user_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./stores/user.js */ "./resources/js/stores/user.js");
-/* harmony import */ var _stores_employee_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./stores/employee.js */ "./resources/js/stores/employee.js");
-/* harmony import */ var _stores_import_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./stores/import.js */ "./resources/js/stores/import.js");
-/* harmony import */ var _stores_coil_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./stores/coil.js */ "./resources/js/stores/coil.js");
-/* harmony import */ var _stores_blok_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./stores/blok.js */ "./resources/js/stores/blok.js");
-/* harmony import */ var _stores_blok_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_stores_blok_js__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var vuex_modal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex-modal */ "./node_modules/vuex-modal/dist/vuex-modal.cjs.js");
+/* harmony import */ var vuex_modal__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vuex_modal__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _stores_auth_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./stores/auth.js */ "./resources/js/stores/auth.js");
+/* harmony import */ var _stores_gudang_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./stores/gudang.js */ "./resources/js/stores/gudang.js");
+/* harmony import */ var _stores_user_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./stores/user.js */ "./resources/js/stores/user.js");
+/* harmony import */ var _stores_employee_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./stores/employee.js */ "./resources/js/stores/employee.js");
+/* harmony import */ var _stores_import_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./stores/import.js */ "./resources/js/stores/import.js");
+/* harmony import */ var _stores_coil_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./stores/coil.js */ "./resources/js/stores/coil.js");
+/* harmony import */ var _stores_blok_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./stores/blok.js */ "./resources/js/stores/blok.js");
+/* harmony import */ var _stores_blok_js__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_stores_blok_js__WEBPACK_IMPORTED_MODULE_9__);
+
 
  //IMPORT MODULE SECTION
 
@@ -69276,13 +69897,14 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   //SEMUA MODULE YANG DIBUAT AKAN DITEPATKAN DIDALAM BAGIAN INI DAN DIPISAHKAN DENGAN KOMA UNTUK SETIAP MODULE-NYA
   modules: {
-    auth: _stores_auth_js__WEBPACK_IMPORTED_MODULE_2__["default"],
-    gudang: _stores_gudang_js__WEBPACK_IMPORTED_MODULE_3__["default"],
-    user: _stores_user_js__WEBPACK_IMPORTED_MODULE_4__["default"],
-    employee: _stores_employee_js__WEBPACK_IMPORTED_MODULE_5__["default"],
-    importExcel: _stores_import_js__WEBPACK_IMPORTED_MODULE_6__["default"],
-    coil: _stores_coil_js__WEBPACK_IMPORTED_MODULE_7__["default"],
-    blok: _stores_blok_js__WEBPACK_IMPORTED_MODULE_8___default.a
+    auth: _stores_auth_js__WEBPACK_IMPORTED_MODULE_3__["default"],
+    gudang: _stores_gudang_js__WEBPACK_IMPORTED_MODULE_4__["default"],
+    user: _stores_user_js__WEBPACK_IMPORTED_MODULE_5__["default"],
+    employee: _stores_employee_js__WEBPACK_IMPORTED_MODULE_6__["default"],
+    importExcel: _stores_import_js__WEBPACK_IMPORTED_MODULE_7__["default"],
+    coil: _stores_coil_js__WEBPACK_IMPORTED_MODULE_8__["default"],
+    blok: _stores_blok_js__WEBPACK_IMPORTED_MODULE_9___default.a,
+    modalModule: vuex_modal__WEBPACK_IMPORTED_MODULE_2__["modalModule"]
   },
   //STATE HAMPIR SERUPA DENGAN PROPERTY DATA DARI COMPONENT HANYA SAJA DAPAT DIGUNAKAN SECARA GLOBAL
   state: {

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { modalModule } from 'vuex-modal'
 
 //IMPORT MODULE SECTION
 import auth from './stores/auth.js'
@@ -23,6 +24,7 @@ const store = new Vuex.Store({
         importExcel,
         coil,
         blok,
+        modalModule,
     },
   	//STATE HAMPIR SERUPA DENGAN PROPERTY DATA DARI COMPONENT HANYA SAJA DAPAT DIGUNAKAN SECARA GLOBAL
     state: {

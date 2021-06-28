@@ -55,7 +55,7 @@ export default {
                 { key: 'item_code', label: 'item_code' },
                 { key: 'item_description', label: 'deskripsi' },
                 { key: 'serial_Code', label: 'Serial_code' },
-                { key: 'id_coil', label: 'ID Coil' },
+                { key: 'ID_coil', label: 'ID Coil' },
                 { key: 'balance', label: 'balance' },
                 { key: 'gudang_id', label: 'gudang' },
                 { key: 'blok_id', label: 'blok' },
