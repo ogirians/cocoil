@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\GudangCollection;
 use App\gudang;
+use App\blok;
 
 class GudangController extends Controller
 {
     public function index()
     {
-        $gudang = gudang::orderBy('created_at', 'DESC');
+        $gudang = gudang::with('blok')->orderBy('created_at', 'DESC');
         if (request()->q != '') {
             $gudang = $gudang->where('name', 'LIKE', '%' . request()->q . '%');
         }

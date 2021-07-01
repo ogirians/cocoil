@@ -1,53 +1,101 @@
 <template>
-<div class="container">
-<div class="row">
-<div class="col-md-3">
- <nav class="navbar navbar-inverse sidebar" role="navigation">
-    <div class="container-fluid">
-		<!-- Brand and toggle get grouped for better mobile display -->
-		<div class="navbar-header">
-				<h3 class="">gudang/block</h3>
-		</div>
-		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div>
-			<modal name="example">
-			<div class="basic-modal">
-				<h1 class="title">Modal Title</h1>
-				<button class="button" type="button" @click="close">Close Modal</button>
-			</div>
-			</modal>
-  		</div>
-		<div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
-			<ul class="nav navbar-nav" id="listgudang">				
-				 <li v-for="(gudang,index) in gudangs.data" :key="index"> 
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown"> {{gudang.name }}  <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-cog"></span></a>
-						<ul class="dropdown-menu forAnimate" role="menu">
-							<li><a href="#">blok 1</a></li> 
-							<li><button type="button" @click="open" href="#"><i class="glyphicon glyphicon-plus" ></i> tambah blok baru</button></li>
-						</ul>
-				</li>
+
+	<div class="col-md-12">
+		
+			<div>
+				<modal name="example">
+				<div class="basic-modal" style="width:60%">
+					<h1 class="title">Buat blok baru</h1>
+					<h4 class="title">masukkan panjang dan lebar denah blok</h4>
+						<input type="hidden" class="form-control" v-model="blok.gudang_id" :readonly="$route.name == 'blok.edit'">
+					 <div class="form-group" :class="{ 'has-error': errors.name }">
+						<label for="">Nama blok</label>
+						<input type="text" class="form-control" v-model="blok.name" :readonly="$route.name == 'blok.edit'">
+						<p class="text-danger" v-if="errors.name">{{ errors.name[0] }}</p>
+					</div>
+					<div class="form-group" :class="{ 'has-error': errors.panjang }">
+						<label for="">panjang</label>
+						<input type="number" class="form-control" v-model="blok.panjang">
+						<p class="text-danger" v-if="errors.panjang">{{ errors.panjang[0] }}</p>
+					</div>
+					<div class="form-group" :class="{ 'has-error': errors.lebar }">
+						<label for="">lebar</label>
+						<input type="number" class="form-control" v-model="blok.lebar"/>
+						<p class="text-danger" v-if="errors.lebar">{{ errors.lebar[0] }}</p>
+					</div>
+					<br>
 				
-			</ul>
+						<button v-if ="selected_blok_id != ''" class="btn btn-primary btn-sm btn-flat" @click.prevent="update">
+							<i class="fa fa-save"></i> update
+						</button>
+						<button v-else class="btn btn-primary btn-sm btn-flat" @click.prevent="submit">
+							simpan
+						</button>
+						<button v-if ="selected_blok_id != ''" class="btn btn-danger btn-sm btn-flat" type="button" @click="delete_blok"><i class="fa fa-trash"></i> hapus blok</button>
+               		
+						<button class="btn btn-secondary btn-sm btn-flat pull-right" type="button" @click="close">Close</button>
+				</div>
+				</modal>
+			</div>
+		<div class="row">
+			<div class="col-md-3">
+			<nav class="navbar-inverse sidebar" role="navigation">
+				<div class="container-fluid">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-1">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+							<a class="navbar-brand">gudang/block</a>
+					</div>
+					<br>
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					
+					<div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+						<ul class="nav navbar-nav" id="listgudang">				
+							<li v-for="(gudang,index) in gudangs.data" :key="index"> 
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown"> {{ gudang.name }}  <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a>
+									<ul class="dropdown-menu forAnimate" role="menu">
+										<li v-for="(blo, index) in gudang.blok" :key="index"><a @click="selectBlok(blo.name, blo.id, gudang.id)">{{ blo.name }}-{{blo.id}}</a></li> 
+										
+										<button style="margin:5px" class="btn btn-secondary btn-sm btn-sm btn-flat " type="button" @click="openBaru(gudang.id)" href="#"><i class="glyphicon glyphicon-plus" ></i> blok baru </button>
+										
+									</ul>
+							</li>					
+						</ul>
+					</div>
+					
+				</div>
+			</nav>
+			</div>
+			<div class="col-md-9">
+				<div class="panel">
+					<h3 style="margin : 15px; " v-if="selected_blok == ''">pilih blok</h3>
+					<h3 style="margin : 15px; " v-else>{{selected_blok}}</h3>
+
+					<button @click="setting()" style="margin:10px 5px 10px 15px;" type="button" class="btn btn-secondary btn-sm btn-sm btn-flat"><i class="glyphicon glyphicon-wrench"></i> blok setting</button>
+					<button style="margin:10px 5px 10px 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> coil </button>
+					<button style="margin:10px 5px 10px 5px" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> arah </button>	
+					<br>
+						<maps-gudang>
+						</maps-gudang>
+					
+				</div>
+			</div>
 		</div>
-		 
-	</div>
-</nav>
-</div>
-<div class="col-md-8">
-        <maps-gudang>
-        </maps-gudang>
-</div>
- </div>
 
 </div>
 
 </template>
+ 
 <script>
 import MapsGudang from './map.vue'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 import { Modal, PUSH, POP } from 'vuex-modal'
 import 'vuex-modal/dist/vuex-modal.css'
-
 
 
 export default {
@@ -55,31 +103,307 @@ export default {
 
 	 name : 'viewGudang',
 
+	 data(){
+		 return{
+			 selected_blok:'',
+			 selected_blok_id:'',
+			 blok_id:'',
+			 selected_gudang_id :'',
+			 modal_stat: false,
+		 }
+	 },
+
 	 created(){
-		 this.getGudangs()
+		 this.getGudangs(),
+		 this.getBloks()
 	 },
 
 	 computed: {
+		 ...mapState (['errors']),
+
+		 ...mapState('blok', {
+			 blok : state => state.blok
+		 }),
+
+		  ...mapState('blok', {
+			 bloks : state => state.bloks
+		 }),
+
 		 ...mapState('gudang', {
 			 gudangs : state => state.gudangs
 		 }),
+
+		
 	 },
+
 	 methods : {
 		 ...mapActions('gudang',['getGudangs']),
-		  
-		open () {
+		 ...mapMutations('blok',['CLEAR_FORM']),
+		 ...mapActions('blok',['submitBlok', 'getBloks','editBlok']),
+		 
+
+		open (id) {
       		this.$store.dispatch(PUSH, { name: 'example' })
+			this.blok.gudang_id = id;
+			this.modal_stat =true;
+			
+			
     	},
  
 		close () {
-		this.$store.dispatch(POP)
-		}
+			this.$store.dispatch(POP)
+			this.$store.commit('blok/CLEAR_FORM')
+			this.selected_blok_id ='';
+			this.modal_stat =false;
+			 
+		},
+
+		submit(){
+			
+			this.submitBlok().then(() => {
+				this.getBloks()
+				this.getGudangs()
+				this.close()
+			})
+		},
+
+		delete_blok(){
+
+		},
+
+		selectBlok(nama,id,idGudang){
+			this.selected_blok = nama;
+			this.selected_blok_id = id;
+			this.blok_id= id;
+			this.selected_gudang_id=idGudang;
+		},
+
+		setting(){
+			this.selected_blok_id = this.blok_id;
+			this.editBlok(this.blok_id);
+			this.open(this.idGudang);
+		},
+
+		openBaru(id){
+			this.selected_blok_id ='';
+			this.open(id)
+			this.$store.commit('blok/CLEAR_FORM')
+		},
+		
+
 	 },
      components: {
             'maps-gudang': MapsGudang,
 			Modal,
     },
+
+	destroyed(){
+		this.CLEAR_FORM()	
+	},
 	
 }
 </script>
+
+
+
+<style>
+    body,html{
+		height: 100%;
+	}
+
+	/* remove outer padding */
+	.main .row{
+		padding: 0px;
+		margin: 0px;
+	}
+
+	/*Remove rounded coners*/
+
+	nav.sidebar.navbar {
+		border-radius: 0px;
+	}
+
+	.navbar-brand > a:hover,
+	.navbar-brand > a:focus{
+		color: rgb(0, 0, 0);
+	}
+	.navbar-inverse .navbar-nav > li > a:hover,
+	.navbar-inverse .navbar-nav > li > a:focus {
+			color: rgb(0, 0, 0);
+	    background: #f7f7f7;
+	}
+
+	.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > .open > a:hover {
+    color: #fff;
+    background-color: #3c8dbc;
+	}
+	
+	.navbar-inverse .navbar-brand #listgudang :hover {
+    color: rgb(0, 0, 0);
+   
+	}
+
+	.navbar-inverse .navbar-nav #listgudang > li > a:hover  {
+    color: rgba(68, 60, 60, 0.205);
+    
+	}
+
+	nav.sidebar, .main{
+		-webkit-transition: margin 200ms ease-out;
+	    -moz-transition: margin 200ms ease-out;
+	    -o-transition: margin 200ms ease-out;
+	    transition: margin 200ms ease-out;
+	}
+
+	/* Add gap to nav and right windows.*/
+	.main{
+		padding: 10px 10px 0 10px;
+	}
+
+	/* .....NavBar: Icon only with coloring/layout.....*/
+
+	/*small/medium side display*/
+	@media (min-width: 768px) {
+
+		/*Allow main to be next to Nav*/
+		.main{
+			position: absolute;
+			width: calc(100% - 40px); /*keeps 100% minus nav size*/
+			margin-left: 40px;
+			float: right;
+		}
+
+        .navbar-inverse {
+            background-color: #fff0;
+            border-color : #fff0;
+
+        }
+
+        .skin-blue .sidebar a {
+            color: black;
+        }
+
+        .navbar-inverse .navbar-nav > li > a {
+            color: black;
+        }
+		/*lets nav bar to be showed on mouseover*/
+		nav.sidebar:hover + .main{
+			margin-left: 200px;
+		}
+
+		/*Center Brand*/
+		nav.sidebar.navbar.sidebar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
+			margin-left: 0px;
+		}
+		/*Center Brand*/
+		nav.sidebar .navbar-brand, nav.sidebar .navbar-header{
+			text-align: center;
+			width: 100%;
+			margin-left: 0px;
+		}
+
+		/*Center Icons*/
+		nav.sidebar a{
+			padding-right: 13px;
+		}
+
+		/*adds border top to first nav box */
+		nav.sidebar .navbar-nav > li:first-child{
+			border-top: 1px #e5e5e5 solid;
+		}
+
+		/*adds border to bottom nav boxes*/
+		nav.sidebar .navbar-nav > li{
+			border-bottom: 1px #e5e5e5 solid;
+		}
+
+		/* Colors/style dropdown box*/
+		nav.sidebar .navbar-nav .open .dropdown-menu {
+			position: static;
+			float: none;
+			width: auto;
+			margin-top: 0;
+			background-color: transparent;
+			border: 0;
+			-webkit-box-shadow: none;
+			box-shadow: none;
+		}
+
+		/*allows nav box to use 100% width*/
+		nav.sidebar .navbar-collapse, nav.sidebar .container-fluid{
+			padding: 15px;
+		}
+
+		/*colors dropdown box text */
+		.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
+			color: #000;
+			background: cornsilk;
+			margin: 5px;
+		}
+
+		/*gives sidebar width/height*/
+		nav.sidebar{
+			width: auto;
+			height: 100%;
+			margin-left: -160px;
+			float: left;
+			z-index: 8000;
+			margin-bottom: 0px;
+		}
+
+		/*give sidebar 100% width;*/
+		nav.sidebar li {
+			width: 100%;
+		}
+
+		/* Move nav to full on mouse over*/
+		nav.sidebar:hover{
+			margin-left: 0px;
+		}
+		/*for hiden things when navbar hidden*/
+		.forAnimate{
+			opacity: 0;
+		}
+	}
+
+	/* .....NavBar: Fully showing nav bar..... */
+
+	@media (min-width: 1330px) {
+
+		/*Allow main to be next to Nav*/
+		.main{
+			width: calc(100% - 200px); /*keeps 100% minus nav size*/
+			margin-left: 200px;
+		}
+
+		/*Show all nav*/
+		nav.sidebar{
+			margin-left: 0px;
+			float: left;
+			background :white;
+		}
+		/*Show hidden items on nav*/
+		nav.sidebar .forAnimate{
+			opacity: 1;
+		}
+	}
+
+	nav.sidebar .navbar-nav .open .dropdown-menu>li>a:hover, nav.sidebar .navbar-nav .open .dropdown-menu>li>a:focus {
+		color: #000;
+		background-color: #9f997f;
+	}
+
+	nav:hover .forAnimate{
+		opacity: 1;
+	}
+	section{
+		padding-left: 15px;
+	}
+
+    .maps {
+        width: 100%;
+        height: 500px;
+        background-color :grey;
+    }
+    </style>
 

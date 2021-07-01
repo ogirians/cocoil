@@ -33,7 +33,7 @@ export default {
     name: 'FormGudang',
     computed: {
         ...mapState(['errors']), //MENGAMBIL STATE ERRORS
-        ...mapState('gudang', {
+        ...mapState('gudang', { 
             gudang: state => state.gudang //MENGAMBIL STATE gudang
         })
     },

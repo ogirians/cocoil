@@ -13,9 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 Route::post('/login', 'Auth\LoginController@login');
-
+Route::resource('/bloks', 'API\BlokController')->except(['show']);
+Route::resource('/gudangs', 'API\GudangController')->except(['show']);
+    
 Route::group(['middleware' => 'auth:api'], function() {
-    Route::resource('/gudangs', 'API\GudangController')->except(['show']);
+   
     Route::resource('/coils', 'API\CoilController')->except(['show']);
 
     Route::get('roles', 'API\RolePermissionController@getAllRole')->name('roles');
