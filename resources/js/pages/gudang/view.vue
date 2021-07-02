@@ -74,15 +74,25 @@
 			</div>
 			<div class="col-md-9">
 				<div class="panel">
-					<h3 style="margin : 15px; " v-if="selected_gudang_id == ''">pilih blok</h3>
-					<h3 style="margin : 15px; " v-else>Gudang {{selected_gudang_name}} : {{selected_blok}}</h3>
-
-					<button v-if="selected_gudang_id != ''"   @click="setting()" style="margin:10px 5px 10px 15px;" type="button" class="btn btn-secondary btn-sm btn-sm btn-flat"><i class="glyphicon glyphicon-wrench"></i> blok setting</button>
-					<button v-if="selected_gudang_id != ''" style="margin:10px 5px 10px 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> coil </button>
-					<button v-if="selected_gudang_id != ''" style="margin:10px 5px 10px 5px" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> arah </button>	
+					<div class="row" style="margin-right: 0px;margin-left: -15px;">
+						<div class="col-md-10">
+							<h3 style="margin : 15px; " v-if="selected_gudang_id == ''">pilih blok</h3>
+							<h3 style="margin: 15px;margin-bottom: 0px;" v-else>Gudang {{selected_gudang_name}} : {{selected_blok}}</h3>							
+						</div>
+						<div class="col-md-2 ">
+							<button v-if="selected_gudang_id != ''"   @click="setting()" style="margin: 15px;padding-right: 10px;margin-right: 15px;margin-bottom: 15px;" type="button" class="btn btn-secondary btn-sm btn-sm btn-flat"><i class="glyphicon glyphicon-wrench"></i> blok setting</button>
+						</div>
+					</div>
+					<button v-if="selected_gudang_id != ''" style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> coil </button>
+					<button v-if="selected_gudang_id != ''" style="margin: 10px 5px;margin-left: 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> arah </button>	
+					
 					<br>
+						<div id="stage-parent">
+						<div class="panel" id="container" style="background: #eee">
 						<maps-gudang v-if="selected_gudang_id != ''">
 						</maps-gudang>
+						</div>
+						</div>
 					
 				</div>
 			</div>
