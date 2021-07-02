@@ -45,7 +45,7 @@ class BlokController extends Controller
             'lebar' => 'required|integer'
         ]);
 
-        $blok = blok::whereCode($id)->first();
+        $blok = blok::where('id',$id)->first();
         $blok->update($request->except('gudang_id'));
         return response()->json(['status' => 'success'], 200);
     }

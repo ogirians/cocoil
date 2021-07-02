@@ -3651,6 +3651,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 
@@ -3664,6 +3665,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       selected_blok_id: '',
       blok_id: '',
       selected_gudang_id: '',
+      selected_gudang_name: '',
       modal_stat: false
     };
   },
@@ -3683,7 +3685,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return state.gudangs;
     }
   })),
-  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('gudang', ['getGudangs'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapMutations"])('blok', ['CLEAR_FORM'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('blok', ['submitBlok', 'getBloks', 'editBlok'])), {}, {
+  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('gudang', ['getGudangs'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapMutations"])('blok', ['CLEAR_FORM'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('blok', ['submitBlok', 'getBloks', 'editBlok', 'removeBlok', 'updateBlok'])), {}, {
     open: function open(id) {
       this.$store.dispatch(vuex_modal__WEBPACK_IMPORTED_MODULE_2__["PUSH"], {
         name: 'example'
@@ -3706,24 +3708,79 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this.getGudangs();
 
         _this.close();
+
+        _this.$swal({
+          type: 'success',
+          title: 'Blok ditambahkan',
+          showConfirmButton: false,
+          timer: 1500
+        });
       });
     },
-    delete_blok: function delete_blok() {},
-    selectBlok: function selectBlok(nama, id, idGudang) {
+    selectBlok: function selectBlok(nama, id, idGudang, namaGudang) {
       this.selected_blok = nama;
       this.selected_blok_id = id;
       this.blok_id = id;
       this.selected_gudang_id = idGudang;
+      this.selected_gudang_name = namaGudang;
     },
     setting: function setting() {
       this.selected_blok_id = this.blok_id;
       this.editBlok(this.blok_id);
       this.open(this.idGudang);
     },
-    openBaru: function openBaru(id) {
+    openBaru: function openBaru(idblok) {
       this.selected_blok_id = '';
-      this.open(id);
       this.$store.commit('blok/CLEAR_FORM');
+      this.open(idblok);
+    },
+    ngupdateBlok: function ngupdateBlok(id) {
+      var _this2 = this;
+
+      this.updateBlok(id).then(function () {
+        _this2.getGudangs();
+
+        _this2.close();
+
+        _this2.$swal({
+          type: 'success',
+          title: 'Blok diupdate',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      });
+    },
+    delete_blok: function delete_blok(id) {
+      var _this3 = this;
+
+      this.$swal({
+        title: 'Kamu Yakin?',
+        text: "Tindakan ini akan menghapus secara permanent!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Iya, Lanjutkan!'
+      }).then(function (result) {
+        //JIKA DISETUJUI
+        if (result.value) {
+          //MAKA FUNGSI removeOutlet AKAN DIJALANKAN
+          _this3.selected_gudang_id = '';
+
+          _this3.removeBlok(id);
+
+          _this3.getGudangs();
+
+          _this3.close();
+
+          _this3.$swal({
+            type: 'success',
+            title: 'Blok dihapus',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+      });
     }
   }),
   components: {
@@ -50275,7 +50332,11 @@ var render = function() {
             "div",
             { staticClass: "basic-modal", staticStyle: { width: "60%" } },
             [
-              _c("h1", { staticClass: "title" }, [_vm._v("Buat blok baru")]),
+              _vm.selected_blok_id != ""
+                ? _c("h1", { staticClass: "title" }, [_vm._v("Update Blok")])
+                : _c("h1", { staticClass: "title" }, [
+                    _vm._v("Buat blok baru")
+                  ]),
               _vm._v(" "),
               _c("h4", { staticClass: "title" }, [
                 _vm._v("masukkan panjang dan lebar denah blok")
@@ -50436,7 +50497,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          return _vm.update($event)
+                          return _vm.ngupdateBlok(_vm.selected_blok_id)
                         }
                       }
                     },
@@ -50465,7 +50526,11 @@ var render = function() {
                     {
                       staticClass: "btn btn-danger btn-sm btn-flat",
                       attrs: { type: "button" },
-                      on: { click: _vm.delete_blok }
+                      on: {
+                        click: function($event) {
+                          return _vm.delete_blok(_vm.selected_blok_id)
+                        }
+                      }
                     },
                     [
                       _c("i", { staticClass: "fa fa-trash" }),
@@ -50553,7 +50618,8 @@ var render = function() {
                                         return _vm.selectBlok(
                                           blo.name,
                                           blo.id,
-                                          gudang.id
+                                          gudang.id,
+                                          gudang.name
                                         )
                                       }
                                     }
@@ -50584,7 +50650,7 @@ var render = function() {
                                 _c("i", {
                                   staticClass: "glyphicon glyphicon-plus"
                                 }),
-                                _vm._v(" blok baru ")
+                                _vm._v(" blok baru " + _vm._s(gudang.id))
                               ]
                             )
                           ],
@@ -50606,39 +50672,72 @@ var render = function() {
           "div",
           { staticClass: "panel" },
           [
-            _vm.selected_blok == ""
+            _vm.selected_gudang_id == ""
               ? _c("h3", { staticStyle: { margin: "15px" } }, [
                   _vm._v("pilih blok")
                 ])
               : _c("h3", { staticStyle: { margin: "15px" } }, [
-                  _vm._v(_vm._s(_vm.selected_blok))
+                  _vm._v(
+                    "Gudang " +
+                      _vm._s(_vm.selected_gudang_name) +
+                      " : " +
+                      _vm._s(_vm.selected_blok)
+                  )
                 ]),
             _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-secondary btn-sm btn-sm btn-flat",
-                staticStyle: { margin: "10px 5px 10px 15px" },
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.setting()
-                  }
-                }
-              },
-              [
-                _c("i", { staticClass: "glyphicon glyphicon-wrench" }),
-                _vm._v(" blok setting")
-              ]
-            ),
+            _vm.selected_gudang_id != ""
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary btn-sm btn-sm btn-flat",
+                    staticStyle: { margin: "10px 5px 10px 15px" },
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        return _vm.setting()
+                      }
+                    }
+                  },
+                  [
+                    _c("i", { staticClass: "glyphicon glyphicon-wrench" }),
+                    _vm._v(" blok setting")
+                  ]
+                )
+              : _vm._e(),
             _vm._v(" "),
-            _vm._m(1),
+            _vm.selected_gudang_id != ""
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
+                    staticStyle: { margin: "10px 5px 10px 5px" },
+                    attrs: { type: "button" }
+                  },
+                  [
+                    _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+                    _vm._v(" coil ")
+                  ]
+                )
+              : _vm._e(),
             _vm._v(" "),
-            _vm._m(2),
+            _vm.selected_gudang_id != ""
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
+                    staticStyle: { margin: "10px 5px 10px 5px" },
+                    attrs: { type: "button" }
+                  },
+                  [
+                    _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+                    _vm._v(" arah ")
+                  ]
+                )
+              : _vm._e(),
             _vm._v(" "),
             _c("br"),
             _vm._v(" "),
-            _c("maps-gudang")
+            _vm.selected_gudang_id != "" ? _c("maps-gudang") : _vm._e()
           ],
           1
         )
@@ -50675,34 +50774,6 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("a", { staticClass: "navbar-brand" }, [_vm._v("gudang/block")])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
-        staticStyle: { margin: "10px 5px 10px 5px" },
-        attrs: { type: "button" }
-      },
-      [_c("i", { staticClass: "glyphicon glyphicon-plus" }), _vm._v(" coil ")]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
-        staticStyle: { margin: "10px 5px 10px 5px" },
-        attrs: { type: "button" }
-      },
-      [_c("i", { staticClass: "glyphicon glyphicon-plus" }), _vm._v(" arah ")]
-    )
   }
 ]
 render._withStripped = true
@@ -70623,7 +70694,7 @@ var actions = {
       //DENGAN METHOD DELETE DAN ID OUTLET DI URL
       _api_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"]("/bloks/".concat(payload)).then(function (response) {
         //APABILA BERHASIL, FETCH DATA TERBARU DARI SERVER
-        dispatch('getbloks').then(function () {
+        dispatch('getBloks').then(function () {
           return resolve();
         });
       });

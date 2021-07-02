@@ -5,7 +5,8 @@
 			<div>
 				<modal name="example">
 				<div class="basic-modal" style="width:60%">
-					<h1 class="title">Buat blok baru</h1>
+					<h1 v-if ="selected_blok_id != ''" class="title">Update Blok</h1>
+					<h1 v-else class="title">Buat blok baru</h1>
 					<h4 class="title">masukkan panjang dan lebar denah blok</h4>
 						<input type="hidden" class="form-control" v-model="blok.gudang_id" :readonly="$route.name == 'blok.edit'">
 					 <div class="form-group" :class="{ 'has-error': errors.name }">
@@ -25,13 +26,13 @@
 					</div>
 					<br>
 				
-						<button v-if ="selected_blok_id != ''" class="btn btn-primary btn-sm btn-flat" @click.prevent="update">
+						<button v-if ="selected_blok_id != ''" class="btn btn-primary btn-sm btn-flat" @click.prevent="ngupdateBlok(selected_blok_id)">
 							<i class="fa fa-save"></i> update
 						</button>
 						<button v-else class="btn btn-primary btn-sm btn-flat" @click.prevent="submit">
 							simpan
 						</button>
-						<button v-if ="selected_blok_id != ''" class="btn btn-danger btn-sm btn-flat" type="button" @click="delete_blok"><i class="fa fa-trash"></i> hapus blok</button>
+						<button v-if ="selected_blok_id != ''" class="btn btn-danger btn-sm btn-flat" type="button" @click="delete_blok(selected_blok_id)"><i class="fa fa-trash"></i> hapus blok</button>
                		
 						<button class="btn btn-secondary btn-sm btn-flat pull-right" type="button" @click="close">Close</button>
 				</div>
@@ -59,9 +60,9 @@
 							<li v-for="(gudang,index) in gudangs.data" :key="index"> 
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown"> {{ gudang.name }}  <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a>
 									<ul class="dropdown-menu forAnimate" role="menu">
-										<li v-for="(blo, index) in gudang.blok" :key="index"><a @click="selectBlok(blo.name, blo.id, gudang.id)">{{ blo.name }}-{{blo.id}}</a></li> 
+										<li v-for="(blo, index) in gudang.blok" :key="index"><a @click="selectBlok(blo.name, blo.id, gudang.id, gudang.name)">{{ blo.name }}-{{blo.id}}</a></li> 
 										
-										<button style="margin:5px" class="btn btn-secondary btn-sm btn-sm btn-flat " type="button" @click="openBaru(gudang.id)" href="#"><i class="glyphicon glyphicon-plus" ></i> blok baru </button>
+										<button style="margin:5px" class="btn btn-secondary btn-sm btn-sm btn-flat " type="button" @click="openBaru(gudang.id)" href="#"><i class="glyphicon glyphicon-plus" ></i> blok baru {{gudang.id}}</button>
 										
 									</ul>
 							</li>					
@@ -73,14 +74,14 @@
 			</div>
 			<div class="col-md-9">
 				<div class="panel">
-					<h3 style="margin : 15px; " v-if="selected_blok == ''">pilih blok</h3>
-					<h3 style="margin : 15px; " v-else>{{selected_blok}}</h3>
+					<h3 style="margin : 15px; " v-if="selected_gudang_id == ''">pilih blok</h3>
+					<h3 style="margin : 15px; " v-else>Gudang {{selected_gudang_name}} : {{selected_blok}}</h3>
 
-					<button @click="setting()" style="margin:10px 5px 10px 15px;" type="button" class="btn btn-secondary btn-sm btn-sm btn-flat"><i class="glyphicon glyphicon-wrench"></i> blok setting</button>
-					<button style="margin:10px 5px 10px 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> coil </button>
-					<button style="margin:10px 5px 10px 5px" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> arah </button>	
+					<button v-if="selected_gudang_id != ''"   @click="setting()" style="margin:10px 5px 10px 15px;" type="button" class="btn btn-secondary btn-sm btn-sm btn-flat"><i class="glyphicon glyphicon-wrench"></i> blok setting</button>
+					<button v-if="selected_gudang_id != ''" style="margin:10px 5px 10px 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> coil </button>
+					<button v-if="selected_gudang_id != ''" style="margin:10px 5px 10px 5px" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> arah </button>	
 					<br>
-						<maps-gudang>
+						<maps-gudang v-if="selected_gudang_id != ''">
 						</maps-gudang>
 					
 				</div>
@@ -109,6 +110,7 @@ export default {
 			 selected_blok_id:'',
 			 blok_id:'',
 			 selected_gudang_id :'',
+			 selected_gudang_name : '',
 			 modal_stat: false,
 		 }
 	 },
@@ -139,7 +141,7 @@ export default {
 	 methods : {
 		 ...mapActions('gudang',['getGudangs']),
 		 ...mapMutations('blok',['CLEAR_FORM']),
-		 ...mapActions('blok',['submitBlok', 'getBloks','editBlok']),
+		 ...mapActions('blok',['submitBlok', 'getBloks','editBlok','removeBlok','updateBlok']),
 		 
 
 		open (id) {
@@ -160,22 +162,28 @@ export default {
 
 		submit(){
 			
+			
 			this.submitBlok().then(() => {
 				this.getBloks()
 				this.getGudangs()
 				this.close()
+
+				this.$swal({
+					type: 'success',
+					title: 'Blok ditambahkan',
+					showConfirmButton: false,
+					timer: 1500
+				})
 			})
+			
 		},
 
-		delete_blok(){
-
-		},
-
-		selectBlok(nama,id,idGudang){
+		selectBlok(nama,id,idGudang,namaGudang){
 			this.selected_blok = nama;
 			this.selected_blok_id = id;
 			this.blok_id= id;
 			this.selected_gudang_id=idGudang;
+			this.selected_gudang_name=namaGudang;
 		},
 
 		setting(){
@@ -184,11 +192,54 @@ export default {
 			this.open(this.idGudang);
 		},
 
-		openBaru(id){
+		openBaru(idblok){
 			this.selected_blok_id ='';
-			this.open(id)
-			this.$store.commit('blok/CLEAR_FORM')
+			this.$store.commit('blok/CLEAR_FORM');
+			this.open(idblok);
+			
+
 		},
+		ngupdateBlok(id){
+			 this.updateBlok(id).then(() => {
+                	this.getGudangs()
+					this.close()
+					this.$swal({
+					type: 'success',
+					title: 'Blok diupdate',
+					showConfirmButton: false,
+					timer: 1500
+					})
+                })
+		},
+
+		delete_blok(id){
+
+			 this.$swal({
+                title: 'Kamu Yakin?',
+                text: "Tindakan ini akan menghapus secara permanent!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Iya, Lanjutkan!'
+            }).then((result) => {
+                //JIKA DISETUJUI
+                if (result.value) {
+                    //MAKA FUNGSI removeOutlet AKAN DIJALANKAN
+                    this.selected_gudang_id ='';
+					this.removeBlok(id)
+					this.getGudangs()
+					this.close()
+					this.$swal({
+					type: 'success',
+					title: 'Blok dihapus',
+					showConfirmButton: false,
+					timer: 1500
+					})
+                }
+            })
+			
+		}
 		
 
 	 },

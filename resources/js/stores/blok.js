@@ -118,7 +118,7 @@ const actions = {
             $axios.delete(`/bloks/${payload}`)
             .then((response) => {
                 //APABILA BERHASIL, FETCH DATA TERBARU DARI SERVER
-                dispatch('getbloks').then(() => resolve())
+                dispatch('getBloks').then(() => resolve())
             })
         })
     }
