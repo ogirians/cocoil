@@ -50,7 +50,7 @@
 								<span class="icon-bar"></span>
 								<span class="icon-bar"></span>
 							</button>
-							<a class="navbar-brand">gudang/block</a>
+							<a class="navbar-brand" style="margin-top: 20px;">gudang/block</a>
 					</div>
 					<br>
 					<!-- Collect the nav links, forms, and other content for toggling -->
@@ -83,15 +83,14 @@
 							<button v-if="selected_gudang_id != ''"   @click="setting()" style="margin: 15px;padding-right: 10px;margin-right: 15px;margin-bottom: 15px;" type="button" class="btn btn-secondary btn-sm btn-sm btn-flat"><i class="glyphicon glyphicon-wrench"></i> blok setting</button>
 						</div>
 					</div>
-					<button v-if="selected_gudang_id != ''" style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> coil </button>
-					<button v-if="selected_gudang_id != ''" style="margin: 10px 5px;margin-left: 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> arah </button>	
+					
 					
 					<br>
 						<div id="stage-parent">
-						<div class="panel" id="container" style="background: #eee">
-						<maps-gudang v-if="selected_gudang_id != ''">
-						</maps-gudang>
-						</div>
+							<div class="panel" id="container" style="background: #eee">
+								<maps-gudang v-if="selected_gudang_id != ''">
+								</maps-gudang>
+							</div>
 						</div>
 					
 				</div>
@@ -324,7 +323,7 @@ export default {
 	/* .....NavBar: Icon only with coloring/layout.....*/
 
 	/*small/medium side display*/
-	@media (min-width: 768px) {
+	@media (min-width: 991px) {
 
 		/*Allow main to be next to Nav*/
 		.main{
@@ -429,7 +428,7 @@ export default {
 
 	/* .....NavBar: Fully showing nav bar..... */
 
-	@media (min-width: 1330px) {
+	@media (min-width:992px) {
 
 		/*Allow main to be next to Nav*/
 		.main{

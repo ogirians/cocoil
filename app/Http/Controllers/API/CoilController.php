@@ -25,7 +25,7 @@ class coilController extends Controller
             'item_type' => 'required|string|max:100',
             'item_code' => 'required|string',
             'item_description' => 'required|max:13',
-            'serial_Code' => 'required|string',
+            'serial_Code' => 'required|string|unique',
             'id_coil' => 'required|string',
             'balance' => 'required|string',
         ]);

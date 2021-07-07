@@ -3661,7 +3661,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
 
 
 
@@ -3822,6 +3821,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3832,15 +3843,14 @@ __webpack_require__.r(__webpack_exports__);
         width: this.sceneWidth,
         height: this.sceneHeight
       },
-      configCircle: {
-        x: 0,
-        y: 0,
-        radius: 70,
-        fill: "red",
-        stroke: "black",
-        strokeWidth: 4,
-        draggable: true
-      }
+      list: [{
+        x: 100,
+        y: 100,
+        id: 1,
+        radius: 50,
+        fill: 'blue'
+      }],
+      isDragging: false
     };
   },
   created: function created() {
@@ -3862,7 +3872,32 @@ __webpack_require__.r(__webpack_exports__);
         x: scale,
         y: scale
       };
+    },
+    addCoil: function addCoil() {
+      var pos = {
+        x: 100,
+        y: 100,
+        id: Math.round(Math.random() * 10000).toString()
+      };
+      this.list.push(pos);
+      this.save();
+    },
+    handleDragStart: function handleDragStart() {
+      this.isDragging = true;
+    },
+    handleDragEnd: function handleDragEnd() {
+      this.isDragging = false;
+    },
+    load: function load() {
+      var data = localStorage.getItem('storage') || '[]';
+      this.list = JSON.parse(data);
+    },
+    save: function save() {
+      localStorage.setItem('storage', JSON.stringify(this.list));
     }
+  },
+  mounted: function mounted() {
+    this.load();
   }
 });
 
@@ -31175,7 +31210,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\nbody,html{\n\t\theight: 100%;\n}\n\n\t/* remove outer padding */\n.main .row{\n\t\tpadding: 0px;\n\t\tmargin: 0px;\n}\n\n\t/*Remove rounded coners*/\nnav.sidebar.navbar {\n\t\tborder-radius: 0px;\n}\n.navbar-brand > a:hover,\n\t.navbar-brand > a:focus{\n\t\tcolor: rgb(0, 0, 0);\n}\n.navbar-inverse .navbar-nav > li > a:hover,\n\t.navbar-inverse .navbar-nav > li > a:focus {\n\t\t\tcolor: rgb(0, 0, 0);\n\t    background: #f7f7f7;\n}\n.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > .open > a:hover {\n    color: #fff;\n    background-color: #3c8dbc;\n}\n.navbar-inverse .navbar-brand #listgudang :hover {\n    color: rgb(0, 0, 0);\n}\n.navbar-inverse .navbar-nav #listgudang > li > a:hover  {\n    color: rgba(68, 60, 60, 0.205);\n}\nnav.sidebar, .main{\n\t transition: margin 200ms ease-out;\n}\n\n\t/* Add gap to nav and right windows.*/\n.main{\n\t\tpadding: 10px 10px 0 10px;\n}\n\n\t/* .....NavBar: Icon only with coloring/layout.....*/\n\n\t/*small/medium side display*/\n@media (min-width: 768px) {\n\n\t\t/*Allow main to be next to Nav*/\n.main{\n\t\t\tposition: absolute;\n\t\t\twidth: calc(100% - 40px); /*keeps 100% minus nav size*/\n\t\t\tmargin-left: 40px;\n\t\t\tfloat: right;\n}\n.navbar-inverse {\n            background-color: #fff0;\n            border-color : #fff0;\n}\n.skin-blue .sidebar a {\n            color: black;\n}\n.navbar-inverse .navbar-nav > li > a {\n            color: black;\n}\n\t\t/*lets nav bar to be showed on mouseover*/\nnav.sidebar:hover + .main{\n\t\t\tmargin-left: 200px;\n}\n\n\t\t/*Center Brand*/\nnav.sidebar.navbar.sidebar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {\n\t\t\tmargin-left: 0px;\n}\n\t\t/*Center Brand*/\nnav.sidebar .navbar-brand, nav.sidebar .navbar-header{\n\t\t\ttext-align: center;\n\t\t\twidth: 100%;\n\t\t\tmargin-left: 0px;\n}\n\n\t\t/*Center Icons*/\nnav.sidebar a{\n\t\t\tpadding-right: 13px;\n}\n\n\t\t/*adds border top to first nav box */\nnav.sidebar .navbar-nav > li:first-child{\n\t\t\tborder-top: 1px #e5e5e5 solid;\n}\n\n\t\t/*adds border to bottom nav boxes*/\nnav.sidebar .navbar-nav > li{\n\t\t\tborder-bottom: 1px #e5e5e5 solid;\n}\n\n\t\t/* Colors/style dropdown box*/\nnav.sidebar .navbar-nav .open .dropdown-menu {\n\t\t\tposition: static;\n\t\t\tfloat: none;\n\t\t\twidth: auto;\n\t\t\tmargin-top: 0;\n\t\t\tbackground-color: transparent;\n\t\t\tborder: 0;\n\t\t\tbox-shadow: none;\n}\n\n\t\t/*allows nav box to use 100% width*/\nnav.sidebar .navbar-collapse, nav.sidebar .container-fluid{\n\t\t\tpadding: 15px;\n}\n\n\t\t/*colors dropdown box text */\n.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n\t\t\tcolor: #000;\n\t\t\tbackground: cornsilk;\n\t\t\tmargin: 5px;\n}\n\n\t\t/*gives sidebar width/height*/\nnav.sidebar{\n\t\t\twidth: auto;\n\t\t\theight: 100%;\n\t\t\tmargin-left: -160px;\n\t\t\tfloat: left;\n\t\t\tz-index: 8000;\n\t\t\tmargin-bottom: 0px;\n}\n\n\t\t/*give sidebar 100% width;*/\nnav.sidebar li {\n\t\t\twidth: 100%;\n}\n\n\t\t/* Move nav to full on mouse over*/\nnav.sidebar:hover{\n\t\t\tmargin-left: 0px;\n}\n\t\t/*for hiden things when navbar hidden*/\n.forAnimate{\n\t\t\topacity: 0;\n}\n}\n\n\t/* .....NavBar: Fully showing nav bar..... */\n@media (min-width: 1330px) {\n\n\t\t/*Allow main to be next to Nav*/\n.main{\n\t\t\twidth: calc(100% - 200px); /*keeps 100% minus nav size*/\n\t\t\tmargin-left: 200px;\n}\n\n\t\t/*Show all nav*/\nnav.sidebar{\n\t\t\tmargin-left: 0px;\n\t\t\tfloat: left;\n\t\t\tbackground :white;\n}\n\t\t/*Show hidden items on nav*/\nnav.sidebar .forAnimate{\n\t\t\topacity: 1;\n}\n}\nnav.sidebar .navbar-nav .open .dropdown-menu>li>a:hover, nav.sidebar .navbar-nav .open .dropdown-menu>li>a:focus {\n\t\tcolor: #000;\n\t\tbackground-color: #9f997f;\n}\nnav:hover .forAnimate{\n\t\topacity: 1;\n}\nsection{\n\t\tpadding-left: 15px;\n}\n.maps {\n        width: 100%;\n        height: 500px;\n        background-color :grey;\n}\n    ", ""]);
+exports.push([module.i, "\nbody,html{\n\t\theight: 100%;\n}\n\n\t/* remove outer padding */\n.main .row{\n\t\tpadding: 0px;\n\t\tmargin: 0px;\n}\n\n\t/*Remove rounded coners*/\nnav.sidebar.navbar {\n\t\tborder-radius: 0px;\n}\n.navbar-brand > a:hover,\n\t.navbar-brand > a:focus{\n\t\tcolor: rgb(0, 0, 0);\n}\n.navbar-inverse .navbar-nav > li > a:hover,\n\t.navbar-inverse .navbar-nav > li > a:focus {\n\t\t\tcolor: rgb(0, 0, 0);\n\t    background: #f7f7f7;\n}\n.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > .open > a:hover {\n    color: #fff;\n    background-color: #3c8dbc;\n}\n.navbar-inverse .navbar-brand #listgudang :hover {\n    color: rgb(0, 0, 0);\n}\n.navbar-inverse .navbar-nav #listgudang > li > a:hover  {\n    color: rgba(68, 60, 60, 0.205);\n}\nnav.sidebar, .main{\n\t transition: margin 200ms ease-out;\n}\n\n\t/* Add gap to nav and right windows.*/\n.main{\n\t\tpadding: 10px 10px 0 10px;\n}\n\n\t/* .....NavBar: Icon only with coloring/layout.....*/\n\n\t/*small/medium side display*/\n@media (min-width: 991px) {\n\n\t\t/*Allow main to be next to Nav*/\n.main{\n\t\t\tposition: absolute;\n\t\t\twidth: calc(100% - 40px); /*keeps 100% minus nav size*/\n\t\t\tmargin-left: 40px;\n\t\t\tfloat: right;\n}\n.navbar-inverse {\n            background-color: #fff0;\n            border-color : #fff0;\n}\n.skin-blue .sidebar a {\n            color: black;\n}\n.navbar-inverse .navbar-nav > li > a {\n            color: black;\n}\n\t\t/*lets nav bar to be showed on mouseover*/\nnav.sidebar:hover + .main{\n\t\t\tmargin-left: 200px;\n}\n\n\t\t/*Center Brand*/\nnav.sidebar.navbar.sidebar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {\n\t\t\tmargin-left: 0px;\n}\n\t\t/*Center Brand*/\nnav.sidebar .navbar-brand, nav.sidebar .navbar-header{\n\t\t\ttext-align: center;\n\t\t\twidth: 100%;\n\t\t\tmargin-left: 0px;\n}\n\n\t\t/*Center Icons*/\nnav.sidebar a{\n\t\t\tpadding-right: 13px;\n}\n\n\t\t/*adds border top to first nav box */\nnav.sidebar .navbar-nav > li:first-child{\n\t\t\tborder-top: 1px #e5e5e5 solid;\n}\n\n\t\t/*adds border to bottom nav boxes*/\nnav.sidebar .navbar-nav > li{\n\t\t\tborder-bottom: 1px #e5e5e5 solid;\n}\n\n\t\t/* Colors/style dropdown box*/\nnav.sidebar .navbar-nav .open .dropdown-menu {\n\t\t\tposition: static;\n\t\t\tfloat: none;\n\t\t\twidth: auto;\n\t\t\tmargin-top: 0;\n\t\t\tbackground-color: transparent;\n\t\t\tborder: 0;\n\t\t\tbox-shadow: none;\n}\n\n\t\t/*allows nav box to use 100% width*/\nnav.sidebar .navbar-collapse, nav.sidebar .container-fluid{\n\t\t\tpadding: 15px;\n}\n\n\t\t/*colors dropdown box text */\n.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n\t\t\tcolor: #000;\n\t\t\tbackground: cornsilk;\n\t\t\tmargin: 5px;\n}\n\n\t\t/*gives sidebar width/height*/\nnav.sidebar{\n\t\t\twidth: auto;\n\t\t\theight: 100%;\n\t\t\tmargin-left: -160px;\n\t\t\tfloat: left;\n\t\t\tz-index: 8000;\n\t\t\tmargin-bottom: 0px;\n}\n\n\t\t/*give sidebar 100% width;*/\nnav.sidebar li {\n\t\t\twidth: 100%;\n}\n\n\t\t/* Move nav to full on mouse over*/\nnav.sidebar:hover{\n\t\t\tmargin-left: 0px;\n}\n\t\t/*for hiden things when navbar hidden*/\n.forAnimate{\n\t\t\topacity: 0;\n}\n}\n\n\t/* .....NavBar: Fully showing nav bar..... */\n@media (min-width:992px) {\n\n\t\t/*Allow main to be next to Nav*/\n.main{\n\t\t\twidth: calc(100% - 200px); /*keeps 100% minus nav size*/\n\t\t\tmargin-left: 200px;\n}\n\n\t\t/*Show all nav*/\nnav.sidebar{\n\t\t\tmargin-left: 0px;\n\t\t\tfloat: left;\n\t\t\tbackground :white;\n}\n\t\t/*Show hidden items on nav*/\nnav.sidebar .forAnimate{\n\t\t\topacity: 1;\n}\n}\nnav.sidebar .navbar-nav .open .dropdown-menu>li>a:hover, nav.sidebar .navbar-nav .open .dropdown-menu>li>a:focus {\n\t\tcolor: #000;\n\t\tbackground-color: #9f997f;\n}\nnav:hover .forAnimate{\n\t\topacity: 1;\n}\nsection{\n\t\tpadding-left: 15px;\n}\n.maps {\n        width: 100%;\n        height: 500px;\n        background-color :grey;\n}\n    ", ""]);
 
 // exports
 
@@ -31194,7 +31229,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\nbody {\n   margin: 0;\n   padding: 0;\n   overflow: hidden;\n   background-color: #f0f0f0;\n}\n#stage-parent {\n   width: 100%;\n}\n", ""]);
+exports.push([module.i, "\nbody {\n   margin: 0;\n   padding: 0;\n   overflow: hidden;\n   background-color: #f0f0f0;\n}\n#stage-parent {\n   width: 100%;\n}\n.tombol {\n   background-color: white;\n}\n", ""]);
 
 // exports
 
@@ -50809,40 +50844,6 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _vm.selected_gudang_id != ""
-            ? _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
-                  staticStyle: {
-                    margin: "10px 5px",
-                    "margin-left": "15px",
-                    "margin-right": "0px"
-                  },
-                  attrs: { type: "button" }
-                },
-                [
-                  _c("i", { staticClass: "glyphicon glyphicon-plus" }),
-                  _vm._v(" coil ")
-                ]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.selected_gudang_id != ""
-            ? _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
-                  staticStyle: { margin: "10px 5px", "margin-left": "5px" },
-                  attrs: { type: "button" }
-                },
-                [
-                  _c("i", { staticClass: "glyphicon glyphicon-plus" }),
-                  _vm._v(" arah ")
-                ]
-              )
-            : _vm._e(),
-          _vm._v(" "),
           _c("br"),
           _vm._v(" "),
           _c("div", { attrs: { id: "stage-parent" } }, [
@@ -50889,7 +50890,11 @@ var staticRenderFns = [
         ]
       ),
       _vm._v(" "),
-      _c("a", { staticClass: "navbar-brand" }, [_vm._v("gudang/block")])
+      _c(
+        "a",
+        { staticClass: "navbar-brand", staticStyle: { "margin-top": "20px" } },
+        [_vm._v("gudang/block")]
+      )
     ])
   }
 ]
@@ -50915,15 +50920,56 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "v-stage",
-    { attrs: { config: _vm.stage } },
+    "div",
     [
+      _c("div", { staticClass: "tombol" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
+            staticStyle: {
+              margin: "10px 5px",
+              "margin-left": "15px",
+              "margin-right": "0px"
+            },
+            attrs: { type: "button" },
+            on: { click: _vm.addCoil }
+          },
+          [
+            _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+            _vm._v(" coil ")
+          ]
+        ),
+        _vm._v(" "),
+        _vm._m(0)
+      ]),
+      _vm._v(" "),
       _c(
-        "v-layer",
+        "v-stage",
+        {
+          attrs: { config: _vm.stage },
+          on: { dragstart: _vm.handleDragStart, dragend: _vm.handleDragEnd }
+        },
         [
-          _c("v-circle", { attrs: { config: _vm.configCircle } }),
-          _vm._v(" "),
-          _c("v-circle", { attrs: { config: _vm.configCircle } })
+          _c(
+            "v-layer",
+            _vm._l(_vm.list, function(item) {
+              return _c("v-circle", {
+                key: item.id,
+                attrs: {
+                  config: {
+                    x: item.x,
+                    y: item.y,
+                    radius: 70,
+                    fill: _vm.isDragging ? "blue" : "red",
+                    draggable: true,
+                    stroke: "black"
+                  }
+                }
+              })
+            }),
+            1
+          )
         ],
         1
       )
@@ -50931,7 +50977,22 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
+        staticStyle: { margin: "10px 5px", "margin-left": "5px" },
+        attrs: { type: "button" }
+      },
+      [_c("i", { staticClass: "glyphicon glyphicon-plus" }), _vm._v(" arah ")]
+    )
+  }
+]
 render._withStripped = true
 
 
