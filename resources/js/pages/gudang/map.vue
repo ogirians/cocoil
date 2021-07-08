@@ -2,10 +2,10 @@
   <div>
     <div class="tombol"> 
     <button @click="addCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Slot </button>
+    <button @click="addNonCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Object </button>
 		<button  style="margin: 10px 5px;margin-left: 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Text </button>	   
     </div>
-    <v-stage :config="stage" 
-         
+    <v-stage :config="stage"          
           @mousedown="handleStageMouseDown"
           @touchstart="handleStageMouseDown">
     <v-layer>
@@ -18,8 +18,20 @@
             name:item.name, x : item.x, y: item.y, id:item.id , scaleX:item.scaleX, scaleY:item.scaleY, rotation:item.rotation, width:item.width, height:item.height, fill: item.fill, draggable:true, stroke:'black'
           }"
           @transformend="handleTransformEnd"
-          ></v-rect> 
-           <v-transformer ref="transformer"/>
+          >
+          </v-rect> 
+           <v-rect 
+          @dragstart="handleDragStart"
+          @dragend="handleDragEnd"         
+          v-for="item in listNonCoil"
+          :key="item.id"
+          :config="{
+            name:item.name, x : item.x, y: item.y, id:item.id , scaleX:item.scaleX, scaleY:item.scaleY, rotation:item.rotation, width:item.width, height:item.height, fill: item.fill, draggable:true, stroke:'black'
+          }"
+          @transformend="handleTransformEnd"
+          >
+          </v-rect>
+          <v-transformer ref="transformer"/>
           <v-text 
             ref="text1"
            :config="{
@@ -52,9 +64,8 @@ export default {
         width: this.sceneWidth,
         height: this.sceneHeight,
       },
-      list: [{ 
-      
-        }],
+      list: [{ }],
+      listNonCoil:[{}],
       
       listText: [{}],
           
@@ -107,6 +118,25 @@ export default {
             this.save();
           },
 
+          addNonCoil() {  
+          const id = Math.round(Math.random() * 10000).toString();          
+            const pos = {
+              rotation: 0,
+              x: 100, 
+              y: 100, 
+              id: id,
+              fill : 'grey',
+              width: 100,
+              height: 100,
+              scaleX: 1,
+              scaleY: 1,
+              name: 'rectNon'+ id,
+            };
+
+            this.list.push(pos);
+            this.save();
+          },
+
           handleDragStart(e) {
             this.isDragging = true;
 
@@ -117,7 +147,7 @@ export default {
             // move current element to the top:
             const item = this.list.find(i => i.id === this.dragItemId);
             const index = this.list.indexOf(item);
-            item.fill = 'blue';
+            //item.fill = 'blue';
             this.list.splice(index, 1);
             this.list.push(item);
 
@@ -127,7 +157,7 @@ export default {
             
             const item = this.list.find((i) => i.id === this.dragItemId);
            
-            item.fill = 'red';
+            //item.fill = 'red';
             item.x = e.target.x();
             item.y = e.target.y();     
             

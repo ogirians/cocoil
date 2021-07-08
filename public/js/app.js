@@ -3850,6 +3850,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3862,6 +3874,7 @@ __webpack_require__.r(__webpack_exports__);
         height: this.sceneHeight
       },
       list: [{}],
+      listNonCoil: [{}],
       listText: [{}],
       isDragging: false,
       selectedShapeName: ''
@@ -3904,6 +3917,23 @@ __webpack_require__.r(__webpack_exports__);
       this.list.push(pos);
       this.save();
     },
+    addNonCoil: function addNonCoil() {
+      var id = Math.round(Math.random() * 10000).toString();
+      var pos = {
+        rotation: 0,
+        x: 100,
+        y: 100,
+        id: id,
+        fill: 'grey',
+        width: 100,
+        height: 100,
+        scaleX: 1,
+        scaleY: 1,
+        name: 'rectNon' + id
+      };
+      this.list.push(pos);
+      this.save();
+    },
     handleDragStart: function handleDragStart(e) {
       var _this = this;
 
@@ -3914,8 +3944,8 @@ __webpack_require__.r(__webpack_exports__);
       var item = this.list.find(function (i) {
         return i.id === _this.dragItemId;
       });
-      var index = this.list.indexOf(item);
-      item.fill = 'blue';
+      var index = this.list.indexOf(item); //item.fill = 'blue';
+
       this.list.splice(index, 1);
       this.list.push(item);
     },
@@ -3925,8 +3955,8 @@ __webpack_require__.r(__webpack_exports__);
       this.dragItemId = e.target.id();
       var item = this.list.find(function (i) {
         return i.id === _this2.dragItemId;
-      });
-      item.fill = 'red';
+      }); //item.fill = 'red';
+
       item.x = e.target.x();
       item.y = e.target.y();
       this.save();
@@ -51052,6 +51082,24 @@ var render = function() {
           ]
         ),
         _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
+            staticStyle: {
+              margin: "10px 5px",
+              "margin-left": "15px",
+              "margin-right": "0px"
+            },
+            attrs: { type: "button" },
+            on: { click: _vm.addNonCoil }
+          },
+          [
+            _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+            _vm._v(" Object ")
+          ]
+        ),
+        _vm._v(" "),
         _vm._m(0)
       ]),
       _vm._v(" "),
@@ -51069,6 +51117,33 @@ var render = function() {
             "v-layer",
             [
               _vm._l(_vm.list, function(item) {
+                return _c("v-rect", {
+                  key: item.id,
+                  attrs: {
+                    config: {
+                      name: item.name,
+                      x: item.x,
+                      y: item.y,
+                      id: item.id,
+                      scaleX: item.scaleX,
+                      scaleY: item.scaleY,
+                      rotation: item.rotation,
+                      width: item.width,
+                      height: item.height,
+                      fill: item.fill,
+                      draggable: true,
+                      stroke: "black"
+                    }
+                  },
+                  on: {
+                    dragstart: _vm.handleDragStart,
+                    dragend: _vm.handleDragEnd,
+                    transformend: _vm.handleTransformEnd
+                  }
+                })
+              }),
+              _vm._v(" "),
+              _vm._l(_vm.listNonCoil, function(item) {
                 return _c("v-rect", {
                   key: item.id,
                   attrs: {
