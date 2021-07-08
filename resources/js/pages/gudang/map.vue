@@ -1,19 +1,36 @@
 <template>
   <div>
     <div class="tombol"> 
-    <button @click="addCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> coil </button>
-		<button  style="margin: 10px 5px;margin-left: 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> arah </button>	   
+    <button @click="addCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Slot </button>
+		<button  style="margin: 10px 5px;margin-left: 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Text </button>	   
     </div>
     <v-stage :config="stage" 
-          @dragstart="handleDragStart"
-          @dragend="handleDragEnd">
+         
+          @mousedown="handleStageMouseDown"
+          @touchstart="handleStageMouseDown">
     <v-layer>
-         <v-circle          
+         <v-rect 
+          @dragstart="handleDragStart"
+          @dragend="handleDragEnd"         
           v-for="item in list"
           :key="item.id"
           :config="{
-            x : item.x, y: item.y, id:item.id, radius: 70, fill: item.fill, draggable:true, stroke:'black'
-          }"></v-circle>     
+            name:item.name, x : item.x, y: item.y, id:item.id , scaleX:item.scaleX, scaleY:item.scaleY, rotation:item.rotation, width:item.width, height:item.height, fill: item.fill, draggable:true, stroke:'black'
+          }"
+          @transformend="handleTransformEnd"
+          ></v-rect> 
+           <v-transformer ref="transformer"/>
+          <v-text 
+            ref="text1"
+           :config="{
+            text: 'Draggable Text',
+            x: 50,
+            y: 50,
+            draggable: true,
+            fill: 'black'
+          }"
+          >
+          </v-text>    
     </v-layer>
   </v-stage>
   </div>
@@ -36,14 +53,14 @@ export default {
         height: this.sceneHeight,
       },
       list: [{ 
-        x: 100, 
-        y: 100,
-        id : 1, 
-        radius: 50, 
-        fill: 'blue' 
+      
         }],
+      
+      listText: [{}],
           
-      isDragging: false,       
+      isDragging: false,  
+      selectedShapeName: '',
+           
     };
 
 
@@ -71,12 +88,19 @@ export default {
             this.stage.scale = ({ x: scale, y: scale });
           },
         
-          addCoil() {            
+          addCoil() {  
+          const id = Math.round(Math.random() * 10000).toString();          
             const pos = {
+              rotation: 0,
               x: 100, 
               y: 100, 
-              id: Math.round(Math.random() * 10000).toString(),
+              id: id,
               fill : 'red',
+              width: 100,
+              height: 100,
+              scaleX: 1,
+              scaleY: 1,
+              name: 'rect'+ id,
             };
 
             this.list.push(pos);
@@ -93,24 +117,90 @@ export default {
             // move current element to the top:
             const item = this.list.find(i => i.id === this.dragItemId);
             const index = this.list.indexOf(item);
-            this.list[index].fill = 'blue';
+            item.fill = 'blue';
             this.list.splice(index, 1);
             this.list.push(item);
 
           },
           handleDragEnd(e) {
             this.dragItemId = e.target.id();
-            const Corx = e.target.x();
-            const Cory = e.target.y();
-            const item = this.list.find(i => i.id === this.dragItemId);
-            const index = this.list.indexOf(item);
-            this.list[index].fill = 'red';
-            this.list[index].x = Corx;
-            this.list[index].y = Cory;
-
+            
+            const item = this.list.find((i) => i.id === this.dragItemId);
+           
+            item.fill = 'red';
+            item.x = e.target.x();
+            item.y = e.target.y();     
+            
             this.save();
             this.isDragging = false;
             this.dragItemId = null;
+          },
+
+          handleTransformEnd(e) {
+            //this.selectedShapeName = e.target.name();
+            // shape is transformed, let us save new attrs back to the node
+            // find element in our state
+            
+            const item = this.list.find(
+              (r) => r.name === this.selectedShapeName
+            );
+            // update the state
+            item.x = e.target.x();
+            item.y = e.target.y();
+            item.rotation = e.target.rotation();
+            item.scaleX = e.target.scaleX();
+            item.scaleY = e.target.scaleY();
+           
+            this.save();
+            // change fill
+            //rect.fill = Konva.Util.getRandomColor();
+          },
+
+          handleStageMouseDown(e) {
+            // clicked on stage - clear selection
+            if (e.target === e.target.getStage()) {
+              this.selectedShapeName =  '';
+              this.updateTransformer();
+              return;
+            }
+
+            // clicked on transformer - do nothing
+            const clickedOnTransformer =
+              e.target.getParent().className === 'Transformer';
+            if (clickedOnTransformer) {
+              return;
+            }
+
+            // find clicked rect by its name
+            const name = e.target.name();
+            const item = this.list.find((r) => r.name === name);
+            if (item) {
+              this.selectedShapeName = name;
+            } else {
+              this.selectedShapeName = '';
+            }
+            this.updateTransformer();
+          },
+
+          updateTransformer() {
+            // here we need to manually attach or detach Transformer node
+            const transformerNode = this.$refs.transformer.getNode();
+            const stage = transformerNode.getStage();
+            const { selectedShapeName } = this;
+
+            const selectedNode = stage.findOne('.' + selectedShapeName);
+            // do nothing if selected node is already attached
+            if (selectedNode === transformerNode.node()) {
+              return;
+            }
+
+            if (selectedNode) {
+              // attach to another node
+              transformerNode.nodes([selectedNode]);
+            } else {
+              // remove transformer
+              transformerNode.nodes([]);
+            }
           },
 
           load() {

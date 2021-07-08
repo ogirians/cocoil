@@ -3833,6 +3833,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3844,14 +3861,10 @@ __webpack_require__.r(__webpack_exports__);
         width: this.sceneWidth,
         height: this.sceneHeight
       },
-      list: [{
-        x: 100,
-        y: 100,
-        id: 1,
-        radius: 50,
-        fill: 'blue'
-      }],
-      isDragging: false
+      list: [{}],
+      listText: [{}],
+      isDragging: false,
+      selectedShapeName: ''
     };
   },
   created: function created() {
@@ -3875,11 +3888,18 @@ __webpack_require__.r(__webpack_exports__);
       };
     },
     addCoil: function addCoil() {
+      var id = Math.round(Math.random() * 10000).toString();
       var pos = {
+        rotation: 0,
         x: 100,
         y: 100,
-        id: Math.round(Math.random() * 10000).toString(),
-        fill: 'red'
+        id: id,
+        fill: 'red',
+        width: 100,
+        height: 100,
+        scaleX: 1,
+        scaleY: 1,
+        name: 'rect' + id
       };
       this.list.push(pos);
       this.save();
@@ -3895,7 +3915,7 @@ __webpack_require__.r(__webpack_exports__);
         return i.id === _this.dragItemId;
       });
       var index = this.list.indexOf(item);
-      this.list[index].fill = 'blue';
+      item.fill = 'blue';
       this.list.splice(index, 1);
       this.list.push(item);
     },
@@ -3903,18 +3923,81 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       this.dragItemId = e.target.id();
-      var Corx = e.target.x();
-      var Cory = e.target.y();
       var item = this.list.find(function (i) {
         return i.id === _this2.dragItemId;
       });
-      var index = this.list.indexOf(item);
-      this.list[index].fill = 'red';
-      this.list[index].x = Corx;
-      this.list[index].y = Cory;
+      item.fill = 'red';
+      item.x = e.target.x();
+      item.y = e.target.y();
       this.save();
       this.isDragging = false;
       this.dragItemId = null;
+    },
+    handleTransformEnd: function handleTransformEnd(e) {
+      var _this3 = this;
+
+      //this.selectedShapeName = e.target.name();
+      // shape is transformed, let us save new attrs back to the node
+      // find element in our state
+      var item = this.list.find(function (r) {
+        return r.name === _this3.selectedShapeName;
+      }); // update the state
+
+      item.x = e.target.x();
+      item.y = e.target.y();
+      item.rotation = e.target.rotation();
+      item.scaleX = e.target.scaleX();
+      item.scaleY = e.target.scaleY();
+      this.save(); // change fill
+      //rect.fill = Konva.Util.getRandomColor();
+    },
+    handleStageMouseDown: function handleStageMouseDown(e) {
+      // clicked on stage - clear selection
+      if (e.target === e.target.getStage()) {
+        this.selectedShapeName = '';
+        this.updateTransformer();
+        return;
+      } // clicked on transformer - do nothing
+
+
+      var clickedOnTransformer = e.target.getParent().className === 'Transformer';
+
+      if (clickedOnTransformer) {
+        return;
+      } // find clicked rect by its name
+
+
+      var name = e.target.name();
+      var item = this.list.find(function (r) {
+        return r.name === name;
+      });
+
+      if (item) {
+        this.selectedShapeName = name;
+      } else {
+        this.selectedShapeName = '';
+      }
+
+      this.updateTransformer();
+    },
+    updateTransformer: function updateTransformer() {
+      // here we need to manually attach or detach Transformer node
+      var transformerNode = this.$refs.transformer.getNode();
+      var stage = transformerNode.getStage();
+      var selectedShapeName = this.selectedShapeName;
+      var selectedNode = stage.findOne('.' + selectedShapeName); // do nothing if selected node is already attached
+
+      if (selectedNode === transformerNode.node()) {
+        return;
+      }
+
+      if (selectedNode) {
+        // attach to another node
+        transformerNode.nodes([selectedNode]);
+      } else {
+        // remove transformer
+        transformerNode.nodes([]);
+      }
     },
     load: function load() {
       var data = localStorage.getItem('storage') || '[]';
@@ -50965,7 +51048,7 @@ var render = function() {
           },
           [
             _c("i", { staticClass: "glyphicon glyphicon-plus" }),
-            _vm._v(" coil ")
+            _vm._v(" Slot ")
           ]
         ),
         _vm._v(" "),
@@ -50976,28 +51059,58 @@ var render = function() {
         "v-stage",
         {
           attrs: { config: _vm.stage },
-          on: { dragstart: _vm.handleDragStart, dragend: _vm.handleDragEnd }
+          on: {
+            mousedown: _vm.handleStageMouseDown,
+            touchstart: _vm.handleStageMouseDown
+          }
         },
         [
           _c(
             "v-layer",
-            _vm._l(_vm.list, function(item) {
-              return _c("v-circle", {
-                key: item.id,
+            [
+              _vm._l(_vm.list, function(item) {
+                return _c("v-rect", {
+                  key: item.id,
+                  attrs: {
+                    config: {
+                      name: item.name,
+                      x: item.x,
+                      y: item.y,
+                      id: item.id,
+                      scaleX: item.scaleX,
+                      scaleY: item.scaleY,
+                      rotation: item.rotation,
+                      width: item.width,
+                      height: item.height,
+                      fill: item.fill,
+                      draggable: true,
+                      stroke: "black"
+                    }
+                  },
+                  on: {
+                    dragstart: _vm.handleDragStart,
+                    dragend: _vm.handleDragEnd,
+                    transformend: _vm.handleTransformEnd
+                  }
+                })
+              }),
+              _vm._v(" "),
+              _c("v-transformer", { ref: "transformer" }),
+              _vm._v(" "),
+              _c("v-text", {
+                ref: "text1",
                 attrs: {
                   config: {
-                    x: item.x,
-                    y: item.y,
-                    id: item.id,
-                    radius: 70,
-                    fill: item.fill,
+                    text: "Draggable Text",
+                    x: 50,
+                    y: 50,
                     draggable: true,
-                    stroke: "black"
+                    fill: "black"
                   }
                 }
               })
-            }),
-            1
+            ],
+            2
           )
         ],
         1
@@ -51018,7 +51131,7 @@ var staticRenderFns = [
         staticStyle: { margin: "10px 5px", "margin-left": "5px" },
         attrs: { type: "button" }
       },
-      [_c("i", { staticClass: "glyphicon glyphicon-plus" }), _vm._v(" arah ")]
+      [_c("i", { staticClass: "glyphicon glyphicon-plus" }), _vm._v(" Text ")]
     )
   }
 ]
