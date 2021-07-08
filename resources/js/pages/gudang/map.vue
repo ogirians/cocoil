@@ -12,7 +12,7 @@
           v-for="item in list"
           :key="item.id"
           :config="{
-            x : item.x, y: item.y, radius: 70, fill: isDragging ? 'blue' : 'red', draggable:true, stroke:'black'
+            x : item.x, y: item.y, id:item.id, radius: 70, fill: item.fill, draggable:true, stroke:'black'
           }"></v-circle>     
     </v-layer>
   </v-stage>
@@ -27,6 +27,8 @@ export default {
     return {
       sceneWidth : 900,
       sceneHeight : 450,
+
+      dragItemId: null,
       
       stage: {
         container: 'container',
@@ -39,7 +41,8 @@ export default {
         id : 1, 
         radius: 50, 
         fill: 'blue' 
-        }],  
+        }],
+          
       isDragging: false,       
     };
 
@@ -73,17 +76,41 @@ export default {
               x: 100, 
               y: 100, 
               id: Math.round(Math.random() * 10000).toString(),
+              fill : 'red',
             };
 
             this.list.push(pos);
             this.save();
           },
 
-          handleDragStart() {
+          handleDragStart(e) {
             this.isDragging = true;
+
+            // save drag element:
+            this.dragItemId = e.target.id();
+           
+           
+            // move current element to the top:
+            const item = this.list.find(i => i.id === this.dragItemId);
+            const index = this.list.indexOf(item);
+            this.list[index].fill = 'blue';
+            this.list.splice(index, 1);
+            this.list.push(item);
+
           },
-          handleDragEnd() {
+          handleDragEnd(e) {
+            this.dragItemId = e.target.id();
+            const Corx = e.target.x();
+            const Cory = e.target.y();
+            const item = this.list.find(i => i.id === this.dragItemId);
+            const index = this.list.indexOf(item);
+            this.list[index].fill = 'red';
+            this.list[index].x = Corx;
+            this.list[index].y = Cory;
+
+            this.save();
             this.isDragging = false;
+            this.dragItemId = null;
           },
 
           load() {

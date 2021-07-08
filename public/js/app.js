@@ -3838,6 +3838,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       sceneWidth: 900,
       sceneHeight: 450,
+      dragItemId: null,
       stage: {
         container: 'container',
         width: this.sceneWidth,
@@ -3877,16 +3878,43 @@ __webpack_require__.r(__webpack_exports__);
       var pos = {
         x: 100,
         y: 100,
-        id: Math.round(Math.random() * 10000).toString()
+        id: Math.round(Math.random() * 10000).toString(),
+        fill: 'red'
       };
       this.list.push(pos);
       this.save();
     },
-    handleDragStart: function handleDragStart() {
-      this.isDragging = true;
+    handleDragStart: function handleDragStart(e) {
+      var _this = this;
+
+      this.isDragging = true; // save drag element:
+
+      this.dragItemId = e.target.id(); // move current element to the top:
+
+      var item = this.list.find(function (i) {
+        return i.id === _this.dragItemId;
+      });
+      var index = this.list.indexOf(item);
+      this.list[index].fill = 'blue';
+      this.list.splice(index, 1);
+      this.list.push(item);
     },
-    handleDragEnd: function handleDragEnd() {
+    handleDragEnd: function handleDragEnd(e) {
+      var _this2 = this;
+
+      this.dragItemId = e.target.id();
+      var Corx = e.target.x();
+      var Cory = e.target.y();
+      var item = this.list.find(function (i) {
+        return i.id === _this2.dragItemId;
+      });
+      var index = this.list.indexOf(item);
+      this.list[index].fill = 'red';
+      this.list[index].x = Corx;
+      this.list[index].y = Cory;
+      this.save();
       this.isDragging = false;
+      this.dragItemId = null;
     },
     load: function load() {
       var data = localStorage.getItem('storage') || '[]';
@@ -50960,8 +50988,9 @@ var render = function() {
                   config: {
                     x: item.x,
                     y: item.y,
+                    id: item.id,
                     radius: 70,
-                    fill: _vm.isDragging ? "blue" : "red",
+                    fill: item.fill,
                     draggable: true,
                     stroke: "black"
                   }
