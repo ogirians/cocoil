@@ -3862,6 +3862,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3873,9 +3879,19 @@ __webpack_require__.r(__webpack_exports__);
         width: this.sceneWidth,
         height: this.sceneHeight
       },
-      list: [{}],
+      list: [],
       listNonCoil: [{}],
-      listText: [{}],
+      listText: [{
+        x: 100,
+        y: 100,
+        text: 'Draggable 1',
+        name: 'rect'
+      }, {
+        x: 100,
+        y: 50,
+        text: 'Draggable 2',
+        name: 'rect2'
+      }],
       isDragging: false,
       selectedShapeName: ''
     };
@@ -3912,7 +3928,12 @@ __webpack_require__.r(__webpack_exports__);
         height: 100,
         scaleX: 1,
         scaleY: 1,
-        name: 'rect' + id
+        name: 'rect' + id,
+        rectext: {
+          x: 100,
+          y: 100,
+          text: id
+        }
       };
       this.list.push(pos);
       this.save();
@@ -51143,44 +51164,19 @@ var render = function() {
                 })
               }),
               _vm._v(" "),
-              _vm._l(_vm.listNonCoil, function(item) {
-                return _c("v-rect", {
-                  key: item.id,
-                  attrs: {
-                    config: {
-                      name: item.name,
-                      x: item.x,
-                      y: item.y,
-                      id: item.id,
-                      scaleX: item.scaleX,
-                      scaleY: item.scaleY,
-                      rotation: item.rotation,
-                      width: item.width,
-                      height: item.height,
-                      fill: item.fill,
-                      draggable: true,
-                      stroke: "black"
-                    }
-                  },
-                  on: {
-                    dragstart: _vm.handleDragStart,
-                    dragend: _vm.handleDragEnd,
-                    transformend: _vm.handleTransformEnd
-                  }
-                })
-              }),
-              _vm._v(" "),
               _c("v-transformer", { ref: "transformer" }),
               _vm._v(" "),
               _c("v-text", {
                 ref: "text1",
                 attrs: {
                   config: {
-                    text: "Draggable Text",
-                    x: 50,
-                    y: 50,
+                    x: 30,
+                    y: 54,
+                    text: "test",
+                    //name: item.name,
                     draggable: true,
-                    fill: "black"
+                    fill: "black",
+                    fontSize: 30
                   }
                 }
               })

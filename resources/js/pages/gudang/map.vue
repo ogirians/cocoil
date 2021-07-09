@@ -9,40 +9,46 @@
           @mousedown="handleStageMouseDown"
           @touchstart="handleStageMouseDown">
     <v-layer>
+         
          <v-rect 
           @dragstart="handleDragStart"
           @dragend="handleDragEnd"         
           v-for="item in list"
           :key="item.id"
           :config="{
-            name:item.name, x : item.x, y: item.y, id:item.id , scaleX:item.scaleX, scaleY:item.scaleY, rotation:item.rotation, width:item.width, height:item.height, fill: item.fill, draggable:true, stroke:'black'
+            name:item.name, 
+            x : item.x, 
+            y: item.y, 
+            id:item.id , 
+            scaleX:item.scaleX, 
+            scaleY:item.scaleY, 
+            rotation:item.rotation, 
+            width:item.width, 
+            height:item.height, 
+            fill: item.fill, 
+            draggable:true, 
+            stroke:'black'
           }"
           @transformend="handleTransformEnd"
-          >
+          >     
           </v-rect> 
-           <v-rect 
-          @dragstart="handleDragStart"
-          @dragend="handleDragEnd"         
-          v-for="item in listNonCoil"
-          :key="item.id"
-          :config="{
-            name:item.name, x : item.x, y: item.y, id:item.id , scaleX:item.scaleX, scaleY:item.scaleY, rotation:item.rotation, width:item.width, height:item.height, fill: item.fill, draggable:true, stroke:'black'
-          }"
-          @transformend="handleTransformEnd"
-          >
-          </v-rect>
+         
+           
           <v-transformer ref="transformer"/>
-          <v-text 
-            ref="text1"
-           :config="{
-            text: 'Draggable Text',
-            x: 50,
-            y: 50,
+           <v-text  
+          ref="text1"
+            :config="{             
+            x: 30,
+            y: 54,
+            text: 'test',
+            //name: item.name,
             draggable: true,
-            fill: 'black'
+            fill: 'black',
+            fontSize: 30,
           }"
           >
-          </v-text>    
+          </v-text> 
+            
     </v-layer>
   </v-stage>
   </div>
@@ -64,10 +70,13 @@ export default {
         width: this.sceneWidth,
         height: this.sceneHeight,
       },
-      list: [{ }],
+      list: [],
       listNonCoil:[{}],
       
-      listText: [{}],
+      listText: [
+        {x:100, y:100, text: 'Draggable 1', name:'rect'},
+        {x:100, y:50, text: 'Draggable 2', name:'rect2'},
+      ],
           
       isDragging: false,  
       selectedShapeName: '',
@@ -112,6 +121,7 @@ export default {
               scaleX: 1,
               scaleY: 1,
               name: 'rect'+ id,
+              rectext: {x: 100, y:100, text:id},
             };
 
             this.list.push(pos);
@@ -236,10 +246,12 @@ export default {
           load() {
             const data = localStorage.getItem('storage') || '[]';
             this.list = JSON.parse(data);
+            
           },
 
           save() {
             localStorage.setItem('storage', JSON.stringify(this.list));
+            
           }
 
       },
