@@ -9,6 +9,7 @@
           @mousedown="handleStageMouseDown"
           @touchstart="handleStageMouseDown">
     <v-layer>
+        
          
          <v-rect 
           @dragstart="handleDragStart"
@@ -30,24 +31,28 @@
             stroke:'black'
           }"
           @transformend="handleTransformEnd"
-          >     
-          </v-rect> 
-         
-           
+          >            
+         </v-rect> 
+
+          <v-text  
+             v-for="item in list"
+             :key="item.name"
+              ref="text1"
+                :config="{             
+                x: 80,
+                y: 90,
+                text: item.rectext.text,
+                name: item.name,
+                draggable: true,
+                fill: 'black',
+                fontSize: 30,
+              }"
+            >
+          </v-text>               
+                  
           <v-transformer ref="transformer"/>
-           <v-text  
-          ref="text1"
-            :config="{             
-            x: 30,
-            y: 54,
-            text: 'test',
-            //name: item.name,
-            draggable: true,
-            fill: 'black',
-            fontSize: 30,
-          }"
-          >
-          </v-text> 
+
+         
             
     </v-layer>
   </v-stage>
@@ -65,6 +70,7 @@ export default {
 
       dragItemId: null,
       
+      tulisan : [{satu:'sjalan'}],
       stage: {
         container: 'container',
         width: this.sceneWidth,

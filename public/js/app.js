@@ -3868,12 +3868,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       sceneWidth: 900,
       sceneHeight: 450,
       dragItemId: null,
+      tulisan: [{
+        satu: 'sjalan'
+      }],
       stage: {
         container: 'container',
         width: this.sceneWidth,
@@ -51164,22 +51172,26 @@ var render = function() {
                 })
               }),
               _vm._v(" "),
-              _c("v-transformer", { ref: "transformer" }),
-              _vm._v(" "),
-              _c("v-text", {
-                ref: "text1",
-                attrs: {
-                  config: {
-                    x: 30,
-                    y: 54,
-                    text: "test",
-                    //name: item.name,
-                    draggable: true,
-                    fill: "black",
-                    fontSize: 30
+              _vm._l(_vm.list, function(item) {
+                return _c("v-text", {
+                  key: item.name,
+                  ref: "text1",
+                  refInFor: true,
+                  attrs: {
+                    config: {
+                      x: 80,
+                      y: 90,
+                      text: item.rectext.text,
+                      name: item.name,
+                      draggable: true,
+                      fill: "black",
+                      fontSize: 30
+                    }
                   }
-                }
-              })
+                })
+              }),
+              _vm._v(" "),
+              _c("v-transformer", { ref: "transformer" })
             ],
             2
           )
@@ -71745,8 +71757,8 @@ var actions = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\project\cocoil\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\project\cocoil\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\Cocoil\cocoil\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\Cocoil\cocoil\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
