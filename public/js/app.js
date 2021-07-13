@@ -3885,6 +3885,7 @@ __webpack_require__.r(__webpack_exports__);
     this.fitStageIntoParentContainer(); // adapt the stage on any window resize
 
     window.addEventListener('resize', this.fitStageIntoParentContainer);
+    var group = new Konva.Group();
   },
   methods: {
     fitStageIntoParentContainer: function fitStageIntoParentContainer() {
@@ -3908,21 +3909,28 @@ __webpack_require__.r(__webpack_exports__);
         scaleX: 1,
         scaleY: 1,
         id: id,
+        x: 0,
+        y: 0,
         name: 'group' + id,
         draggable: true,
+        width: 100,
+        height: 130,
         rectext: {
-          x: 100,
-          y: 100,
+          id: id,
+          x: 0,
+          y: 0,
           text: id,
-          name: 'rectecx' + id
+          visible: true,
+          name: 'group' + id
         },
         rect: {
-          x: 120,
-          y: 110,
+          id: id,
+          x: 0,
+          y: 20,
           fill: 'red',
           width: 100,
-          height: 100,
-          name: 'rect' + id
+          height: 150,
+          name: 'group' + id
         }
       };
       this.list.push(pos);
@@ -3986,6 +3994,9 @@ __webpack_require__.r(__webpack_exports__);
 
       item.x = e.target.x();
       item.y = e.target.y();
+      item.width = e.target.getWidth() * e.target.scaleX();
+      item.height = e.target.getHeight() * e.target.scaleY();
+      console.log(item.width);
       item.rotation = e.target.rotation();
       item.scaleX = e.target.scaleX();
       item.scaleY = e.target.scaleY();
@@ -3993,9 +4004,16 @@ __webpack_require__.r(__webpack_exports__);
       //rect.fill = Konva.Util.getRandomColor();
     },
     handleStageMouseDown: function handleStageMouseDown(e) {
+      var _this4 = this;
+
       // clicked on stage - clear selection
       if (e.target === e.target.getStage()) {
+        var _item = this.list.find(function (r) {
+          return r.rect.name === _this4.selectedShapeName;
+        });
+
         this.selectedShapeName = '';
+        _item.rectext.visible = true;
         this.updateTransformer();
         return;
       } // clicked on transformer - do nothing
@@ -4009,12 +4027,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
       var name = e.target.name();
+      console.log(name);
       var item = this.list.find(function (r) {
         return r.name === name;
       });
 
       if (item) {
         this.selectedShapeName = name;
+        item.rectext.visible = false;
       } else {
         this.selectedShapeName = '';
       }
@@ -51116,7 +51136,13 @@ var render = function() {
       _vm._v(" "),
       _c(
         "v-stage",
-        { attrs: { config: _vm.stage } },
+        {
+          attrs: { config: _vm.stage },
+          on: {
+            mousedown: _vm.handleStageMouseDown,
+            touchstart: _vm.handleStageMouseDown
+          }
+        },
         [
           _c(
             "v-layer",
@@ -51128,12 +51154,16 @@ var render = function() {
                     key: item.id,
                     attrs: {
                       config: {
+                        x: item.x,
+                        y: item.y,
                         name: item.name,
                         id: item.id,
                         scaleX: item.scaleX,
                         scaleY: item.scaleY,
                         rotation: item.rotation,
-                        draggable: true
+                        draggable: true,
+                        width: item.width,
+                        height: item.height
                       }
                     },
                     on: {

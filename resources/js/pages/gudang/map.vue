@@ -6,7 +6,8 @@
 		<button  style="margin: 10px 5px;margin-left: 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Text </button>	   
     </div>
     <v-stage 
-         
+          @mousedown="handleStageMouseDown"
+          @touchstart="handleStageMouseDown"
           :config="stage"          
          >
     <v-layer>
@@ -15,21 +16,20 @@
           @dragend="handleDragEnd"                       
            v-for="item in list"
           :key="item.id"
-          :config="{ name:item.name, id: item.id, scaleX:item.scaleX, scaleY:item.scaleY, rotation:item.rotation, draggable:true}" 
+          :config="{x:item.x, y:item.y, name:item.name, id: item.id, scaleX:item.scaleX, scaleY:item.scaleY, rotation:item.rotation, draggable:true, width:item.width, height: item.height}" 
           @transformend="handleTransformEnd">          
               <v-rect                
                  :config="item.rect"              
               >            
               </v-rect>          
-              <v-text  
+              <v-text                    
                    ref="text1"
                     :config="item.rectext"
                 >
-              </v-text>           
+              </v-text>
+                   
        </v-group>
-
-      <v-transformer ref="transformer"/>
-            
+      <v-transformer ref="transformer"/>    
     </v-layer>
   </v-stage>
   </div>
@@ -75,7 +75,7 @@ export default {
       // adapt the stage on any window resize
       window.addEventListener('resize', this.fitStageIntoParentContainer);
       
-  
+      var group = new Konva.Group();
   },
   methods: {
           fitStageIntoParentContainer() { 
@@ -98,13 +98,16 @@ export default {
             const pos = {
               rotation: 0,
               scaleX: 1, scaleY: 1,             
-              id: id,              
+              id: id, 
+              x:0,
+              y:0,             
               name: 'group'+ id,
               draggable:true,
-              rectext : { x: 100, y:100, text:id, name:'rectecx'+id} ,
-              rect: { x: 120, y:110, fill : 'red', width: 100, height: 100,  name:'rect'+id}             
+              width: 100,
+              height: 130,
+              rectext : {id: id, x: 0, y:0, text:id, visible:true, name:'group'+ id} ,
+              rect: {id:id, x: 0, y:20, fill : 'red', width: 100, height: 150,  name:'group'+ id}             
             };
-
           
            
             this.list.push(pos);          
@@ -153,7 +156,9 @@ export default {
            
             //item.fill = 'red';
             item.x = e.target.x();
-            item.y = e.target.y();     
+            item.y = e.target.y();  
+
+                 
             
             this.save();
             this.isDragging = false;
@@ -171,6 +176,10 @@ export default {
             // update the state
             item.x = e.target.x();
             item.y = e.target.y();
+
+            item.width = e.target.getWidth() * e.target.scaleX();
+            item.height = e.target.getHeight() * e.target.scaleY();
+            console.log(item.width);       
             item.rotation = e.target.rotation();
             item.scaleX = e.target.scaleX();
             item.scaleY = e.target.scaleY();
@@ -181,9 +190,14 @@ export default {
           },
 
           handleStageMouseDown(e) {
+           
             // clicked on stage - clear selection
             if (e.target === e.target.getStage()) {
+
+              const item = this.list.find((r) => r.rect.name === this.selectedShapeName); 
               this.selectedShapeName =  '';
+             
+              item.rectext.visible = true;
               this.updateTransformer();
               return;
             }
@@ -197,9 +211,14 @@ export default {
 
             // find clicked rect by its name
             const name = e.target.name();
-            const item = this.list.find((r) => r.name === name);
+           
+            console.log(name);
+            const item = this.list.find((r) => r.name === name);            
+            
             if (item) {
               this.selectedShapeName = name;
+              item.rectext.visible = false;
+              
             } else {
               this.selectedShapeName = '';
             }
