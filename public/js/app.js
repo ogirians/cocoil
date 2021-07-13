@@ -3849,30 +3849,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3901,7 +3877,8 @@ __webpack_require__.r(__webpack_exports__);
         name: 'rect2'
       }],
       isDragging: false,
-      selectedShapeName: ''
+      selectedShapeName: '',
+      group: ''
     };
   },
   created: function created() {
@@ -3928,19 +3905,24 @@ __webpack_require__.r(__webpack_exports__);
       var id = Math.round(Math.random() * 10000).toString();
       var pos = {
         rotation: 0,
-        x: 100,
-        y: 100,
-        id: id,
-        fill: 'red',
-        width: 100,
-        height: 100,
         scaleX: 1,
         scaleY: 1,
-        name: 'rect' + id,
+        id: id,
+        name: 'group' + id,
+        draggable: true,
         rectext: {
           x: 100,
           y: 100,
-          text: id
+          text: id,
+          name: 'rectecx' + id
+        },
+        rect: {
+          x: 120,
+          y: 110,
+          fill: 'red',
+          width: 100,
+          height: 100,
+          name: 'rect' + id
         }
       };
       this.list.push(pos);
@@ -51134,61 +51116,43 @@ var render = function() {
       _vm._v(" "),
       _c(
         "v-stage",
-        {
-          attrs: { config: _vm.stage },
-          on: {
-            mousedown: _vm.handleStageMouseDown,
-            touchstart: _vm.handleStageMouseDown
-          }
-        },
+        { attrs: { config: _vm.stage } },
         [
           _c(
             "v-layer",
             [
               _vm._l(_vm.list, function(item) {
-                return _c("v-rect", {
-                  key: item.id,
-                  attrs: {
-                    config: {
-                      name: item.name,
-                      x: item.x,
-                      y: item.y,
-                      id: item.id,
-                      scaleX: item.scaleX,
-                      scaleY: item.scaleY,
-                      rotation: item.rotation,
-                      width: item.width,
-                      height: item.height,
-                      fill: item.fill,
-                      draggable: true,
-                      stroke: "black"
+                return _c(
+                  "v-group",
+                  {
+                    key: item.id,
+                    attrs: {
+                      config: {
+                        name: item.name,
+                        id: item.id,
+                        scaleX: item.scaleX,
+                        scaleY: item.scaleY,
+                        rotation: item.rotation,
+                        draggable: true
+                      }
+                    },
+                    on: {
+                      dragstart: _vm.handleDragStart,
+                      dragend: _vm.handleDragEnd,
+                      transformend: _vm.handleTransformEnd
                     }
                   },
-                  on: {
-                    dragstart: _vm.handleDragStart,
-                    dragend: _vm.handleDragEnd,
-                    transformend: _vm.handleTransformEnd
-                  }
-                })
-              }),
-              _vm._v(" "),
-              _vm._l(_vm.list, function(item) {
-                return _c("v-text", {
-                  key: item.name,
-                  ref: "text1",
-                  refInFor: true,
-                  attrs: {
-                    config: {
-                      x: 80,
-                      y: 90,
-                      text: item.rectext.text,
-                      name: item.name,
-                      draggable: true,
-                      fill: "black",
-                      fontSize: 30
-                    }
-                  }
-                })
+                  [
+                    _c("v-rect", { attrs: { config: item.rect } }),
+                    _vm._v(" "),
+                    _c("v-text", {
+                      ref: "text1",
+                      refInFor: true,
+                      attrs: { config: item.rectext }
+                    })
+                  ],
+                  1
+                )
               }),
               _vm._v(" "),
               _c("v-transformer", { ref: "transformer" })
@@ -71757,8 +71721,8 @@ var actions = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\Cocoil\cocoil\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\Cocoil\cocoil\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\project\cocoil\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\project\cocoil\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

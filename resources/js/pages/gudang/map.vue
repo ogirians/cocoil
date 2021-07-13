@@ -5,54 +5,30 @@
     <button @click="addNonCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Object </button>
 		<button  style="margin: 10px 5px;margin-left: 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Text </button>	   
     </div>
-    <v-stage :config="stage"          
-          @mousedown="handleStageMouseDown"
-          @touchstart="handleStageMouseDown">
+    <v-stage 
+         
+          :config="stage"          
+         >
     <v-layer>
-        
-         
-         <v-rect 
+       <v-group              
           @dragstart="handleDragStart"
-          @dragend="handleDragEnd"         
-          v-for="item in list"
+          @dragend="handleDragEnd"                       
+           v-for="item in list"
           :key="item.id"
-          :config="{
-            name:item.name, 
-            x : item.x, 
-            y: item.y, 
-            id:item.id , 
-            scaleX:item.scaleX, 
-            scaleY:item.scaleY, 
-            rotation:item.rotation, 
-            width:item.width, 
-            height:item.height, 
-            fill: item.fill, 
-            draggable:true, 
-            stroke:'black'
-          }"
-          @transformend="handleTransformEnd"
-          >            
-         </v-rect> 
+          :config="{ name:item.name, id: item.id, scaleX:item.scaleX, scaleY:item.scaleY, rotation:item.rotation, draggable:true}" 
+          @transformend="handleTransformEnd">          
+              <v-rect                
+                 :config="item.rect"              
+              >            
+              </v-rect>          
+              <v-text  
+                   ref="text1"
+                    :config="item.rectext"
+                >
+              </v-text>           
+       </v-group>
 
-          <v-text  
-             v-for="item in list"
-             :key="item.name"
-              ref="text1"
-                :config="{             
-                x: 80,
-                y: 90,
-                text: item.rectext.text,
-                name: item.name,
-                draggable: true,
-                fill: 'black',
-                fontSize: 30,
-              }"
-            >
-          </v-text>               
-                  
-          <v-transformer ref="transformer"/>
-
-         
+      <v-transformer ref="transformer"/>
             
     </v-layer>
   </v-stage>
@@ -71,6 +47,7 @@ export default {
       dragItemId: null,
       
       tulisan : [{satu:'sjalan'}],
+
       stage: {
         container: 'container',
         width: this.sceneWidth,
@@ -86,6 +63,8 @@ export default {
           
       isDragging: false,  
       selectedShapeName: '',
+
+      group:'',
            
     };
 
@@ -95,7 +74,7 @@ export default {
       this.fitStageIntoParentContainer();
       // adapt the stage on any window resize
       window.addEventListener('resize', this.fitStageIntoParentContainer);
-   
+      
   
   },
   methods: {
@@ -118,19 +97,18 @@ export default {
           const id = Math.round(Math.random() * 10000).toString();          
             const pos = {
               rotation: 0,
-              x: 100, 
-              y: 100, 
-              id: id,
-              fill : 'red',
-              width: 100,
-              height: 100,
-              scaleX: 1,
-              scaleY: 1,
-              name: 'rect'+ id,
-              rectext: {x: 100, y:100, text:id},
+              scaleX: 1, scaleY: 1,             
+              id: id,              
+              name: 'group'+ id,
+              draggable:true,
+              rectext : { x: 100, y:100, text:id, name:'rectecx'+id} ,
+              rect: { x: 120, y:110, fill : 'red', width: 100, height: 100,  name:'rect'+id}             
             };
 
-            this.list.push(pos);
+          
+           
+            this.list.push(pos);          
+           
             this.save();
           },
 
@@ -251,12 +229,15 @@ export default {
 
           load() {
             const data = localStorage.getItem('storage') || '[]';
+           
             this.list = JSON.parse(data);
+           
             
           },
 
           save() {
             localStorage.setItem('storage', JSON.stringify(this.list));
+           
             
           }
 
