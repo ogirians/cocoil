@@ -10,18 +10,22 @@
           @touchstart="handleStageMouseDown"
           :config="stage"          
          >
-    <v-layer>
-       <v-group              
-          @dragstart="handleDragStart"
-          @dragend="handleDragEnd"                       
+    <v-layer
+          >
+       <v-group
+                                                                     
            v-for="item in list"
           :key="item.id"
-          :config="{x:item.x, y:item.y, name:item.name, id: item.id, scaleX:item.scaleX, scaleY:item.scaleY, rotation:item.rotation, draggable:true, width:item.width, height: item.height}" 
-          @transformend="handleTransformEnd">          
-              <v-rect                
+          :config="{name:item.name, id: item.id, draggable:true}" 
+        >          
+              <v-rect                      
+                  @dragstart="handleDragStart"
+                  @dragend="handleDragEnd" 
+                  @transformend="handleTransformEnd"             
                  :config="item.rect"              
               >            
-              </v-rect>          
+              </v-rect>
+
               <v-text                    
                    ref="text1"
                     :config="item.rectext"
@@ -45,26 +49,18 @@ export default {
       sceneHeight : 450,
 
       dragItemId: null,
-      
-      tulisan : [{satu:'sjalan'}],
-
+          
       stage: {
         container: 'container',
         width: this.sceneWidth,
         height: this.sceneHeight,
       },
       list: [],
-      listNonCoil:[{}],
-      
-      listText: [
-        {x:100, y:100, text: 'Draggable 1', name:'rect'},
-        {x:100, y:50, text: 'Draggable 2', name:'rect2'},
-      ],
-          
+      listNonCoil:[{}],   
+             
       isDragging: false,  
       selectedShapeName: '',
 
-      group:'',
            
     };
 
@@ -95,18 +91,14 @@ export default {
         
           addCoil() {  
           const id = Math.round(Math.random() * 10000).toString();          
-            const pos = {
-              rotation: 0,
-              scaleX: 1, scaleY: 1,             
-              id: id, 
-              x:0,
-              y:0,             
-              name: 'group'+ id,
+            const pos = {                                        
+              id: id,                   
+              name: 'gr'+ id,
               draggable:true,
               width: 100,
               height: 130,
-              rectext : {id: id, x: 0, y:0, text:id, visible:true, name:'group'+ id} ,
-              rect: {id:id, x: 0, y:20, fill : 'red', width: 100, height: 150,  name:'group'+ id}             
+              rectext : {id: id, x: 0, y:0, text:id, visible:true, name:'text'+ id, rotation: 0, } ,
+              rect: {id:id, x: 0, y:0, fill : 'red', width: 100, height: 150,  name:'group'+ id , scaleX: 1, scaleY: 1, rotation: 0, }              
             };
           
            
@@ -139,7 +131,7 @@ export default {
 
             // save drag element:
             this.dragItemId = e.target.id();
-           
+            console.log(this.dragItemId)
            
             // move current element to the top:
             const item = this.list.find(i => i.id === this.dragItemId);
@@ -150,15 +142,17 @@ export default {
 
           },
           handleDragEnd(e) {
-            this.dragItemId = e.target.id();
+            //this.dragItemId = e.target.name();
             
-            const item = this.list.find((i) => i.id === this.dragItemId);
+            const item = this.list.find((i) => i.id === e.target.id());
            
             //item.fill = 'red';
-            item.x = e.target.x();
-            item.y = e.target.y();  
-
-                 
+                        
+            item.rect.x = e.target.x();
+            item.rect.y = e.target.y();  
+            
+            item.x = item.rect.x;
+            item.y = item.rect.y;     
             
             this.save();
             this.isDragging = false;
@@ -166,23 +160,24 @@ export default {
           },
 
           handleTransformEnd(e) {
-            //this.selectedShapeName = e.target.name();
+            var aaa = e.target.name() ;
+            console.log(aaa);
             // shape is transformed, let us save new attrs back to the node
             // find element in our state
             
             const item = this.list.find(
-              (r) => r.name === this.selectedShapeName
+              (r) => r.rect.name === this.selectedShapeName
             );
             // update the state
-            item.x = e.target.x();
-            item.y = e.target.y();
-
-            item.width = e.target.getWidth() * e.target.scaleX();
-            item.height = e.target.getHeight() * e.target.scaleY();
-            console.log(item.width);       
-            item.rotation = e.target.rotation();
-            item.scaleX = e.target.scaleX();
-            item.scaleY = e.target.scaleY();
+            item.rect.x = e.target.x();
+            item.rect.y = e.target.y();
+            item.rectext.x = item.rect.x;
+            item.rectext.y = item.rect.y-20;
+            
+            item.rect.rotation = e.target.rotation();
+            item.rectext.rotation = item.rect.rotation;
+            item.rect.scaleX = e.target.scaleX();
+            item.rect.scaleY = e.target.scaleY();
            
             this.save();
             // change fill
@@ -213,7 +208,7 @@ export default {
             const name = e.target.name();
            
             console.log(name);
-            const item = this.list.find((r) => r.name === name);            
+            const item = this.list.find((r) => r.rect.name === name);            
             
             if (item) {
               this.selectedShapeName = name;

@@ -3849,15 +3849,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       sceneWidth: 900,
       sceneHeight: 450,
       dragItemId: null,
-      tulisan: [{
-        satu: 'sjalan'
-      }],
       stage: {
         container: 'container',
         width: this.sceneWidth,
@@ -3865,20 +3866,8 @@ __webpack_require__.r(__webpack_exports__);
       },
       list: [],
       listNonCoil: [{}],
-      listText: [{
-        x: 100,
-        y: 100,
-        text: 'Draggable 1',
-        name: 'rect'
-      }, {
-        x: 100,
-        y: 50,
-        text: 'Draggable 2',
-        name: 'rect2'
-      }],
       isDragging: false,
-      selectedShapeName: '',
-      group: ''
+      selectedShapeName: ''
     };
   },
   created: function created() {
@@ -3905,13 +3894,8 @@ __webpack_require__.r(__webpack_exports__);
     addCoil: function addCoil() {
       var id = Math.round(Math.random() * 10000).toString();
       var pos = {
-        rotation: 0,
-        scaleX: 1,
-        scaleY: 1,
         id: id,
-        x: 0,
-        y: 0,
-        name: 'group' + id,
+        name: 'gr' + id,
         draggable: true,
         width: 100,
         height: 130,
@@ -3921,16 +3905,20 @@ __webpack_require__.r(__webpack_exports__);
           y: 0,
           text: id,
           visible: true,
-          name: 'group' + id
+          name: 'text' + id,
+          rotation: 0
         },
         rect: {
           id: id,
           x: 0,
-          y: 20,
+          y: 0,
           fill: 'red',
           width: 100,
           height: 150,
-          name: 'group' + id
+          name: 'group' + id,
+          scaleX: 1,
+          scaleY: 1,
+          rotation: 0
         }
       };
       this.list.push(pos);
@@ -3958,7 +3946,8 @@ __webpack_require__.r(__webpack_exports__);
 
       this.isDragging = true; // save drag element:
 
-      this.dragItemId = e.target.id(); // move current element to the top:
+      this.dragItemId = e.target.id();
+      console.log(this.dragItemId); // move current element to the top:
 
       var item = this.list.find(function (i) {
         return i.id === _this.dragItemId;
@@ -3969,47 +3958,48 @@ __webpack_require__.r(__webpack_exports__);
       this.list.push(item);
     },
     handleDragEnd: function handleDragEnd(e) {
-      var _this2 = this;
-
-      this.dragItemId = e.target.id();
+      //this.dragItemId = e.target.name();
       var item = this.list.find(function (i) {
-        return i.id === _this2.dragItemId;
+        return i.id === e.target.id();
       }); //item.fill = 'red';
 
-      item.x = e.target.x();
-      item.y = e.target.y();
+      item.rect.x = e.target.x();
+      item.rect.y = e.target.y();
+      item.x = item.rect.x;
+      item.y = item.rect.y;
       this.save();
       this.isDragging = false;
       this.dragItemId = null;
     },
     handleTransformEnd: function handleTransformEnd(e) {
-      var _this3 = this;
+      var _this2 = this;
 
-      //this.selectedShapeName = e.target.name();
-      // shape is transformed, let us save new attrs back to the node
+      var aaa = e.target.name();
+      console.log(aaa); // shape is transformed, let us save new attrs back to the node
       // find element in our state
+
       var item = this.list.find(function (r) {
-        return r.name === _this3.selectedShapeName;
+        return r.rect.name === _this2.selectedShapeName;
       }); // update the state
 
-      item.x = e.target.x();
-      item.y = e.target.y();
-      item.width = e.target.getWidth() * e.target.scaleX();
-      item.height = e.target.getHeight() * e.target.scaleY();
-      console.log(item.width);
-      item.rotation = e.target.rotation();
-      item.scaleX = e.target.scaleX();
-      item.scaleY = e.target.scaleY();
+      item.rect.x = e.target.x();
+      item.rect.y = e.target.y();
+      item.rectext.x = item.rect.x;
+      item.rectext.y = item.rect.y - 20;
+      item.rect.rotation = e.target.rotation();
+      item.rectext.rotation = item.rect.rotation;
+      item.rect.scaleX = e.target.scaleX();
+      item.rect.scaleY = e.target.scaleY();
       this.save(); // change fill
       //rect.fill = Konva.Util.getRandomColor();
     },
     handleStageMouseDown: function handleStageMouseDown(e) {
-      var _this4 = this;
+      var _this3 = this;
 
       // clicked on stage - clear selection
       if (e.target === e.target.getStage()) {
         var _item = this.list.find(function (r) {
-          return r.rect.name === _this4.selectedShapeName;
+          return r.rect.name === _this3.selectedShapeName;
         });
 
         this.selectedShapeName = '';
@@ -4029,7 +4019,7 @@ __webpack_require__.r(__webpack_exports__);
       var name = e.target.name();
       console.log(name);
       var item = this.list.find(function (r) {
-        return r.name === name;
+        return r.rect.name === name;
       });
 
       if (item) {
@@ -51153,27 +51143,18 @@ var render = function() {
                   {
                     key: item.id,
                     attrs: {
-                      config: {
-                        x: item.x,
-                        y: item.y,
-                        name: item.name,
-                        id: item.id,
-                        scaleX: item.scaleX,
-                        scaleY: item.scaleY,
-                        rotation: item.rotation,
-                        draggable: true,
-                        width: item.width,
-                        height: item.height
-                      }
-                    },
-                    on: {
-                      dragstart: _vm.handleDragStart,
-                      dragend: _vm.handleDragEnd,
-                      transformend: _vm.handleTransformEnd
+                      config: { name: item.name, id: item.id, draggable: true }
                     }
                   },
                   [
-                    _c("v-rect", { attrs: { config: item.rect } }),
+                    _c("v-rect", {
+                      attrs: { config: item.rect },
+                      on: {
+                        dragstart: _vm.handleDragStart,
+                        dragend: _vm.handleDragEnd,
+                        transformend: _vm.handleTransformEnd
+                      }
+                    }),
                     _vm._v(" "),
                     _c("v-text", {
                       ref: "text1",
