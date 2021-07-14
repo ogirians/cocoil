@@ -10,19 +10,18 @@
           @touchstart="handleStageMouseDown"
           :config="stage"          
          >
-    <v-layer
-          >
+    <v-layer >
        <v-group
-                                                                     
+           @dragstart="handleDragStart"
+           @dragend="handleDragEnd"                                                            
            v-for="item in list"
           :key="item.id"
-          :config="{name:item.name, id: item.id, draggable:true}" 
+          :config="{name:item.name, id: item.id}" 
         >          
-              <v-rect                      
-                  @dragstart="handleDragStart"
-                  @dragend="handleDragEnd" 
-                  @transformend="handleTransformEnd"             
-                 :config="item.rect"              
+              <v-rect              
+                      
+                 :config="item.rect"    
+                 @transformend="handleTransformEnd"          
               >            
               </v-rect>
 
@@ -71,7 +70,7 @@ export default {
       // adapt the stage on any window resize
       window.addEventListener('resize', this.fitStageIntoParentContainer);
       
-      var group = new Konva.Group();
+    
   },
   methods: {
           fitStageIntoParentContainer() { 
@@ -97,8 +96,8 @@ export default {
               draggable:true,
               width: 100,
               height: 130,
-              rectext : {id: id, x: 0, y:0, text:id, visible:true, name:'text'+ id, rotation: 0, } ,
-              rect: {id:id, x: 0, y:0, fill : 'red', width: 100, height: 150,  name:'group'+ id , scaleX: 1, scaleY: 1, rotation: 0, }              
+              rectext : {id: id, x: 0, y:0, text:id, visible:true, name:'text'+ id, rotation: 0, fontSize :15} ,
+              rect: {id:id, x: 0, y:0, fill : '#f7a7a7', width: 100, height: 150,  name:'group'+ id , scaleX: 1, scaleY: 1, rotation: 0, draggable:true, stroke :5}              
             };
           
            
@@ -144,15 +143,17 @@ export default {
           handleDragEnd(e) {
             //this.dragItemId = e.target.name();
             
-            const item = this.list.find((i) => i.id === e.target.id());
+            const item = this.list.find((i) => i.rect.id === e.target.id());
            
             //item.fill = 'red';
                         
             item.rect.x = e.target.x();
-            item.rect.y = e.target.y();  
+            item.rect.y = e.target.y(); 
+            item.rectext.x = item.rect.x;
+            item.rectext.y = item.rect.y; 
             
-            item.x = item.rect.x;
-            item.y = item.rect.y;     
+           // item.x = item.rect.x;
+            //item.y = item.rect.y;     
             
             this.save();
             this.isDragging = false;
@@ -160,8 +161,7 @@ export default {
           },
 
           handleTransformEnd(e) {
-            var aaa = e.target.name() ;
-            console.log(aaa);
+           
             // shape is transformed, let us save new attrs back to the node
             // find element in our state
             
@@ -172,7 +172,7 @@ export default {
             item.rect.x = e.target.x();
             item.rect.y = e.target.y();
             item.rectext.x = item.rect.x;
-            item.rectext.y = item.rect.y-20;
+            item.rectext.y = item.rect.y;
             
             item.rect.rotation = e.target.rotation();
             item.rectext.rotation = item.rect.rotation;
@@ -189,10 +189,14 @@ export default {
             // clicked on stage - clear selection
             if (e.target === e.target.getStage()) {
 
-              const item = this.list.find((r) => r.rect.name === this.selectedShapeName); 
-              this.selectedShapeName =  '';
-             
-              item.rectext.visible = true;
+               const item = this.list.find((r) => r.rect.name ===  this.selectedShapeName); 
+               this.selectedShapeName =  ''; 
+              
+               if (item) {
+                item.rectext.visible = true;
+                this.save();
+               };
+               
               this.updateTransformer();
               return;
             }
@@ -205,17 +209,28 @@ export default {
             }
 
             // find clicked rect by its name
-            const name = e.target.name();
-           
+
+            const name = e.target.name(); 
+            
+            // cek jika pindah ke objec lain tanpa klik stage
+            if (this.selectedShapeName != ''){
+              if (this.selectedShapeName != name) {
+                    const itemtext = this.list.find((r) => r.rect.name === this.selectedShapeName);
+                    itemtext.rectext.visible = true;
+                    this.save();
+              }    
+            }
             console.log(name);
+            
             const item = this.list.find((r) => r.rect.name === name);            
             
-            if (item) {
+            if (item) {                         
               this.selectedShapeName = name;
               item.rectext.visible = false;
               
             } else {
               this.selectedShapeName = '';
+              item.rectext.visible = true;
             }
             this.updateTransformer();
           },
@@ -241,11 +256,12 @@ export default {
             }
           },
 
+     
           load() {
             const data = localStorage.getItem('storage') || '[]';
            
-            this.list = JSON.parse(data);
-           
+            this.list = JSON.parse(data);           
+                      
             
           },
 
