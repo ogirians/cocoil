@@ -3852,6 +3852,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3866,13 +3891,24 @@ __webpack_require__.r(__webpack_exports__);
       list: [],
       listNonCoil: [{}],
       isDragging: false,
-      selectedShapeName: ''
+      selectedShapeName: '',
+      editMode: false,
+      image: null
     };
   },
   created: function created() {
+    var _this = this;
+
     this.fitStageIntoParentContainer(); // adapt the stage on any window resize
 
     window.addEventListener('resize', this.fitStageIntoParentContainer);
+    var image = new window.Image();
+    image.src = "/coil.png";
+
+    image.onload = function () {
+      // set image only when it is loaded
+      _this.image = image;
+    };
   },
   methods: {
     fitStageIntoParentContainer: function fitStageIntoParentContainer() {
@@ -3897,6 +3933,7 @@ __webpack_require__.r(__webpack_exports__);
         draggable: true,
         width: 100,
         height: 130,
+        img: false,
         rectext: {
           id: id,
           x: 0,
@@ -3919,10 +3956,56 @@ __webpack_require__.r(__webpack_exports__);
           scaleY: 1,
           rotation: 0,
           draggable: true,
-          stroke: 5
+          stroke: 5,
+          visible: true
         }
       };
       this.list.push(pos);
+      this.save();
+    },
+    SetCoil: function SetCoil() {
+      var _this2 = this;
+
+      var item = this.list.find(function (i) {
+        return i.rect.name === _this2.selectedShapeName;
+      });
+      var id = item.id;
+      item.img = true;
+      item.rect.visible = false; // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+      // this.list.push(img);
+
+      this.save();
+    },
+    removeCoil: function removeCoil() {
+      var _this3 = this;
+
+      var item = this.list.find(function (i) {
+        return i.rect.name === _this3.selectedShapeName;
+      });
+      var id = item.id;
+      item.img = false;
+      item.rect.visible = true; // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+      // this.list.push(img);
+
+      this.save();
+    },
+    editSlotMode: function editSlotMode() {
+      this.editMode = true; // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+      // this.list.push(img);
+
+      this.save();
+    },
+    lookMode: function lookMode() {
+      this.editMode = false;
+      var coil = this.list;
+      coil.forEach(myFunction);
+
+      function myFunction(item, index) {
+        item.rect.visible = true;
+      } // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+      // this.list.push(img);
+
+
       this.save();
     },
     addNonCoil: function addNonCoil() {
@@ -3943,7 +4026,7 @@ __webpack_require__.r(__webpack_exports__);
       this.save();
     },
     handleDragStart: function handleDragStart(e) {
-      var _this = this;
+      var _this4 = this;
 
       this.isDragging = true; // save drag element:
 
@@ -3951,7 +4034,7 @@ __webpack_require__.r(__webpack_exports__);
       console.log(this.dragItemId); // move current element to the top:
 
       var item = this.list.find(function (i) {
-        return i.id === _this.dragItemId;
+        return i.id === _this4.dragItemId;
       });
       var index = this.list.indexOf(item); //item.fill = 'blue';
 
@@ -3975,12 +4058,12 @@ __webpack_require__.r(__webpack_exports__);
       this.dragItemId = null;
     },
     handleTransformEnd: function handleTransformEnd(e) {
-      var _this2 = this;
+      var _this5 = this;
 
       // shape is transformed, let us save new attrs back to the node
       // find element in our state
       var item = this.list.find(function (r) {
-        return r.rect.name === _this2.selectedShapeName;
+        return r.rect.name === _this5.selectedShapeName;
       }); // update the state
 
       item.rect.x = e.target.x();
@@ -3995,12 +4078,12 @@ __webpack_require__.r(__webpack_exports__);
       //rect.fill = Konva.Util.getRandomColor();
     },
     handleStageMouseDown: function handleStageMouseDown(e) {
-      var _this3 = this;
+      var _this6 = this;
 
       // clicked on stage - clear selection
       if (e.target === e.target.getStage()) {
         var _item = this.list.find(function (r) {
-          return r.rect.name === _this3.selectedShapeName;
+          return r.rect.name === _this6.selectedShapeName;
         });
 
         this.selectedShapeName = '';
@@ -4028,7 +4111,7 @@ __webpack_require__.r(__webpack_exports__);
       if (this.selectedShapeName != '') {
         if (this.selectedShapeName != name) {
           var itemtext = this.list.find(function (r) {
-            return r.rect.name === _this3.selectedShapeName;
+            return r.rect.name === _this6.selectedShapeName;
           });
           itemtext.rectext.visible = true;
           this.save();
@@ -4045,7 +4128,6 @@ __webpack_require__.r(__webpack_exports__);
         item.rectext.visible = false;
       } else {
         this.selectedShapeName = '';
-        item.rectext.visible = true;
       }
 
       this.updateTransformer();
@@ -51140,6 +51222,96 @@ var render = function() {
           ]
         ),
         _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
+            staticStyle: {
+              margin: "10px 5px",
+              "margin-left": "15px",
+              "margin-right": "0px"
+            },
+            attrs: { type: "button" },
+            on: { click: _vm.removeCoil }
+          },
+          [
+            _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+            _vm._v(" Remove ")
+          ]
+        ),
+        _vm._v(" "),
+        _vm.editMode == false
+          ? _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
+                staticStyle: {
+                  margin: "10px 5px",
+                  "margin-left": "15px",
+                  "margin-right": "0px"
+                },
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    return _vm.editSlotMode()
+                  }
+                }
+              },
+              [
+                _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+                _vm._v(" edit Mode ")
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.editMode == true
+          ? _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
+                staticStyle: {
+                  margin: "10px 5px",
+                  "margin-left": "15px",
+                  "margin-right": "0px"
+                },
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    return _vm.lookMode()
+                  }
+                }
+              },
+              [
+                _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+                _vm._v(" look Mode ")
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.selectedShapeName
+          ? _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
+                staticStyle: {
+                  margin: "10px 5px",
+                  "margin-left": "15px",
+                  "margin-right": "0px"
+                },
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    return _vm.SetCoil()
+                  }
+                }
+              },
+              [
+                _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+                _vm._v(" Set COil ")
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
         _vm._m(0)
       ]),
       _vm._v(" "),
@@ -51172,6 +51344,25 @@ var render = function() {
                       attrs: { config: item.rect },
                       on: { transformend: _vm.handleTransformEnd }
                     }),
+                    _vm._v(" "),
+                    item.img
+                      ? _c("v-image", {
+                          attrs: {
+                            config: {
+                              image: _vm.image,
+                              height: item.rect.height,
+                              width: item.rect.width,
+                              name: item.rect.name,
+                              x: item.rect.x,
+                              y: item.rect.y,
+                              scaleX: item.rect.scaleX,
+                              scaleY: item.rect.scaleY,
+                              rotation: item.rect.rotation,
+                              visible: _vm.editMode ? false : true
+                            }
+                          }
+                        })
+                      : _vm._e(),
                     _vm._v(" "),
                     _c("v-text", {
                       ref: "text1",

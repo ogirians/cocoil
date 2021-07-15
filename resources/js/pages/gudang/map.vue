@@ -3,6 +3,10 @@
     <div class="tombol"> 
     <button @click="addCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Slot </button>
     <button @click="addNonCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Object </button>
+    <button @click="removeCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Remove </button>
+    <button v-if="editMode == false" @click="editSlotMode()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> edit Mode </button>
+    <button v-if="editMode == true" @click="lookMode()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> look Mode </button>
+    <button v-if="selectedShapeName" @click="SetCoil()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Set COil </button>
 		<button  style="margin: 10px 5px;margin-left: 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Text </button>	   
     </div>
     <v-stage 
@@ -17,21 +21,42 @@
            v-for="item in list"
           :key="item.id"
           :config="{name:item.name, id: item.id}" 
-        >          
+        >        
+               
+               
+
               <v-rect              
                       
                  :config="item.rect"    
                  @transformend="handleTransformEnd"          
               >            
-              </v-rect>
+              </v-rect>   
 
+              <v-image                
+                v-if="item.img"
+                    :config="{
+                        image: image, 
+                        height:item.rect.height, 
+                        width:item.rect.width, 
+                        name: item.rect.name, 
+                        x :item.rect.x, 
+                        y :item.rect.y,
+                        scaleX:item.rect.scaleX,
+                        scaleY:item.rect.scaleY,
+                        rotation:item.rect.rotation,                         
+                        visible : editMode ? false : true,                        
+                      }"                              
+                />        
+                           
               <v-text                    
                    ref="text1"
                     :config="item.rectext"
                 >
               </v-text>
+             
                    
        </v-group>
+             
       <v-transformer ref="transformer"/>    
     </v-layer>
   </v-stage>
@@ -60,6 +85,8 @@ export default {
       isDragging: false,  
       selectedShapeName: '',
 
+      editMode: false,
+      image : null,
            
     };
 
@@ -69,6 +96,14 @@ export default {
       this.fitStageIntoParentContainer();
       // adapt the stage on any window resize
       window.addEventListener('resize', this.fitStageIntoParentContainer);
+
+      const image = new window.Image();
+      image.src = "/coil.png";
+
+      image.onload = () => {
+      // set image only when it is loaded
+      this.image = image;
+      };
       
     
   },
@@ -96,15 +131,74 @@ export default {
               draggable:true,
               width: 100,
               height: 130,
+              img:false,
               rectext : {id: id, x: 0, y:0, text:id, visible:true, name:'text'+ id, rotation: 0, fontSize :15} ,
-              rect: {id:id, x: 0, y:0, fill : '#f7a7a7', width: 100, height: 150,  name:'group'+ id , scaleX: 1, scaleY: 1, rotation: 0, draggable:true, stroke :5}              
+              rect: {id:id, x: 0, y:0, fill : '#f7a7a7', width: 100, height: 150,  name:'group'+ id , scaleX: 1, scaleY: 1, rotation: 0, draggable:true, stroke :5, visible: true}              
             };
-          
+                   
            
             this.list.push(pos);          
            
             this.save();
           },
+
+          SetCoil() { 
+            
+            const item = this.list.find(i => i.rect.name === this.selectedShapeName);
+            const id = item.id;
+            item.img =  true;
+            item.rect.visible = false;
+         // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+            
+           // this.list.push(img);
+            this.save();
+          },
+
+          removeCoil(){
+
+            const item = this.list.find(i => i.rect.name === this.selectedShapeName);
+            const id = item.id;
+            item.img =  false;
+            item.rect.visible = true;
+         // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+            
+           // this.list.push(img);
+            this.save();
+      
+
+
+          },         
+
+           editSlotMode(){
+
+            this.editMode = true;
+         // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+            
+           // this.list.push(img);
+            this.save();
+
+          },  
+
+          lookMode(){
+            
+            this.editMode = false;
+
+            const coil = this.list;
+
+            coil.forEach(myFunction);
+
+
+            function myFunction(item, index) {
+              item.rect.visible = true; 
+            }
+            // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+            
+           // this.list.push(img);
+            this.save();
+
+
+          },
+         
 
           addNonCoil() {  
           const id = Math.round(Math.random() * 10000).toString();          
@@ -185,6 +279,8 @@ export default {
           },
 
           handleStageMouseDown(e) {
+
+            
            
             // clicked on stage - clear selection
             if (e.target === e.target.getStage()) {
@@ -230,7 +326,7 @@ export default {
               
             } else {
               this.selectedShapeName = '';
-              item.rectext.visible = true;
+              
             }
             this.updateTransformer();
           },
@@ -269,7 +365,9 @@ export default {
             localStorage.setItem('storage', JSON.stringify(this.list));
            
             
-          }
+          },
+          
+        
 
       },
       mounted() {
