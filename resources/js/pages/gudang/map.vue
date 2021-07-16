@@ -6,7 +6,7 @@
     <button @click="removeCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Remove </button>
     <button v-if="editMode == false" @click="editSlotMode()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> edit Mode </button>
     <button v-if="editMode == true" @click="lookMode()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> look Mode </button>
-    <button v-if="selectedShapeName" @click="SetCoil()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Set COil </button>
+    <button v-if="setCoilButton" @click="SetCoil()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Set COil </button>
 		<button  style="margin: 10px 5px;margin-left: 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Text </button>	   
     </div>
     <v-stage 
@@ -38,7 +38,7 @@
                         image: image, 
                         height:item.rect.height, 
                         width:item.rect.width, 
-                        name: item.rect.name, 
+                        name: 'img ' +item.rect.name, 
                         x :item.rect.x, 
                         y :item.rect.y,
                         scaleX:item.rect.scaleX,
@@ -84,7 +84,10 @@ export default {
              
       isDragging: false,  
       selectedShapeName: '',
-
+      setCoilButton: false,
+      selectedShapeNameSerialcode: '',
+      
+      selectedImg: '',
       editMode: false,
       image : null,
            
@@ -132,6 +135,7 @@ export default {
               width: 100,
               height: 130,
               img:false,
+              serial_code: null,
               rectext : {id: id, x: 0, y:0, text:id, visible:true, name:'text'+ id, rotation: 0, fontSize :15} ,
               rect: {id:id, x: 0, y:0, fill : '#f7a7a7', width: 100, height: 150,  name:'group'+ id , scaleX: 1, scaleY: 1, rotation: 0, draggable:true, stroke :5, visible: true}              
             };
@@ -148,6 +152,7 @@ export default {
             const id = item.id;
             item.img =  true;
             item.rect.visible = false;
+            item.serial_code = 'serial ' + id;
          // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
             
            // this.list.push(img);
@@ -160,6 +165,7 @@ export default {
             const id = item.id;
             item.img =  false;
             item.rect.visible = true;
+            item.serial_code = null;
          // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
             
            // this.list.push(img);
@@ -171,7 +177,19 @@ export default {
 
            editSlotMode(){
 
-            this.editMode = true;
+            this.editMode = true;             
+
+            const coil = this.list;
+
+            coil.forEach(myFunction);
+
+            function myFunction(item, index) {
+             
+                item.rect.visible = true;
+          
+            }
+           
+            
          // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
             
            // this.list.push(img);
@@ -187,9 +205,12 @@ export default {
 
             coil.forEach(myFunction);
 
-
             function myFunction(item, index) {
-              item.rect.visible = true; 
+              if(item.serial_code != null){
+                item.rect.visible = false;
+              } else if (item.serial_code == null) {
+                item.rect.visible = true;
+              }
             }
             // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
             
@@ -278,16 +299,17 @@ export default {
             //rect.fill = Konva.Util.getRandomColor();
           },
 
-          handleStageMouseDown(e) {
-
-            
+          handleStageMouseDown(e) {            
            
             // clicked on stage - clear selection
             if (e.target === e.target.getStage()) {
+              this.selectedImg = '';
 
                const item = this.list.find((r) => r.rect.name ===  this.selectedShapeName); 
                this.selectedShapeName =  ''; 
-              
+               this.selectedShapeNameSerialcode = '';
+               this.setCoilButton= false;
+               
                if (item) {
                 item.rectext.visible = true;
                 this.save();
@@ -305,9 +327,20 @@ export default {
             }
 
             // find clicked rect by its name
-
-            const name = e.target.name(); 
             
+            const name = e.target.name();
+            
+            const nameimg = e.target.name();
+            
+            //klik on coil
+            if ( name.includes("img")){
+                const item = this.list.find((r) => r.rect.name === this.selectedShapeName);
+                this.selectedImg = name;
+                 console.log(name);
+            }
+
+           
+
             // cek jika pindah ke objec lain tanpa klik stage
             if (this.selectedShapeName != ''){
               if (this.selectedShapeName != name) {
@@ -316,13 +349,22 @@ export default {
                     this.save();
               }    
             }
-            console.log(name);
+            
             
             const item = this.list.find((r) => r.rect.name === name);            
             
-            if (item) {                         
-              this.selectedShapeName = name;
-              item.rectext.visible = false;
+            if (item) {                 
+
+                this.selectedShapeName = name;
+                
+                this.selectedShapeNameSerialcode = item.serial_code
+
+                if(!this.selectedShapeNameSerialcode){
+                    this.setCoilButton= true;
+                } else {
+                     this.setCoilButton= false;
+                }
+                item.rectext.visible = false;
               
             } else {
               this.selectedShapeName = '';

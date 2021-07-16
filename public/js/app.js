@@ -3892,6 +3892,9 @@ __webpack_require__.r(__webpack_exports__);
       listNonCoil: [{}],
       isDragging: false,
       selectedShapeName: '',
+      setCoilButton: false,
+      selectedShapeNameSerialcode: '',
+      selectedImg: '',
       editMode: false,
       image: null
     };
@@ -3934,6 +3937,7 @@ __webpack_require__.r(__webpack_exports__);
         width: 100,
         height: 130,
         img: false,
+        serial_code: null,
         rectext: {
           id: id,
           x: 0,
@@ -3971,7 +3975,8 @@ __webpack_require__.r(__webpack_exports__);
       });
       var id = item.id;
       item.img = true;
-      item.rect.visible = false; // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+      item.rect.visible = false;
+      item.serial_code = 'serial ' + id; // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
       // this.list.push(img);
 
       this.save();
@@ -3984,14 +3989,22 @@ __webpack_require__.r(__webpack_exports__);
       });
       var id = item.id;
       item.img = false;
-      item.rect.visible = true; // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+      item.rect.visible = true;
+      item.serial_code = null; // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
       // this.list.push(img);
 
       this.save();
     },
     editSlotMode: function editSlotMode() {
-      this.editMode = true; // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+      this.editMode = true;
+      var coil = this.list;
+      coil.forEach(myFunction);
+
+      function myFunction(item, index) {
+        item.rect.visible = true;
+      } // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
       // this.list.push(img);
+
 
       this.save();
     },
@@ -4001,7 +4014,11 @@ __webpack_require__.r(__webpack_exports__);
       coil.forEach(myFunction);
 
       function myFunction(item, index) {
-        item.rect.visible = true;
+        if (item.serial_code != null) {
+          item.rect.visible = false;
+        } else if (item.serial_code == null) {
+          item.rect.visible = true;
+        }
       } // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
       // this.list.push(img);
 
@@ -4082,11 +4099,15 @@ __webpack_require__.r(__webpack_exports__);
 
       // clicked on stage - clear selection
       if (e.target === e.target.getStage()) {
+        this.selectedImg = '';
+
         var _item = this.list.find(function (r) {
           return r.rect.name === _this6.selectedShapeName;
         });
 
         this.selectedShapeName = '';
+        this.selectedShapeNameSerialcode = '';
+        this.setCoilButton = false;
 
         if (_item) {
           _item.rectext.visible = true;
@@ -4106,7 +4127,18 @@ __webpack_require__.r(__webpack_exports__);
       } // find clicked rect by its name
 
 
-      var name = e.target.name(); // cek jika pindah ke objec lain tanpa klik stage
+      var name = e.target.name();
+      var nameimg = e.target.name(); //klik on coil
+
+      if (name.includes("img")) {
+        var _item2 = this.list.find(function (r) {
+          return r.rect.name === _this6.selectedShapeName;
+        });
+
+        this.selectedImg = name;
+        console.log(name);
+      } // cek jika pindah ke objec lain tanpa klik stage
+
 
       if (this.selectedShapeName != '') {
         if (this.selectedShapeName != name) {
@@ -4118,13 +4150,20 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
 
-      console.log(name);
       var item = this.list.find(function (r) {
         return r.rect.name === name;
       });
 
       if (item) {
         this.selectedShapeName = name;
+        this.selectedShapeNameSerialcode = item.serial_code;
+
+        if (!this.selectedShapeNameSerialcode) {
+          this.setCoilButton = true;
+        } else {
+          this.setCoilButton = false;
+        }
+
         item.rectext.visible = false;
       } else {
         this.selectedShapeName = '';
@@ -51288,7 +51327,7 @@ var render = function() {
             )
           : _vm._e(),
         _vm._v(" "),
-        _vm.selectedShapeName
+        _vm.setCoilButton
           ? _c(
               "button",
               {
@@ -51352,7 +51391,7 @@ var render = function() {
                               image: _vm.image,
                               height: item.rect.height,
                               width: item.rect.width,
-                              name: item.rect.name,
+                              name: "img " + item.rect.name,
                               x: item.rect.x,
                               y: item.rect.y,
                               scaleX: item.rect.scaleX,
