@@ -16,14 +16,13 @@
          >
     <v-layer >
        <v-group
+      
            @dragstart="handleDragStart"
            @dragend="handleDragEnd"                                                            
            v-for="item in list"
           :key="item.id"
           :config="{name:item.name, id: item.id}" 
         >        
-               
-               
 
               <v-rect              
                       
@@ -32,7 +31,8 @@
               >            
               </v-rect>   
 
-              <v-image                
+              <v-image   
+                            
                 v-if="item.img"
                     :config="{
                         image: image, 
@@ -44,7 +44,9 @@
                         scaleX:item.rect.scaleX,
                         scaleY:item.rect.scaleY,
                         rotation:item.rect.rotation,                         
-                        visible : editMode ? false : true,                        
+                        visible : editMode ? false : true,  
+                        filters : filters,
+                        brightness: brightness,
                       }"                              
                 />        
                            
@@ -55,7 +57,7 @@
               </v-text>
              
                    
-       </v-group>
+        </v-group>
              
       <v-transformer ref="transformer"/>    
     </v-layer>
@@ -68,47 +70,49 @@
       
 export default {
   data() {
-    return {
-      sceneWidth : 900,
-      sceneHeight : 450,
+            return {
+              sceneWidth : 900,
+              sceneHeight : 450,
 
-      dragItemId: null,
-          
-      stage: {
-        container: 'container',
-        width: this.sceneWidth,
-        height: this.sceneHeight,
-      },
-      list: [],
-      listNonCoil:[{}],   
-             
-      isDragging: false,  
-      selectedShapeName: '',
-      setCoilButton: false,
-      selectedShapeNameSerialcode: '',
-      
-      selectedImg: '',
-      editMode: false,
-      image : null,
-           
-    };
+              dragItemId: null,
+                  
+              stage: {
+                container: 'container',
+                width: this.sceneWidth,
+                height: this.sceneHeight,
+              },
+              list: [],
+              listNonCoil:[{}],   
+                    
+              isDragging: false,  
+              selectedShapeName: '',
+              setCoilButton: false,
+              selectedShapeNameSerialcode: '',
+              
+              selectedImg: '',
+              editMode: false,
+              image : null,
+              filters : [Konva.Filters.Brighten],
+              brightness: '',
+                  
+            };
 
 
   },
   created(){    
-      this.fitStageIntoParentContainer();
-      // adapt the stage on any window resize
-      window.addEventListener('resize', this.fitStageIntoParentContainer);
 
-      const image = new window.Image();
-      image.src = "/coil.png";
+            this.fitStageIntoParentContainer();
+            // adapt the stage on any window resize
+            window.addEventListener('resize', this.fitStageIntoParentContainer);
 
-      image.onload = () => {
-      // set image only when it is loaded
-      this.image = image;
-      };
-      
-    
+            const image = new window.Image();
+            image.src = "/coil.png";
+
+            image.onload = () => {
+            // set image only when it is loaded
+            this.image = image;
+            };
+           
   },
   methods: {
           fitStageIntoParentContainer() { 
@@ -175,7 +179,7 @@ export default {
 
           },         
 
-           editSlotMode(){
+          editSlotMode(){
 
             this.editMode = true;             
 
@@ -183,23 +187,18 @@ export default {
 
             coil.forEach(myFunction);
 
-            function myFunction(item, index) {
+                function myFunction(item, index) {
              
                 item.rect.visible = true;
           
             }
-           
-            
-         // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
-            
-           // this.list.push(img);
-            this.save();
 
           },  
 
           lookMode(){
             
             this.editMode = false;
+            this.selectedShapeName = '';
 
             const coil = this.list;
 
@@ -211,11 +210,16 @@ export default {
               } else if (item.serial_code == null) {
                 item.rect.visible = true;
               }
+               item.rectext.visible = true;
             }
             // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
             
            // this.list.push(img);
+            this.updateTransformer();
+
             this.save();
+            return;
+            
 
 
           },
@@ -309,6 +313,7 @@ export default {
                this.selectedShapeName =  ''; 
                this.selectedShapeNameSerialcode = '';
                this.setCoilButton= false;
+               this.brightness = 0;
                
                if (item) {
                 item.rectext.visible = true;
@@ -334,9 +339,14 @@ export default {
             
             //klik on coil
             if ( name.includes("img")){
-                const item = this.list.find((r) => r.rect.name === this.selectedShapeName);
+              //  const item = this.list.find((r) => r.rect.name === this.selectedShapeName);
+              
                 this.selectedImg = name;
-                 console.log(name);
+                console.log(name);
+                this.brightness = 0.8;
+                
+                  this.save();
+                  this.selectCoilImg();
             }
 
            
@@ -373,25 +383,34 @@ export default {
             this.updateTransformer();
           },
 
+          selectCoilImg(){
+           
+
+          },
+
           updateTransformer() {
-            // here we need to manually attach or detach Transformer node
-            const transformerNode = this.$refs.transformer.getNode();
-            const stage = transformerNode.getStage();
-            const { selectedShapeName } = this;
+              // here we need to manually attach or detach Transformer node
+              const transformerNode = this.$refs.transformer.getNode();
 
-            const selectedNode = stage.findOne('.' + selectedShapeName);
-            // do nothing if selected node is already attached
-            if (selectedNode === transformerNode.node()) {
-              return;
-            }
+              
+              const stage = transformerNode.getStage();
+              
+              const { selectedShapeName } = this;
+  
+              const selectedNode = stage.findOne('.' + selectedShapeName);
+            
+              // do nothing if selected node is already attached
+              if (selectedNode === transformerNode.node()) {
+                return;
+              }
 
-            if (selectedNode) {
-              // attach to another node
-              transformerNode.nodes([selectedNode]);
-            } else {
-              // remove transformer
-              transformerNode.nodes([]);
-            }
+              if (selectedNode) {
+                // attach to another node
+                transformerNode.nodes([selectedNode]);
+              } else {
+                // remove transformer
+                transformerNode.nodes([]);
+              }
           },
 
      
@@ -413,8 +432,14 @@ export default {
 
       },
       mounted() {
+          
           this.load();
-      }
+
+          
+
+
+      },
+     
 };
 </script>
 

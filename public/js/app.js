@@ -3877,6 +3877,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3896,7 +3898,9 @@ __webpack_require__.r(__webpack_exports__);
       selectedShapeNameSerialcode: '',
       selectedImg: '',
       editMode: false,
-      image: null
+      image: null,
+      filters: [Konva.Filters.Brighten],
+      brightness: ''
     };
   },
   created: function created() {
@@ -4002,14 +4006,11 @@ __webpack_require__.r(__webpack_exports__);
 
       function myFunction(item, index) {
         item.rect.visible = true;
-      } // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
-      // this.list.push(img);
-
-
-      this.save();
+      }
     },
     lookMode: function lookMode() {
       this.editMode = false;
+      this.selectedShapeName = '';
       var coil = this.list;
       coil.forEach(myFunction);
 
@@ -4019,11 +4020,15 @@ __webpack_require__.r(__webpack_exports__);
         } else if (item.serial_code == null) {
           item.rect.visible = true;
         }
+
+        item.rectext.visible = true;
       } // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
       // this.list.push(img);
 
 
+      this.updateTransformer();
       this.save();
+      return;
     },
     addNonCoil: function addNonCoil() {
       var id = Math.round(Math.random() * 10000).toString();
@@ -4108,6 +4113,7 @@ __webpack_require__.r(__webpack_exports__);
         this.selectedShapeName = '';
         this.selectedShapeNameSerialcode = '';
         this.setCoilButton = false;
+        this.brightness = 0;
 
         if (_item) {
           _item.rectext.visible = true;
@@ -4131,12 +4137,12 @@ __webpack_require__.r(__webpack_exports__);
       var nameimg = e.target.name(); //klik on coil
 
       if (name.includes("img")) {
-        var _item2 = this.list.find(function (r) {
-          return r.rect.name === _this6.selectedShapeName;
-        });
-
+        //  const item = this.list.find((r) => r.rect.name === this.selectedShapeName);
         this.selectedImg = name;
         console.log(name);
+        this.brightness = 0.8;
+        this.save();
+        this.selectCoilImg();
       } // cek jika pindah ke objec lain tanpa klik stage
 
 
@@ -4171,6 +4177,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.updateTransformer();
     },
+    selectCoilImg: function selectCoilImg() {},
     updateTransformer: function updateTransformer() {
       // here we need to manually attach or detach Transformer node
       var transformerNode = this.$refs.transformer.getNode();
@@ -51397,7 +51404,9 @@ var render = function() {
                               scaleX: item.rect.scaleX,
                               scaleY: item.rect.scaleY,
                               rotation: item.rect.rotation,
-                              visible: _vm.editMode ? false : true
+                              visible: _vm.editMode ? false : true,
+                              filters: _vm.filters,
+                              brightness: _vm.brightness
                             }
                           }
                         })
