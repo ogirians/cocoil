@@ -1,13 +1,15 @@
 <template>
   <div>
     <div class="tombol"> 
-    <button @click="addCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Slot </button>
-    <button @click="addNonCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Object </button>
-    <button @click="removeCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Remove </button>
-    <button v-if="editMode == false" @click="editSlotMode()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> edit Mode </button>
+   
     <button v-if="editMode == true" @click="lookMode()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> look Mode </button>
-    <button v-if="setCoilButton" @click="SetCoil()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Set COil </button>
-		<button  style="margin: 10px 5px;margin-left: 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Text </button>	   
+    <button v-if="editMode == false" @click="editSlotMode()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> edit Mode </button>
+    
+    <button v-if="editMode == true" @click="addCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Slot </button>
+    <button v-if="editMode == true" @click="addNonCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Object </button>
+    <button v-if="setCoilButton == true && editMode == false" @click="SetCoil()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Set COil </button>
+		<button v-if="setRemoveButton == true && editMode == false" @click="removeCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Remove </button>
+    <button  style="margin: 10px 5px;margin-left: 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Text </button>	   
     </div>
     <v-stage 
           @mousedown="handleStageMouseDown"
@@ -24,8 +26,7 @@
           :config="{name:item.name, id: item.id}" 
         >        
 
-              <v-rect              
-                      
+              <v-rect       
                  :config="item.rect"    
                  @transformend="handleTransformEnd"          
               >            
@@ -36,17 +37,15 @@
                 v-if="item.img"
                     :config="{
                         image: image, 
-                        height:item.rect.height, 
-                        width:item.rect.width, 
-                        name: 'img ' +item.rect.name, 
+                        height: item.rect.height, 
+                        width: item.rect.width, 
+                        name: item.rect.name, 
                         x :item.rect.x, 
                         y :item.rect.y,
                         scaleX:item.rect.scaleX,
                         scaleY:item.rect.scaleY,
                         rotation:item.rect.rotation,                         
                         visible : editMode ? false : true,  
-                        filters : filters,
-                        brightness: brightness,
                       }"                              
                 />        
                            
@@ -59,7 +58,23 @@
                    
         </v-group>
              
-      <v-transformer ref="transformer"/>    
+      <v-transformer ref="transformer"
+      v-if="editMode == false"
+      :config="{ boundBoxFunc: function (oldBoundBox, newBoundBox) {
+          
+          if (Math.abs(newBoundBox.width) != selectedWidth) {
+            return oldBoundBox;
+          } else if (Math.abs(newBoundBox.height) != selectedHeigth){
+            return oldBoundBox;
+          }
+          return newBoundBox;
+          },
+        }"
+      />
+
+      <v-transformer ref="transformer"
+        v-else
+      />
     </v-layer>
   </v-stage>
   </div>
@@ -82,18 +97,22 @@ export default {
                 height: this.sceneHeight,
               },
               list: [],
+
               listNonCoil:[{}],   
                     
               isDragging: false,  
               selectedShapeName: '',
               setCoilButton: false,
+              setRemoveButton :false,
               selectedShapeNameSerialcode: '',
               
               selectedImg: '',
               editMode: false,
               image : null,
-              filters : [Konva.Filters.Brighten],
-              brightness: '',
+              image2 : null,
+             
+              selectedWidth : '',
+              selectedHeigth : '',
                   
             };
 
@@ -108,9 +127,13 @@ export default {
             const image = new window.Image();
             image.src = "/coil.png";
 
+            const image2 = new window.Image();
+            image2.src = "/coilSelected.png";
+
             image.onload = () => {
             // set image only when it is loaded
             this.image = image;
+            this.image2 = image2;
             };
            
   },
@@ -141,7 +164,7 @@ export default {
               img:false,
               serial_code: null,
               rectext : {id: id, x: 0, y:0, text:id, visible:true, name:'text'+ id, rotation: 0, fontSize :15} ,
-              rect: {id:id, x: 0, y:0, fill : '#f7a7a7', width: 100, height: 150,  name:'group'+ id , scaleX: 1, scaleY: 1, rotation: 0, draggable:true, stroke :5, visible: true}              
+              rect: {id:id, x: 0, y:0, fill : '#f7a7a7', width: 100, height: 150,  name:'group'+ id , scaleX: 1, scaleY: 1, rotation: 0, draggable:true, stroke :5, visible: true, imgCoil:''}              
             };
                    
            
@@ -157,6 +180,7 @@ export default {
             item.img =  true;
             item.rect.visible = false;
             item.serial_code = 'serial ' + id;
+            
          // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
             
            // this.list.push(img);
@@ -170,6 +194,7 @@ export default {
             item.img =  false;
             item.rect.visible = true;
             item.serial_code = null;
+            //item.rect.draggable = false;
          // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
             
            // this.list.push(img);
@@ -190,6 +215,7 @@ export default {
                 function myFunction(item, index) {
              
                 item.rect.visible = true;
+                item.rect.draggable = true;
           
             }
 
@@ -199,7 +225,7 @@ export default {
             
             this.editMode = false;
             this.selectedShapeName = '';
-
+            
             const coil = this.list;
 
             coil.forEach(myFunction);
@@ -209,6 +235,7 @@ export default {
                 item.rect.visible = false;
               } else if (item.serial_code == null) {
                 item.rect.visible = true;
+                item.rect.draggable = false;
               }
                item.rectext.visible = true;
             }
@@ -219,8 +246,6 @@ export default {
 
             this.save();
             return;
-            
-
 
           },
          
@@ -313,6 +338,7 @@ export default {
                this.selectedShapeName =  ''; 
                this.selectedShapeNameSerialcode = '';
                this.setCoilButton= false;
+               this.setRemoveButton= false;
                this.brightness = 0;
                
                if (item) {
@@ -335,18 +361,20 @@ export default {
             
             const name = e.target.name();
             
-            const nameimg = e.target.name();
-            
             //klik on coil
             if ( name.includes("img")){
-              //  const item = this.list.find((r) => r.rect.name === this.selectedShapeName);
               
+                name.replace("img", "");
+
+
+                const item = this.list.find((r) => r.rect.name === this.selectedShapeName);
+
                 this.selectedImg = name;
                 console.log(name);
                 this.brightness = 0.8;
                 
-                  this.save();
-                  this.selectCoilImg();
+                this.save();
+                this.selectCoilImg();
             }
 
            
@@ -368,11 +396,16 @@ export default {
                 this.selectedShapeName = name;
                 
                 this.selectedShapeNameSerialcode = item.serial_code
-
+                
+                //cek apakah sudah ada serial code
                 if(!this.selectedShapeNameSerialcode){
-                    this.setCoilButton= true;
+                    this.setCoilButton = true;
+                    this.setRemoveButton = false;
+                    this.selectedWidth = item.rect.width;
+                    this.selectedHeigth = item.rect.height;
                 } else {
-                     this.setCoilButton= false;
+                    this.setCoilButton= false;
+                    this.setRemoveButton = true;
                 }
                 item.rectext.visible = false;
               
@@ -434,9 +467,6 @@ export default {
       mounted() {
           
           this.load();
-
-          
-
 
       },
      

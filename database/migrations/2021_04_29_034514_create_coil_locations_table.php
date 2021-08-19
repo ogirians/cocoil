@@ -18,7 +18,6 @@ class CreateCoilLocationsTable extends Migration
             $table->unsignedBigInteger('coil_id')->nullable();
             $table->unsignedBigInteger('gudang_id')->nullable();
             $table->unsignedBigInteger('blok_id')->nullable();
-            $table->char('coordinate');
             $table->timestamps();
 
             $table->foreign('coil_id')->references('id')->on('coil_details');

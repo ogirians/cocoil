@@ -3879,6 +3879,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3895,12 +3910,14 @@ __webpack_require__.r(__webpack_exports__);
       isDragging: false,
       selectedShapeName: '',
       setCoilButton: false,
+      setRemoveButton: false,
       selectedShapeNameSerialcode: '',
       selectedImg: '',
       editMode: false,
       image: null,
-      filters: [Konva.Filters.Brighten],
-      brightness: ''
+      image2: null,
+      selectedWidth: '',
+      selectedHeigth: ''
     };
   },
   created: function created() {
@@ -3911,10 +3928,13 @@ __webpack_require__.r(__webpack_exports__);
     window.addEventListener('resize', this.fitStageIntoParentContainer);
     var image = new window.Image();
     image.src = "/coil.png";
+    var image2 = new window.Image();
+    image2.src = "/coilSelected.png";
 
     image.onload = function () {
       // set image only when it is loaded
       _this.image = image;
+      _this.image2 = image2;
     };
   },
   methods: {
@@ -3965,7 +3985,8 @@ __webpack_require__.r(__webpack_exports__);
           rotation: 0,
           draggable: true,
           stroke: 5,
-          visible: true
+          visible: true,
+          imgCoil: ''
         }
       };
       this.list.push(pos);
@@ -3994,7 +4015,8 @@ __webpack_require__.r(__webpack_exports__);
       var id = item.id;
       item.img = false;
       item.rect.visible = true;
-      item.serial_code = null; // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+      item.serial_code = null; //item.rect.draggable = false;
+      // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
       // this.list.push(img);
 
       this.save();
@@ -4006,6 +4028,7 @@ __webpack_require__.r(__webpack_exports__);
 
       function myFunction(item, index) {
         item.rect.visible = true;
+        item.rect.draggable = true;
       }
     },
     lookMode: function lookMode() {
@@ -4019,6 +4042,7 @@ __webpack_require__.r(__webpack_exports__);
           item.rect.visible = false;
         } else if (item.serial_code == null) {
           item.rect.visible = true;
+          item.rect.draggable = false;
         }
 
         item.rectext.visible = true;
@@ -4113,6 +4137,7 @@ __webpack_require__.r(__webpack_exports__);
         this.selectedShapeName = '';
         this.selectedShapeNameSerialcode = '';
         this.setCoilButton = false;
+        this.setRemoveButton = false;
         this.brightness = 0;
 
         if (_item) {
@@ -4133,11 +4158,15 @@ __webpack_require__.r(__webpack_exports__);
       } // find clicked rect by its name
 
 
-      var name = e.target.name();
-      var nameimg = e.target.name(); //klik on coil
+      var name = e.target.name(); //klik on coil
 
       if (name.includes("img")) {
-        //  const item = this.list.find((r) => r.rect.name === this.selectedShapeName);
+        name.replace("img", "");
+
+        var _item2 = this.list.find(function (r) {
+          return r.rect.name === _this6.selectedShapeName;
+        });
+
         this.selectedImg = name;
         console.log(name);
         this.brightness = 0.8;
@@ -4162,12 +4191,16 @@ __webpack_require__.r(__webpack_exports__);
 
       if (item) {
         this.selectedShapeName = name;
-        this.selectedShapeNameSerialcode = item.serial_code;
+        this.selectedShapeNameSerialcode = item.serial_code; //cek apakah sudah ada serial code
 
         if (!this.selectedShapeNameSerialcode) {
           this.setCoilButton = true;
+          this.setRemoveButton = false;
+          this.selectedWidth = item.rect.width;
+          this.selectedHeigth = item.rect.height;
         } else {
           this.setCoilButton = false;
+          this.setRemoveButton = true;
         }
 
         item.rectext.visible = false;
@@ -51232,59 +51265,29 @@ var render = function() {
     "div",
     [
       _c("div", { staticClass: "tombol" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
-            staticStyle: {
-              margin: "10px 5px",
-              "margin-left": "15px",
-              "margin-right": "0px"
-            },
-            attrs: { type: "button" },
-            on: { click: _vm.addCoil }
-          },
-          [
-            _c("i", { staticClass: "glyphicon glyphicon-plus" }),
-            _vm._v(" Slot ")
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
-            staticStyle: {
-              margin: "10px 5px",
-              "margin-left": "15px",
-              "margin-right": "0px"
-            },
-            attrs: { type: "button" },
-            on: { click: _vm.addNonCoil }
-          },
-          [
-            _c("i", { staticClass: "glyphicon glyphicon-plus" }),
-            _vm._v(" Object ")
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
-            staticStyle: {
-              margin: "10px 5px",
-              "margin-left": "15px",
-              "margin-right": "0px"
-            },
-            attrs: { type: "button" },
-            on: { click: _vm.removeCoil }
-          },
-          [
-            _c("i", { staticClass: "glyphicon glyphicon-plus" }),
-            _vm._v(" Remove ")
-          ]
-        ),
+        _vm.editMode == true
+          ? _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
+                staticStyle: {
+                  margin: "10px 5px",
+                  "margin-left": "15px",
+                  "margin-right": "0px"
+                },
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    return _vm.lookMode()
+                  }
+                }
+              },
+              [
+                _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+                _vm._v(" look Mode ")
+              ]
+            )
+          : _vm._e(),
         _vm._v(" "),
         _vm.editMode == false
           ? _c(
@@ -51321,20 +51324,36 @@ var render = function() {
                   "margin-right": "0px"
                 },
                 attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.lookMode()
-                  }
-                }
+                on: { click: _vm.addCoil }
               },
               [
                 _c("i", { staticClass: "glyphicon glyphicon-plus" }),
-                _vm._v(" look Mode ")
+                _vm._v(" Slot ")
               ]
             )
           : _vm._e(),
         _vm._v(" "),
-        _vm.setCoilButton
+        _vm.editMode == true
+          ? _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
+                staticStyle: {
+                  margin: "10px 5px",
+                  "margin-left": "15px",
+                  "margin-right": "0px"
+                },
+                attrs: { type: "button" },
+                on: { click: _vm.addNonCoil }
+              },
+              [
+                _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+                _vm._v(" Object ")
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.setCoilButton == true && _vm.editMode == false
           ? _c(
               "button",
               {
@@ -51354,6 +51373,26 @@ var render = function() {
               [
                 _c("i", { staticClass: "glyphicon glyphicon-plus" }),
                 _vm._v(" Set COil ")
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.setRemoveButton == true && _vm.editMode == false
+          ? _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
+                staticStyle: {
+                  margin: "10px 5px",
+                  "margin-left": "15px",
+                  "margin-right": "0px"
+                },
+                attrs: { type: "button" },
+                on: { click: _vm.removeCoil }
+              },
+              [
+                _c("i", { staticClass: "glyphicon glyphicon-plus" }),
+                _vm._v(" Remove ")
               ]
             )
           : _vm._e(),
@@ -51398,15 +51437,13 @@ var render = function() {
                               image: _vm.image,
                               height: item.rect.height,
                               width: item.rect.width,
-                              name: "img " + item.rect.name,
+                              name: item.rect.name,
                               x: item.rect.x,
                               y: item.rect.y,
                               scaleX: item.rect.scaleX,
                               scaleY: item.rect.scaleY,
                               rotation: item.rect.rotation,
-                              visible: _vm.editMode ? false : true,
-                              filters: _vm.filters,
-                              brightness: _vm.brightness
+                              visible: _vm.editMode ? false : true
                             }
                           }
                         })
@@ -51422,7 +51459,27 @@ var render = function() {
                 )
               }),
               _vm._v(" "),
-              _c("v-transformer", { ref: "transformer" })
+              _vm.editMode == false
+                ? _c("v-transformer", {
+                    ref: "transformer",
+                    attrs: {
+                      config: {
+                        boundBoxFunc: function(oldBoundBox, newBoundBox) {
+                          if (
+                            Math.abs(newBoundBox.width) != _vm.selectedWidth
+                          ) {
+                            return oldBoundBox
+                          } else if (
+                            Math.abs(newBoundBox.height) != _vm.selectedHeigth
+                          ) {
+                            return oldBoundBox
+                          }
+                          return newBoundBox
+                        }
+                      }
+                    }
+                  })
+                : _c("v-transformer", { ref: "transformer" })
             ],
             2
           )
