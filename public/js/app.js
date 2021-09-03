@@ -1927,6 +1927,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 
@@ -3661,6 +3662,36 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3671,17 +3702,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       selected_blok: '',
-      selected_blok_id: '',
+      //selected_blok_id:'',
       blok_id: '',
-      selected_gudang_id: '',
+      //selected_gudang_id :'',
       selected_gudang_name: '',
-      modal_stat: false
+      modal_stat: false,
+      search: ''
     };
+  },
+  watch: {
+    search: function search() {
+      //APABILA VALUE DARI SEARCH BERUBAH MAKA AKAN MEMINTA DATA
+      //SESUAI DENGAN DATA YANG SEDANG DICARI
+      this.getcoils(this.search);
+    }
   },
   created: function created() {
     this.getGudangs(), this.getBloks();
+    this.getcoils();
   },
-  computed: _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])(['errors'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])('blok', {
+  computed: _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])(['errors'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])('blok', {
     blok: function blok(state) {
       return state.blok;
     }
@@ -3693,8 +3733,46 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     gudangs: function gudangs(state) {
       return state.gudangs;
     }
-  })),
-  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('gudang', ['getGudangs'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapMutations"])('blok', ['CLEAR_FORM'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('blok', ['submitBlok', 'getBloks', 'editBlok', 'removeBlok', 'updateBlok'])), {}, {
+  })), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])('coil', {
+    coils: function coils(state) {
+      return state.coils;
+    }
+  })), {}, {
+    selected_blok_id: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_blok_id;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_BLOK_ID', val);
+      }
+    },
+    selected_gudang_id: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_gudang_id;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_GUDANG_ID', val);
+      }
+    },
+    selected_coil_id: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_coil_id;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_COIL_ID', val);
+      }
+    }
+  }),
+  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('gudang', ['getGudangs'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapMutations"])('blok', ['CLEAR_FORM'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('blok', ['submitBlok', 'getBloks', 'editBlok', 'removeBlok', 'updateBlok'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('coil', ['getcoils'])), {}, {
     open: function open(id) {
       this.$store.dispatch(vuex_modal__WEBPACK_IMPORTED_MODULE_2__["PUSH"], {
         name: 'example'
@@ -3732,6 +3810,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.blok_id = id;
       this.selected_gudang_id = idGudang;
       this.selected_gudang_name = namaGudang;
+    },
+    selectCoil: function selectCoil(id) {
+      this.selected_coil_id = id;
+      console.log(this.selected_coil_id);
     },
     setting: function setting() {
       this.selected_blok_id = this.blok_id;
@@ -3812,6 +3894,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -3894,6 +3983,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3937,6 +4027,17 @@ __webpack_require__.r(__webpack_exports__);
       _this.image2 = image2;
     };
   },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('gudang', {
+    selected_blok_id: function selected_blok_id(state) {
+      return state.selected_blok_id;
+    },
+    selected_gudang_id: function selected_gudang_id(state) {
+      return state.selected_gudang_id;
+    },
+    selected_coil_id: function selected_coil_id(state) {
+      return state.selected_coil_id;
+    }
+  })),
   methods: {
     fitStageIntoParentContainer: function fitStageIntoParentContainer() {
       this.container = document.querySelector('#stage-parent'); // now we need to fit stage into parent container
@@ -3952,7 +4053,7 @@ __webpack_require__.r(__webpack_exports__);
         y: scale
       };
     },
-    addCoil: function addCoil() {
+    addSlot: function addSlot() {
       var id = Math.round(Math.random() * 10000).toString();
       var pos = {
         id: id,
@@ -3961,6 +4062,7 @@ __webpack_require__.r(__webpack_exports__);
         width: 100,
         height: 130,
         img: false,
+        coil_code: null,
         serial_code: null,
         rectext: {
           id: id,
@@ -4001,7 +4103,7 @@ __webpack_require__.r(__webpack_exports__);
       var id = item.id;
       item.img = true;
       item.rect.visible = false;
-      item.serial_code = 'serial ' + id; // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+      item.coil_code = this.selected_coil_id; // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
       // this.list.push(img);
 
       this.save();
@@ -4233,6 +4335,7 @@ __webpack_require__.r(__webpack_exports__);
     load: function load() {
       var data = localStorage.getItem('storage') || '[]';
       this.list = JSON.parse(data);
+      this.list;
     },
     save: function save() {
       localStorage.setItem('storage', JSON.stringify(this.list));
@@ -31540,6 +31643,25 @@ exports.push([module.i, "@charset \"utf-8\";\n\n.modal-open {\n  overflow: hidde
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/App.vue?vue&type=style&index=0&lang=css&":
+/*!**********************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/App.vue?vue&type=style&index=0&lang=css& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\nhtml, body {\nheight: 100%;\noverflow-y:scroll;\nmargin: 0;\npadding: 0;\n}\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/gudang/View.vue?vue&type=style&index=0&lang=css&":
 /*!************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/pages/gudang/View.vue?vue&type=style&index=0&lang=css& ***!
@@ -31552,7 +31674,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\nbody,html{\n\t\theight: 100%;\n}\n\n\t/* remove outer padding */\n.main .row{\n\t\tpadding: 0px;\n\t\tmargin: 0px;\n}\n\n\t/*Remove rounded coners*/\nnav.sidebar.navbar {\n\t\tborder-radius: 0px;\n}\n.navbar-brand > a:hover,\n\t.navbar-brand > a:focus{\n\t\tcolor: rgb(0, 0, 0);\n}\n.navbar-inverse .navbar-nav > li > a:hover,\n\t.navbar-inverse .navbar-nav > li > a:focus {\n\t\t\tcolor: rgb(0, 0, 0);\n\t    background: #f7f7f7;\n}\n.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > .open > a:hover {\n    color: #fff;\n    background-color: #3c8dbc;\n}\n.navbar-inverse .navbar-brand #listgudang :hover {\n    color: rgb(0, 0, 0);\n}\n.navbar-inverse .navbar-nav #listgudang > li > a:hover  {\n    color: rgba(68, 60, 60, 0.205);\n}\nnav.sidebar, .main{\n\t transition: margin 200ms ease-out;\n}\n\n\t/* Add gap to nav and right windows.*/\n.main{\n\t\tpadding: 10px 10px 0 10px;\n}\n\n\t/* .....NavBar: Icon only with coloring/layout.....*/\n\n\t/*small/medium side display*/\n@media (min-width: 991px) {\n\n\t\t/*Allow main to be next to Nav*/\n.main{\n\t\t\tposition: absolute;\n\t\t\twidth: calc(100% - 40px); /*keeps 100% minus nav size*/\n\t\t\tmargin-left: 40px;\n\t\t\tfloat: right;\n}\n.navbar-inverse {\n            background-color: #fff0;\n            border-color : #fff0;\n}\n.skin-blue .sidebar a {\n            color: black;\n}\n.navbar-inverse .navbar-nav > li > a {\n            color: black;\n}\n\t\t/*lets nav bar to be showed on mouseover*/\nnav.sidebar:hover + .main{\n\t\t\tmargin-left: 200px;\n}\n\n\t\t/*Center Brand*/\nnav.sidebar.navbar.sidebar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {\n\t\t\tmargin-left: 0px;\n}\n\t\t/*Center Brand*/\nnav.sidebar .navbar-brand, nav.sidebar .navbar-header{\n\t\t\ttext-align: center;\n\t\t\twidth: 100%;\n\t\t\tmargin-left: 0px;\n}\n\n\t\t/*Center Icons*/\nnav.sidebar a{\n\t\t\tpadding-right: 13px;\n}\n\n\t\t/*adds border top to first nav box */\nnav.sidebar .navbar-nav > li:first-child{\n\t\t\tborder-top: 1px #e5e5e5 solid;\n}\n\n\t\t/*adds border to bottom nav boxes*/\nnav.sidebar .navbar-nav > li{\n\t\t\tborder-bottom: 1px #e5e5e5 solid;\n}\n\n\t\t/* Colors/style dropdown box*/\nnav.sidebar .navbar-nav .open .dropdown-menu {\n\t\t\tposition: static;\n\t\t\tfloat: none;\n\t\t\twidth: auto;\n\t\t\tmargin-top: 0;\n\t\t\tbackground-color: transparent;\n\t\t\tborder: 0;\n\t\t\tbox-shadow: none;\n}\n\n\t\t/*allows nav box to use 100% width*/\nnav.sidebar .navbar-collapse, nav.sidebar .container-fluid{\n\t\t\tpadding: 15px;\n}\n\n\t\t/*colors dropdown box text */\n.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n\t\t\tcolor: #000;\n\t\t\tbackground: cornsilk;\n\t\t\tmargin: 5px;\n}\n\n\t\t/*gives sidebar width/height*/\nnav.sidebar{\n\t\t\twidth: auto;\n\t\t\theight: 100%;\n\t\t\tmargin-left: -160px;\n\t\t\tfloat: left;\n\t\t\tz-index: 8000;\n\t\t\tmargin-bottom: 0px;\n}\n\n\t\t/*give sidebar 100% width;*/\nnav.sidebar li {\n\t\t\twidth: 100%;\n}\n\n\t\t/* Move nav to full on mouse over*/\nnav.sidebar:hover{\n\t\t\tmargin-left: 0px;\n}\n\t\t/*for hiden things when navbar hidden*/\n.forAnimate{\n\t\t\topacity: 0;\n}\n}\n\n\t/* .....NavBar: Fully showing nav bar..... */\n@media (min-width:992px) {\n\n\t\t/*Allow main to be next to Nav*/\n.main{\n\t\t\twidth: calc(100% - 200px); /*keeps 100% minus nav size*/\n\t\t\tmargin-left: 200px;\n}\n\n\t\t/*Show all nav*/\nnav.sidebar{\n\t\t\tmargin-left: 0px;\n\t\t\tfloat: left;\n\t\t\tbackground :white;\n}\n\t\t/*Show hidden items on nav*/\nnav.sidebar .forAnimate{\n\t\t\topacity: 1;\n}\n}\nnav.sidebar .navbar-nav .open .dropdown-menu>li>a:hover, nav.sidebar .navbar-nav .open .dropdown-menu>li>a:focus {\n\t\tcolor: #000;\n\t\tbackground-color: #9f997f;\n}\nnav:hover .forAnimate{\n\t\topacity: 1;\n}\nsection{\n\t\tpadding-left: 15px;\n}\n.maps {\n        width: 100%;\n        height: 500px;\n        background-color :grey;\n}\n    ", ""]);
+exports.push([module.i, "\nbody,html{\n\t\theight: 100%;\n}\n\n\t/* remove outer padding */\n.main .row{\n\t\tpadding: 0px;\n\t\tmargin: 0px;\n}\n\n\t/*Remove rounded coners*/\nnav.sidebar.navbar {\n\t\tborder-radius: 0px;\n}\n.navbar-brand > a:hover,\n\t.navbar-brand > a:focus{\n\t\tcolor: rgb(0, 0, 0);\n}\n.navbar-inverse .navbar-nav > li > a:hover,\n\t.navbar-inverse .navbar-nav > li > a:focus {\n\t\t\tcolor: rgb(0, 0, 0);\n\t    background: #f7f7f7;\n}\n.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > .open > a:hover {\n    color: #fff;\n    background-color: #3c8dbc;\n}\n.navbar-inverse .navbar-brand #listgudang :hover {\n    color: rgb(0, 0, 0);\n}\n.navbar-inverse .navbar-nav #listgudang > li > a:hover  {\n    color: rgba(68, 60, 60, 0.205);\n}\nnav.sidebar, .main{\n\t transition: margin 200ms ease-out;\n}\n\n\t/* Add gap to nav and right windows.*/\n.main{\n\t\tpadding: 10px 10px 0 10px;\n}\n\n\t/* .....NavBar: Icon only with coloring/layout.....*/\n\n\t/*small/medium side display*/\n@media (min-width: 991px) {\n\n\t\t/*Allow main to be next to Nav*/\n.main{\n\t\t\tposition: absolute;\n\t\t\twidth: calc(100% - 40px); /*keeps 100% minus nav size*/\n\t\t\tmargin-left: 40px;\n\t\t\tfloat: right;\n}\n.navbar-inverse {\n            background-color: #fff0;\n            border-color : #fff0;\n}\n.skin-blue .sidebar a {\n            color: black;\n}\n.navbar-inverse .navbar-nav > li > a {\n            color: black;\n}\n\t\t/*lets nav bar to be showed on mouseover*/\nnav.sidebar:hover + .main{\n\t\t\tmargin-left: 200px;\n}\n\n\t\t/*Center Brand*/\nnav.sidebar.navbar.sidebar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {\n\t\t\tmargin-left: 0px;\n}\n\t\t/*Center Brand*/\nnav.sidebar .navbar-brand, nav.sidebar .navbar-header{\n\t\t\ttext-align: center;\n\t\t\twidth: 100%;\n\t\t\tmargin-left: 0px;\n}\n\n\t\t/*Center Icons*/\nnav.sidebar a{\n\t\t\tpadding-right: 13px;\n}\n\n\t\t/*adds border top to first nav box */\nnav.sidebar .navbar-nav > li:first-child{\n\t\t\tborder-top: 1px #e5e5e5 solid;\n}\n\n\t\t/*adds border to bottom nav boxes*/\nnav.sidebar .navbar-nav > li{\n\t\t\tborder-bottom: 1px #e5e5e5 solid;\n}\n\n\t\t/* Colors/style dropdown box*/\nnav.sidebar .navbar-nav .open .dropdown-menu {\n\t\t\tposition: static;\n\t\t\tfloat: none;\n\t\t\twidth: auto;\n\t\t\tmargin-top: 0;\n\t\t\tbackground-color: transparent;\n\t\t\tborder: 0;\n\t\t\tbox-shadow: none;\n}\n\n\t\t/*allows nav box to use 100% width*/\nnav.sidebar .navbar-collapse, nav.sidebar .container-fluid{\n\t\t\tpadding: 15px;\n}\n\n\t\t/*colors dropdown box text */\n.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {\n\t\t\tcolor: #000;\n\t\t\tbackground: cornsilk;\n\t\t\tmargin: 5px;\n}\n\n\t\t/*gives sidebar width/height*/\nnav.sidebar{\n\t\t\twidth: auto;\n\t\t\theight: 100%;\n\t\t\tmargin-left: -160px;\n\t\t\tfloat: left;\n\t\t\tz-index: 8000;\n\t\t\tmargin-bottom: 0px;\n}\n\n\t\t/*give sidebar 100% width;*/\nnav.sidebar li {\n\t\t\twidth: 100%;\n}\n\n\t\t/* Move nav to full on mouse over*/\nnav.sidebar:hover{\n\t\t\tmargin-left: 0px;\n}\n\t\t/*for hiden things when navbar hidden*/\n.forAnimate{\n\t\t\topacity: 0;\n}\n}\n\n\t/* .....NavBar: Fully showing nav bar..... */\n@media (min-width:992px) {\n\n\t\t/*Allow main to be next to Nav*/\n.main{\n\t\t\twidth: calc(100% - 200px); /*keeps 100% minus nav size*/\n\t\t\tmargin-left: 200px;\n}\n\n\t\t/*Show all nav*/\nnav.sidebar{\n\t\t\tmargin-left: 0px;\n\t\t\tfloat: left;\n\t\t\tbackground :white;\n}\n\t\t/*Show hidden items on nav*/\nnav.sidebar .forAnimate{\n\t\t\topacity: 1;\n}\n}\nnav.sidebar .navbar-nav .open .dropdown-menu>li>a:hover, nav.sidebar .navbar-nav .open .dropdown-menu>li>a:focus {\n\t\tcolor: #000;\n\t\tbackground-color: #9f997f;\n}\nnav:hover .forAnimate{\n\t\topacity: 1;\n}\nsection{\n\t\tpadding-left: 15px;\n}\n.maps {\n        width: 100%;\n        height: 500px;\n        background-color :grey;\n}\n.coil-data{\n        max-height:300px;\n        overflow-y:scroll;\n}\n\n    ", ""]);
 
 // exports
 
@@ -31571,7 +31693,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\nbody {\n   margin: 0;\n   padding: 0;\n   overflow: hidden;\n   background-color: #f0f0f0;\n}\n#stage-parent {\n   width: 100%;\n}\n.tombol {\n   background-color: white;\n}\n", ""]);
+exports.push([module.i, "\nbody {\n   margin: 0;\n   padding: 0;\n   \n   background-color: #f0f0f0;\n}\n#stage-parent {\n   width: 100%;\n}\n.tombol {\n   background-color: white;\n}\n", ""]);
 
 // exports
 
@@ -46904,6 +47026,36 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/App.vue?vue&type=style&index=0&lang=css&":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/App.vue?vue&type=style&index=0&lang=css& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../node_modules/css-loader??ref--6-1!../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../node_modules/postcss-loader/src??ref--6-2!../../node_modules/vue-loader/lib??vue-loader-options!./App.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/App.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/gudang/View.vue?vue&type=style&index=0&lang=css&":
 /*!****************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/pages/gudang/View.vue?vue&type=style&index=0&lang=css& ***!
@@ -51021,6 +51173,7 @@ var render = function() {
           "nav",
           {
             staticClass: "navbar-inverse sidebar",
+            staticStyle: { "margin-bottom": "20px" },
             attrs: { role: "navigation" }
           },
           [
@@ -51115,6 +51268,82 @@ var render = function() {
                             )
                           ],
                           2
+                        )
+                      ])
+                    }),
+                    0
+                  )
+                ]
+              )
+            ])
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "nav",
+          {
+            staticClass: "navbar-inverse sidebar ",
+            staticStyle: { width: "100%" },
+            attrs: { role: "navigation" }
+          },
+          [
+            _c("div", { staticClass: "container-fluid" }, [
+              _vm._m(1),
+              _vm._v(" "),
+              _c("div", {}, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.search,
+                      expression: "search"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text", placeholder: "Cari..." },
+                  domProps: { value: _vm.search },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.search = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "collapse navbar-collapse",
+                  attrs: { id: "bs-sidebar-navbar-collapse-2" }
+                },
+                [
+                  _c(
+                    "ul",
+                    {
+                      staticClass: "nav navbar-nav  coil-data",
+                      staticStyle: { width: "100%" },
+                      attrs: { id: "listgudang" }
+                    },
+                    _vm._l(_vm.coils.data, function(coil, index) {
+                      return _c("li", { key: index }, [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "dropdown-toggle",
+                            attrs: { href: "#", "data-toggle": "dropdown" },
+                            on: {
+                              click: function($event) {
+                                return _vm.selectCoil(coil.item_code)
+                              }
+                            }
+                          },
+                          [_vm._v(" " + _vm._s(coil.item_code) + "  ")]
                         )
                       ])
                     }),
@@ -51238,6 +51467,39 @@ var staticRenderFns = [
         [_vm._v("gudang/block")]
       )
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "navbar-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "navbar-toggle",
+          attrs: {
+            type: "button",
+            "data-toggle": "collapse",
+            "data-target": "#bs-sidebar-navbar-collapse-2"
+          }
+        },
+        [
+          _c("span", { staticClass: "sr-only" }, [_vm._v("Toggle navigation")]),
+          _vm._v(" "),
+          _c("span", { staticClass: "icon-bar" }),
+          _vm._v(" "),
+          _c("span", { staticClass: "icon-bar" }),
+          _vm._v(" "),
+          _c("span", { staticClass: "icon-bar" })
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "a",
+        { staticClass: "navbar-brand", staticStyle: { "margin-top": "20px" } },
+        [_vm._v("Unsetted Coil")]
+      )
+    ])
   }
 ]
 render._withStripped = true
@@ -51324,7 +51586,11 @@ var render = function() {
                   "margin-right": "0px"
                 },
                 attrs: { type: "button" },
-                on: { click: _vm.addCoil }
+                on: {
+                  click: function($event) {
+                    return _vm.addSlot()
+                  }
+                }
               },
               [
                 _c("i", { staticClass: "glyphicon glyphicon-plus" }),
@@ -51343,8 +51609,7 @@ var render = function() {
                   "margin-left": "15px",
                   "margin-right": "0px"
                 },
-                attrs: { type: "button" },
-                on: { click: _vm.addNonCoil }
+                attrs: { type: "button" }
               },
               [
                 _c("i", { staticClass: "glyphicon glyphicon-plus" }),
@@ -69050,7 +69315,9 @@ module.exports = g;
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _App_vue_vue_type_template_id_f348271a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./App.vue?vue&type=template&id=f348271a& */ "./resources/js/App.vue?vue&type=template&id=f348271a&");
 /* harmony import */ var _App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./App.vue?vue&type=script&lang=js& */ "./resources/js/App.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./App.vue?vue&type=style&index=0&lang=css& */ "./resources/js/App.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -69058,7 +69325,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _App_vue_vue_type_template_id_f348271a___WEBPACK_IMPORTED_MODULE_0__["render"],
   _App_vue_vue_type_template_id_f348271a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
@@ -69087,6 +69354,22 @@ component.options.__file = "resources/js/App.vue"
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/babel-loader/lib??ref--4-0!../../node_modules/vue-loader/lib??vue-loader-options!./App.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/App.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/App.vue?vue&type=style&index=0&lang=css&":
+/*!***************************************************************!*\
+  !*** ./resources/js/App.vue?vue&type=style&index=0&lang=css& ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/style-loader!../../node_modules/css-loader??ref--6-1!../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../node_modules/postcss-loader/src??ref--6-2!../../node_modules/vue-loader/lib??vue-loader-options!./App.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/App.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+
 
 /***/ }),
 
@@ -71142,9 +71425,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _stores_import_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./stores/import.js */ "./resources/js/stores/import.js");
 /* harmony import */ var _stores_coil_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./stores/coil.js */ "./resources/js/stores/coil.js");
 /* harmony import */ var _stores_blok_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./stores/blok.js */ "./resources/js/stores/blok.js");
+/* harmony import */ var _stores_from_view_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./stores/from_view.js */ "./resources/js/stores/from_view.js");
 
 
  //IMPORT MODULE SECTION
+
 
 
 
@@ -71165,7 +71450,8 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     importExcel: _stores_import_js__WEBPACK_IMPORTED_MODULE_7__["default"],
     coil: _stores_coil_js__WEBPACK_IMPORTED_MODULE_8__["default"],
     blok: _stores_blok_js__WEBPACK_IMPORTED_MODULE_9__["default"],
-    modalModule: vuex_modal__WEBPACK_IMPORTED_MODULE_2__["modalModule"]
+    modalModule: vuex_modal__WEBPACK_IMPORTED_MODULE_2__["modalModule"],
+    from_view: _stores_from_view_js__WEBPACK_IMPORTED_MODULE_10__["default"]
   },
   //STATE HAMPIR SERUPA DENGAN PROPERTY DATA DARI COMPONENT HANYA SAJA DAPAT DIGUNAKAN SECARA GLOBAL
   state: {
@@ -71682,6 +71968,158 @@ var actions = {
 
 /***/ }),
 
+/***/ "./resources/js/stores/from_view.js":
+/*!******************************************!*\
+  !*** ./resources/js/stores/from_view.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api.js */ "./resources/js/api.js");
+
+
+var state = function state() {
+  return {
+    selected_blok: '',
+    selected_blok_id: '',
+    blok_id: '',
+    selected_gudang_id: '',
+    selected_gudang_name: '',
+    //UNTUK MENAMPUNG DATA OUTLETS YANG DIDAPATKAN DARI DATABASE
+    page: 1 //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
+
+  };
+};
+
+var mutations = {
+  //MEMASUKKAN DATA KE STATE locationS
+  ASSIGN_DATA: function ASSIGN_DATA(state, payload) {
+    state.locations = payload;
+  },
+  //MENGUBAH DATA STATE PAGE
+  SET_PAGE: function SET_PAGE(state, payload) {
+    state.page = payload;
+  },
+  //MENGUBAH DATA STATE location
+  ASSIGN_FORM: function ASSIGN_FORM(state, payload) {
+    state.location = {
+      item_category: payload.item_category,
+      item_type: payload.item_type,
+      item_code: payload.item_code,
+      item_description: payload.item_description,
+      serial_Code: payload.serial_Code,
+      id_location: payload.id_location,
+      balance: payload.balance
+    };
+  },
+  //ME-RESET STATE OUTLET MENJADI KOSONG
+  CLEAR_FORM: function CLEAR_FORM(state) {
+    state.location = {
+      item_category: '',
+      item_type: '',
+      item_code: '',
+      item_description: '',
+      serial_code: '',
+      id_location: '',
+      balance: ''
+    };
+  }
+};
+var actions = {
+  //FUNGSI INI UNTUK MELAKUKAN REQUEST DATA OUTLET DARI SERVER
+  getlocations: function getlocations(_ref, payload) {
+    var commit = _ref.commit,
+        state = _ref.state;
+    //MENGECEK PAYLOAD ADA ATAU TIDAK
+    var search = typeof payload != 'undefined' ? payload : '';
+    return new Promise(function (resolve, reject) {
+      //REQUEST DATA DENGAN ENDPOINT /OUTLETS
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].get("/locations?page=".concat(state.page, "&q=").concat(search)).then(function (response) {
+        //SIMPAN DATA KE STATE MELALUI MUTATIONS
+        commit('ASSIGN_DATA', response.data);
+        resolve(response.data);
+      });
+    });
+  },
+  //FUNGSI UNTUK MENAMBAHKAN DATA BARU
+  submitlocation: function submitlocation(_ref2) {
+    var dispatch = _ref2.dispatch,
+        commit = _ref2.commit,
+        state = _ref2.state;
+    return new Promise(function (resolve, reject) {
+      //MENGIRIMKAN PERMINTAAN KE SERVER DAN MELAMPIRKAN DATA YANG AKAN DISIMPAN
+      //DARI STATE OUTLET
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].post("/locations", state.location).then(function (response) {
+        //APABILA BERHASIL KITA MELAKUKAN REQUEST LAGI
+        //UNTUK MENGAMBIL DATA TERBARU
+        dispatch('getlocations').then(function () {
+          resolve(response.data);
+        });
+      })["catch"](function (error) {
+        //APABILA TERJADI ERROR VALIDASI
+        //DIMANA LARAVEL MENGGUNAKAN CODE 422
+        if (error.response.status == 422) {
+          //MAKA LIST ERROR AKAN DIASSIGN KE STATE ERRORS
+          commit('SET_ERRORS', error.response.data.errors, {
+            root: true
+          });
+        }
+      });
+    });
+  },
+  //UNTUK MENGAMBIL SINGLE DATA DARI SERVER BERDASARKAN CODE OUTLET
+  editlocation: function editlocation(_ref3, payload) {
+    var commit = _ref3.commit;
+    return new Promise(function (resolve, reject) {
+      //MELAKUKAN REQUEST DENGAN MENGIRIMKAN CODE OUTLET DI URL
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].get("/locations/".concat(payload, "/edit")).then(function (response) {
+        //APABIL BERHASIL, DI ASSIGN KE FORM
+        commit('ASSIGN_FORM', response.data.data);
+        resolve(response.data);
+      });
+    });
+  },
+  //UNTUK MENGUPDATE DATA BERDASARKAN CODE YANG SEDANG DIEDIT
+  updatelocation: function updatelocation(_ref4, payload) {
+    var state = _ref4.state,
+        commit = _ref4.commit;
+    return new Promise(function (resolve, reject) {
+      //MELAKUKAN REQUEST DENGAN MENGIRIMKAN CODE DIURL
+      //DAN MENGIRIMKAN DATA TERBARU YANG TELAH DIEDIT
+      //MELALUI STATE OUTLET
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].put("/locations/".concat(payload), state.location).then(function (response) {
+        //FORM DIBERSIHKAN
+        commit('CLEAR_FORM');
+        resolve(response.data);
+      });
+    });
+  },
+  //MENGHAPUS DATA
+  removelocation: function removelocation(_ref5, payload) {
+    var dispatch = _ref5.dispatch;
+    return new Promise(function (resolve, reject) {
+      //MENGIRIM PERMINTAAN KE SERVER UNTUK MENGHAPUS DATA
+      //DENGAN METHOD DELETE DAN ID OUTLET DI URL
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"]("/locations/".concat(payload)).then(function (response) {
+        //APABILA BERHASIL, FETCH DATA TERBARU DARI SERVER
+        dispatch('getlocations').then(function () {
+          return resolve();
+        });
+      });
+    });
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: state,
+  actions: actions,
+  mutations: mutations
+});
+
+/***/ }),
+
 /***/ "./resources/js/stores/gudang.js":
 /*!***************************************!*\
   !*** ./resources/js/stores/gudang.js ***!
@@ -71707,6 +72145,9 @@ var state = function state() {
       address: '',
       phone: ''
     },
+    selected_blok_id: '',
+    selected_gudang_id: '',
+    selected_coil_id: '',
     page: 1 //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
 
   };
@@ -71716,6 +72157,15 @@ var mutations = {
   //MEMASUKKAN DATA KE STATE GUDANGS
   ASSIGN_DATA: function ASSIGN_DATA(state, payload) {
     state.gudangs = payload;
+  },
+  ASSIGN_BLOK_ID: function ASSIGN_BLOK_ID(state, payload) {
+    state.selected_blok_id = payload;
+  },
+  ASSIGN_GUDANG_ID: function ASSIGN_GUDANG_ID(state, payload) {
+    state.selected_gudang_id = payload;
+  },
+  ASSIGN_COIL_ID: function ASSIGN_COIL_ID(state, payload) {
+    state.selected_coil_id = payload;
   },
   //MENGUBAH DATA STATE PAGE
   SET_PAGE: function SET_PAGE(state, payload) {

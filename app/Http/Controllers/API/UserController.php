@@ -36,7 +36,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|string',
             'gudang_id' => 'required|exists:gudangs,id',
-            'photo' => 'required|image'
+            'photo' => 'image',
         ]);
 
         DB::beginTransaction();
@@ -56,6 +56,7 @@ class UserController extends Controller
                 'gudang_id' => $request->gudang_id,
                 'role' => 1
             ]);
+
             $user->assignRole('admin');
             DB::commit();
             return response()->json(['status' => 'success'], 200);

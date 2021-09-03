@@ -14,4 +14,10 @@ class gudang extends Model
         return $this->hasMany('App\blok');
        
     }
+
+    public function slot()
+    {
+        return $this->hasMany('App\slot');
+       
+    }
 }

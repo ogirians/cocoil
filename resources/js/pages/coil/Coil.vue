@@ -60,7 +60,6 @@ export default {
                 { key: 'gudang_id', label: 'gudang' },
                 { key: 'blok_id', label: 'blok' },
                 { key: 'actions', label: 'aksi' }
-
             ],
             search: ''
         }

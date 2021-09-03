@@ -22,6 +22,8 @@ class AddDetailLocationCoilColumn extends Migration
             $table->char('scaleX');
             $table->char('scaleY');
             $table->char('rotation');
+            $table->char('slot_id');
+            $table->char('slot_name');
         });
     }
 
@@ -33,7 +35,8 @@ class AddDetailLocationCoilColumn extends Migration
     public function down()
     {
         Schema::table('coil_locations', function($table) {
-          
+            
+            $table->dropColumn('height');
             $table->dropColumn('width');
             $table->dropColumn('nameRect');
             $table->dropColumn('x');
@@ -41,6 +44,8 @@ class AddDetailLocationCoilColumn extends Migration
             $table->dropColumn('scaleX');
             $table->dropColumn('scaleY');
             $table->dropColumn('rotation');
+            $table->dropColumn('slot_id');
+            $table->dropColumn('slot_name');
         });
     }
 }

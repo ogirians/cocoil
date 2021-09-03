@@ -40,7 +40,7 @@
 			</div>
 		<div class="row">
 			<div class="col-md-3">
-			<nav class="navbar-inverse sidebar" role="navigation">
+			<nav class="navbar-inverse sidebar" role="navigation" style="margin-bottom:20px;">
 				<div class="container-fluid">
 					<!-- Brand and toggle get grouped for better mobile display -->
 					<div class="navbar-header">
@@ -71,7 +71,37 @@
 					
 				</div>
 			</nav>
+			<nav class="navbar-inverse sidebar " role="navigation" style="width:100%;">
+				<div class="container-fluid">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-2">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+							<a class="navbar-brand" style="margin-top: 20px;">Unsetted Coil</a>
+					</div>
+					<div class="">
+                    	<input type="text" class="form-control" placeholder="Cari..." v-model="search">
+                	</div>
+					<br>
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					
+					<div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-2">
+						<ul class="nav navbar-nav  coil-data" style="width:100%;" id="listgudang">				
+							<li v-for="(coil,index) in coils.data" :key="index"> 
+									<a @click="selectCoil(coil.item_code)" href="#" class="dropdown-toggle" data-toggle="dropdown"> {{ coil.item_code }}  </a>
+									
+							</li>					
+						</ul>
+					</div>
+					
+				</div>
+			</nav>
 			</div>
+			
 			<div class="col-md-9">
 				<div class="panel">
 					<div class="row" style="margin-right: 0px;margin-left: -15px;">
@@ -80,7 +110,7 @@
 							<h3 style="margin: 15px;margin-bottom: 0px;" v-else>Gudang {{selected_gudang_name}} : {{selected_blok}}</h3>							
 						</div>
 						<div class="col-md-2 ">
-							<button v-if="selected_gudang_id != ''"   @click="setting()" style="margin: 15px;padding-right: 10px;margin-right: 15px;margin-bottom: 15px;" type="button" class="btn btn-secondary btn-sm btn-sm btn-flat"><i class="glyphicon glyphicon-wrench"></i> blok setting</button>
+							<button v-if="selected_gudang_id != ''"  @click="setting()" style="margin: 15px;padding-right: 10px;margin-right: 15px;margin-bottom: 15px;" type="button" class="btn btn-secondary btn-sm btn-sm btn-flat"><i class="glyphicon glyphicon-wrench"></i> blok setting</button>
 						</div>
 					</div>
 					
@@ -116,17 +146,29 @@ export default {
 	 data(){
 		 return{
 			 selected_blok:'',
-			 selected_blok_id:'',
+			 //selected_blok_id:'',
 			 blok_id:'',
-			 selected_gudang_id :'',
+			 //selected_gudang_id :'',
 			 selected_gudang_name : '',
 			 modal_stat: false,
+
+			 search: '',
 		 }
 	 },
+
+	watch: {
+       
+        search() {
+            //APABILA VALUE DARI SEARCH BERUBAH MAKA AKAN MEMINTA DATA
+            //SESUAI DENGAN DATA YANG SEDANG DICARI
+            this.getcoils(this.search)
+        }
+    },
 
 	 created(){
 		 this.getGudangs(),
 		 this.getBloks()
+		 this.getcoils()
 	 },
 
 	 computed: {
@@ -144,6 +186,44 @@ export default {
 			 gudangs : state => state.gudangs
 		 }),
 
+		  ...mapState('coil', {
+			 coils : state => state.coils
+		 }),
+
+		selected_blok_id: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.gudang.selected_blok_id
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('gudang/ASSIGN_BLOK_ID', val)
+            }
+        },
+		selected_gudang_id: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.gudang.selected_gudang_id
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('gudang/ASSIGN_GUDANG_ID', val)
+            }
+        },
+		selected_coil_id: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.gudang.selected_coil_id
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('gudang/ASSIGN_COIL_ID', val)
+            }
+        },
+
 		
 	 },
 
@@ -151,6 +231,7 @@ export default {
 		 ...mapActions('gudang',['getGudangs']),
 		 ...mapMutations('blok',['CLEAR_FORM']),
 		 ...mapActions('blok',['submitBlok', 'getBloks','editBlok','removeBlok','updateBlok']),
+		 ...mapActions('coil',['getcoils']),
 		 
 
 		open (id) {
@@ -172,7 +253,7 @@ export default {
 		submit(){
 			
 			
-			this.submitBlok().then(() => {
+				this.submitBlok().then(() => {
 				this.getBloks()
 				this.getGudangs()
 				this.close()
@@ -193,6 +274,11 @@ export default {
 			this.blok_id= id;
 			this.selected_gudang_id=idGudang;
 			this.selected_gudang_name=namaGudang;
+		},
+
+		selectCoil(id){
+			this.selected_coil_id = id ;
+			console.log(this.selected_coil_id);
 		},
 
 		setting(){
@@ -465,5 +551,12 @@ export default {
         height: 500px;
         background-color :grey;
     }
+
+	
+    .coil-data{
+        max-height:300px;
+        overflow-y:scroll;
+    }
+
     </style>
 

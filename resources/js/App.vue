@@ -5,6 +5,7 @@
         <div class="content-wrapper">
             <router-view></router-view>
         </div>
+
         <app-footer v-if="isAuth" />
     </div>
 </template>
@@ -23,3 +24,14 @@
         }
     }
 </script>
+
+<style>
+
+    html, body {
+    height: 100%;
+    overflow-y:scroll;
+    margin: 0;
+    padding: 0;
+    }
+
+</style>

@@ -18,19 +18,30 @@ Route::resource('/gudangs', 'API\GudangController')->except(['show']);
     
 Route::group(['middleware' => 'auth:api'], function() {
    
+    //get coil data
     Route::resource('/coils', 'API\CoilController')->except(['show']);
 
+    //get coil location
+    Route::get('/location/{id}', 'API\LocationController@getLocation')->name('location');
+
+    //roles
     Route::get('roles', 'API\RolePermissionController@getAllRole')->name('roles');
+    
+    //permisions
     Route::get('permissions', 'API\RolePermissionController@getAllPermission')->name('permission');
     Route::post('role-permission', 'API\RolePermissionController@getRolePermission')->name('role_permission');
     Route::post('set-role-permission', 'API\RolePermissionController@setRolePermission')->name('set_role_permission');
     Route::post('set-role-user', 'API\RolePermissionController@setRoleUser')->name('user.set_role');
 
+    //user
     Route::get('user-authenticated', 'API\UserController@getUserLogin')->name('user.authenticated');
     Route::get('user-lists', 'API\UserController@userLists')->name('user.index');
 
+    //get employee
     Route::resource('/Employees', 'API\UserController')->except(['create', 'show', 'update']);
     Route::post('/Employees/{id}', 'API\UserController@update')->name('Employees.update');
 
+
+    //import
     Route::post('/import','ImportController@import')->name('import');
 });

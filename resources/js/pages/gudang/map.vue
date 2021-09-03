@@ -5,8 +5,8 @@
     <button v-if="editMode == true" @click="lookMode()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> look Mode </button>
     <button v-if="editMode == false" @click="editSlotMode()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> edit Mode </button>
     
-    <button v-if="editMode == true" @click="addCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Slot </button>
-    <button v-if="editMode == true" @click="addNonCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Object </button>
+    <button v-if="editMode == true" @click="addSlot()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Slot </button>
+    <button v-if="editMode == true" style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Object </button>
     <button v-if="setCoilButton == true && editMode == false" @click="SetCoil()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Set COil </button>
 		<button v-if="setRemoveButton == true && editMode == false" @click="removeCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Remove </button>
     <button  style="margin: 10px 5px;margin-left: 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Text </button>	   
@@ -81,6 +81,7 @@
 </template>
 
 <script>
+import { mapActions, mapMutations, mapState } from 'vuex'
 
       
 export default {
@@ -137,6 +138,18 @@ export default {
             };
            
   },
+
+  computed:{
+
+    ...mapState('gudang', {
+          selected_blok_id : state => state.selected_blok_id,
+          selected_gudang_id : state => state.selected_gudang_id,
+          selected_coil_id : state => state.selected_coil_id,
+     
+		 }),
+
+  },
+
   methods: {
           fitStageIntoParentContainer() { 
             this.container = document.querySelector('#stage-parent');
@@ -153,7 +166,7 @@ export default {
             this.stage.scale = ({ x: scale, y: scale });
           },
         
-          addCoil() {  
+          addSlot() {  
           const id = Math.round(Math.random() * 10000).toString();          
             const pos = {                                        
               id: id,                   
@@ -162,6 +175,7 @@ export default {
               width: 100,
               height: 130,
               img:false,
+              coil_code:null,
               serial_code: null,
               rectext : {id: id, x: 0, y:0, text:id, visible:true, name:'text'+ id, rotation: 0, fontSize :15} ,
               rect: {id:id, x: 0, y:0, fill : '#f7a7a7', width: 100, height: 150,  name:'group'+ id , scaleX: 1, scaleY: 1, rotation: 0, draggable:true, stroke :5, visible: true, imgCoil:''}              
@@ -179,8 +193,8 @@ export default {
             const id = item.id;
             item.img =  true;
             item.rect.visible = false;
-            item.serial_code = 'serial ' + id;
-            
+            item.coil_code = this.selected_coil_id;
+              
          // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
             
            // this.list.push(img);
@@ -450,7 +464,9 @@ export default {
           load() {
             const data = localStorage.getItem('storage') || '[]';
            
-            this.list = JSON.parse(data);           
+            this.list = JSON.parse(data);    
+            
+            this.list
                       
             
           },
@@ -477,7 +493,7 @@ export default {
      body {
         margin: 0;
         padding: 0;
-        overflow: hidden;
+        
         background-color: #f0f0f0;
       }
 

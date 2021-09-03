@@ -1,79 +1,60 @@
 import $axios from '../api.js'
 
 const state = () => ({
-    gudangs: [], //UNTUK MENAMPUNG DATA OUTLETS YANG DIDAPATKAN DARI DATABASE
-
-    //UNTUK MENAMPUNG VALUE DARI FORM INPUTAN NANTINYA
-    //STATE INI AKAN DIGUNAKAN PADA FORM ADD OUTLET YANG AKAN DIBAHAS KEMUDIAN
-    gudang: {
-        code: '',
-        name: '',
-        status: false,
-        address: '',
-        phone: ''
-    },
-
-    selected_blok_id:'',
     
+    selected_blok:'',
+    selected_blok_id:'',
+    blok_id:'',
     selected_gudang_id :'',
-    selected_coil_id :'',
-  
+    selected_gudang_name : '',
+     //UNTUK MENAMPUNG DATA OUTLETS YANG DIDAPATKAN DARI DATABASE
 
     page: 1 //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
 })
 
 const mutations = {
-    //MEMASUKKAN DATA KE STATE GUDANGS
+    //MEMASUKKAN DATA KE STATE locationS
     ASSIGN_DATA(state, payload) {
-        state.gudangs = payload
+        state.locations = payload
     },
-
-    ASSIGN_BLOK_ID(state, payload) {
-        state.selected_blok_id = payload
-    },
-
-    ASSIGN_GUDANG_ID(state, payload) {
-        state.selected_gudang_id = payload
-    },
-
-    ASSIGN_COIL_ID(state, payload) {
-        state.selected_coil_id = payload
-    },
-
     //MENGUBAH DATA STATE PAGE
     SET_PAGE(state, payload) {
         state.page = payload
     },
-    //MENGUBAH DATA STATE GUDANG
+    //MENGUBAH DATA STATE location
     ASSIGN_FORM(state, payload) {
-        state.gudang = {
-            code: payload.code,
-            name: payload.name,
-            status: payload.status,
-            address: payload.address,
-            phone: payload.phone
+        state.location = {
+            item_category: payload.item_category,
+            item_type: payload.item_type,
+            item_code: payload.item_code,
+            item_description: payload.item_description,
+            serial_Code: payload.serial_Code,
+            id_location: payload.id_location,
+            balance: payload.balance,
         }
     },
     //ME-RESET STATE OUTLET MENJADI KOSONG
     CLEAR_FORM(state) {
-        state.gudang = {
-            code: '',
-            name: '',
-            status: false,
-            address: '',
-            phone: ''
+        state.location = {
+            item_category: '',
+            item_type: '',
+            item_code: '',
+            item_description: '',
+            serial_code: '',
+            id_location:'',
+            balance: '',
         }
     }
 }
 
 const actions = {
     //FUNGSI INI UNTUK MELAKUKAN REQUEST DATA OUTLET DARI SERVER
-    getGudangs({ commit, state }, payload) {
+    getlocations({ commit, state }, payload) {
         //MENGECEK PAYLOAD ADA ATAU TIDAK
         let search = typeof payload != 'undefined' ? payload:''
         return new Promise((resolve, reject) => {
             //REQUEST DATA DENGAN ENDPOINT /OUTLETS
-            $axios.get(`/gudangs?page=${state.page}&q=${search}`)
+            $axios.get(`/locations?page=${state.page}&q=${search}`)
             .then((response) => {
                 //SIMPAN DATA KE STATE MELALUI MUTATIONS
                 commit('ASSIGN_DATA', response.data)
@@ -82,15 +63,15 @@ const actions = {
         })
     },
     //FUNGSI UNTUK MENAMBAHKAN DATA BARU
-    submitGudang({ dispatch, commit, state }) {
+    submitlocation({ dispatch, commit, state }) {
         return new Promise((resolve, reject) => {
             //MENGIRIMKAN PERMINTAAN KE SERVER DAN MELAMPIRKAN DATA YANG AKAN DISIMPAN
             //DARI STATE OUTLET
-            $axios.post(`/gudangs`, state.gudang)
+            $axios.post(`/locations`, state.location)
             .then((response) => {
                 //APABILA BERHASIL KITA MELAKUKAN REQUEST LAGI
                 //UNTUK MENGAMBIL DATA TERBARU
-                dispatch('getGudangs').then(() => {
+                dispatch('getlocations').then(() => {
                     resolve(response.data)
                 })
             })
@@ -105,10 +86,10 @@ const actions = {
         })
     },
     //UNTUK MENGAMBIL SINGLE DATA DARI SERVER BERDASARKAN CODE OUTLET
-    editGudang({ commit }, payload) {
+    editlocation({ commit }, payload) {
         return new Promise((resolve, reject) => {
             //MELAKUKAN REQUEST DENGAN MENGIRIMKAN CODE OUTLET DI URL
-            $axios.get(`/gudangs/${payload}/edit`)
+            $axios.get(`/locations/${payload}/edit`)
             .then((response) => {
                 //APABIL BERHASIL, DI ASSIGN KE FORM
                 commit('ASSIGN_FORM', response.data.data)
@@ -117,12 +98,12 @@ const actions = {
         })
     },
     //UNTUK MENGUPDATE DATA BERDASARKAN CODE YANG SEDANG DIEDIT
-    updateGudang({ state, commit }, payload) {
+    updatelocation({ state, commit }, payload) {
         return new Promise((resolve, reject) => {
             //MELAKUKAN REQUEST DENGAN MENGIRIMKAN CODE DIURL
             //DAN MENGIRIMKAN DATA TERBARU YANG TELAH DIEDIT
             //MELALUI STATE OUTLET
-            $axios.put(`/gudangs/${payload}`, state.gudang)
+            $axios.put(`/locations/${payload}`, state.location)
             .then((response) => {
                 //FORM DIBERSIHKAN
                 commit('CLEAR_FORM')
@@ -131,14 +112,14 @@ const actions = {
         })
     } ,
     //MENGHAPUS DATA
-    removeGudang({ dispatch }, payload) {
+    removelocation({ dispatch }, payload) {
         return new Promise((resolve, reject) => {
             //MENGIRIM PERMINTAAN KE SERVER UNTUK MENGHAPUS DATA
             //DENGAN METHOD DELETE DAN ID OUTLET DI URL
-            $axios.delete(`/gudangs/${payload}`)
+            $axios.delete(`/locations/${payload}`)
             .then((response) => {
                 //APABILA BERHASIL, FETCH DATA TERBARU DARI SERVER
-                dispatch('getGudangs').then(() => resolve())
+                dispatch('getlocations').then(() => resolve())
             })
         })
     }

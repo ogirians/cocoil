@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="0">
+
     <title>DW Laundry</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -21,7 +25,14 @@
         folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="{{ asset('assets/css/skins/_all-skins.min.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-
+    <style>
+        html, body {
+            height: 100%;
+            overflow : visible;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
  
 </head>
 <body class="hold-transition skin-blue layout-top-nav">

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CoilCollection;
 use App\coil_detail;
+use App\coil_location;
+
 
 class coilController extends Controller
 {
@@ -13,7 +15,7 @@ class coilController extends Controller
     {
         $coil = coil_detail::orderBy('created_at', 'DESC');
         if (request()->q != '') {
-            $coil = $coil->where('serial_Code', 'LIKE', '%' . request()->q . '%');
+            $coil = $coil->where('serial_Code', 'LIKE', '%' . request()->q . '%')->orWhere('item_code', 'LIKE', '%' . request()->q . '%');
         }
         return new CoilCollection($coil->paginate(10));
     }
@@ -31,6 +33,16 @@ class coilController extends Controller
         ]);
 
         coil_detail::create($request->all());
+
+        $coil = coil_detail::where('id_coil', $request->id_coil)->first();
+       
+        $id_coil_detail = $coil->id;
+
+        coil_location::create([
+            'coil_id' => $id_coil_detail
+        ]);
+
+
         return response()->json(['status' => 'success'], 200);
     }
 
