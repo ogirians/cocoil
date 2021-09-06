@@ -92,7 +92,7 @@
 					<div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-2">
 						<ul class="nav navbar-nav  coil-data" style="width:100%;" id="listgudang">				
 							<li v-for="(coil,index) in coils.data" :key="index"> 
-									<a @click="selectCoil(coil.item_code)" href="#" class="dropdown-toggle" data-toggle="dropdown"> {{ coil.item_code }}  </a>
+									<a @click="selectCoil(coil.item_code,coil.serial_Code)" href="#" class="dropdown-toggle" data-toggle="dropdown"> {{ coil.item_code }}  </a>
 									
 							</li>					
 						</ul>
@@ -223,6 +223,17 @@ export default {
                 this.$store.commit('gudang/ASSIGN_COIL_ID', val)
             }
         },
+		selected_serial_code: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.gudang.selected_serial_code
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('gudang/ASSIGN_SERIAL_CODE', val)
+            }
+        },
 
 		
 	 },
@@ -276,8 +287,9 @@ export default {
 			this.selected_gudang_name=namaGudang;
 		},
 
-		selectCoil(id){
+		selectCoil(id,serial_code){
 			this.selected_coil_id = id ;
+			this.selected_serial_code = serial_code ;
 			console.log(this.selected_coil_id);
 		},
 

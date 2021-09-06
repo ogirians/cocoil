@@ -3770,6 +3770,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         //DI VUEX JUGA AKAN DIUBAH
         this.$store.commit('gudang/ASSIGN_COIL_ID', val);
       }
+    },
+    selected_serial_code: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_serial_code;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_SERIAL_CODE', val);
+      }
     }
   }),
   methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('gudang', ['getGudangs'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapMutations"])('blok', ['CLEAR_FORM'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('blok', ['submitBlok', 'getBloks', 'editBlok', 'removeBlok', 'updateBlok'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('coil', ['getcoils'])), {}, {
@@ -3811,8 +3822,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.selected_gudang_id = idGudang;
       this.selected_gudang_name = namaGudang;
     },
-    selectCoil: function selectCoil(id) {
+    selectCoil: function selectCoil(id, serial_code) {
       this.selected_coil_id = id;
+      this.selected_serial_code = serial_code;
       console.log(this.selected_coil_id);
     },
     setting: function setting() {
@@ -4036,6 +4048,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     selected_coil_id: function selected_coil_id(state) {
       return state.selected_coil_id;
+    },
+    selected_serial_code: function selected_serial_code(state) {
+      return state.selected_serial_code;
     }
   })),
   methods: {
@@ -4091,6 +4106,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           imgCoil: ''
         }
       };
+      var slot = {};
       this.list.push(pos);
       this.save();
     },
@@ -4103,7 +4119,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var id = item.id;
       item.img = true;
       item.rect.visible = false;
-      item.coil_code = this.selected_coil_id; // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+      item.serial_code = this.selected_coil_id; // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
       // this.list.push(img);
 
       this.save();
@@ -51339,7 +51355,10 @@ var render = function() {
                             attrs: { href: "#", "data-toggle": "dropdown" },
                             on: {
                               click: function($event) {
-                                return _vm.selectCoil(coil.item_code)
+                                return _vm.selectCoil(
+                                  coil.item_code,
+                                  coil.serial_Code
+                                )
                               }
                             }
                           },
@@ -72148,6 +72167,7 @@ var state = function state() {
     selected_blok_id: '',
     selected_gudang_id: '',
     selected_coil_id: '',
+    selected_serial_code: '',
     page: 1 //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
 
   };
@@ -72166,6 +72186,9 @@ var mutations = {
   },
   ASSIGN_COIL_ID: function ASSIGN_COIL_ID(state, payload) {
     state.selected_coil_id = payload;
+  },
+  ASSIGN_SERIAL_CODE: function ASSIGN_SERIAL_CODE(state, payload) {
+    state.selected_serial_code = payload;
   },
   //MENGUBAH DATA STATE PAGE
   SET_PAGE: function SET_PAGE(state, payload) {

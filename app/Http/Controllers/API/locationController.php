@@ -35,7 +35,23 @@ class locationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'coil_id' => 'required',
+            'gudang_id' => 'required',
+            'height' => 'required',
+            'width' => 'required',
+            'nameRect' => 'required',
+            'x' => 'required',
+            'y' => 'required',
+            'scaleX' => 'required',
+            'scaleY' => 'required',
+            'rotation' => 'required',
+            'slot_id' => 'required',
+            'slot_name' => 'required',
+        ]);
+
+        gudang::create($request->all());
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**

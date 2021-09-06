@@ -145,6 +145,7 @@ export default {
           selected_blok_id : state => state.selected_blok_id,
           selected_gudang_id : state => state.selected_gudang_id,
           selected_coil_id : state => state.selected_coil_id,
+          selected_serial_code : state => state.selected_serial_code,
      
 		 }),
 
@@ -175,13 +176,16 @@ export default {
               width: 100,
               height: 130,
               img:false,
-              coil_code:null,
+              coil_code: null,
               serial_code: null,
               rectext : {id: id, x: 0, y:0, text:id, visible:true, name:'text'+ id, rotation: 0, fontSize :15} ,
               rect: {id:id, x: 0, y:0, fill : '#f7a7a7', width: 100, height: 150,  name:'group'+ id , scaleX: 1, scaleY: 1, rotation: 0, draggable:true, stroke :5, visible: true, imgCoil:''}              
             };
                    
-           
+            const slot = {
+
+            };
+
             this.list.push(pos);          
            
             this.save();
@@ -193,7 +197,7 @@ export default {
             const id = item.id;
             item.img =  true;
             item.rect.visible = false;
-            item.coil_code = this.selected_coil_id;
+            item.serial_code = this.selected_coil_id;
               
          // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
             

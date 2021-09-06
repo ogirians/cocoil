@@ -17,6 +17,7 @@ const state = () => ({
     
     selected_gudang_id :'',
     selected_coil_id :'',
+    selected_serial_code :'',
   
 
     page: 1 //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
@@ -38,6 +39,10 @@ const mutations = {
 
     ASSIGN_COIL_ID(state, payload) {
         state.selected_coil_id = payload
+    },
+
+    ASSIGN_SERIAL_CODE(state, payload) {
+        state.selected_serial_code = payload
     },
 
     //MENGUBAH DATA STATE PAGE
