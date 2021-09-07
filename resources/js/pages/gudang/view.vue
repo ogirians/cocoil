@@ -244,6 +244,7 @@ export default {
 		 ...mapActions('blok',['submitBlok', 'getBloks','editBlok','removeBlok','updateBlok']),
 		 ...mapActions('coil',['getcoils']),
 		 
+		 
 
 		open (id) {
       		this.$store.dispatch(PUSH, { name: 'example' })
@@ -264,17 +265,17 @@ export default {
 		submit(){
 			
 			
-				this.submitBlok().then(() => {
-				this.getBloks()
-				this.getGudangs()
-				this.close()
+			this.submitBlok().then(() => {
+					this.getBloks()
+					this.getGudangs()
+					this.close()
 
-				this.$swal({
-					type: 'success',
-					title: 'Blok ditambahkan',
-					showConfirmButton: false,
-					timer: 1500
-				})
+					this.$swal({
+						type: 'success',
+						title: 'Blok ditambahkan',
+						showConfirmButton: false,
+						timer: 1500
+					})
 			})
 			
 		},

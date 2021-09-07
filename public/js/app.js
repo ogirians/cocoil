@@ -4038,8 +4038,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       _this.image = image;
       _this.image2 = image2;
     };
+
+    this.getlocations(this.selected_blok_id).then(function () {
+      //this.list = null;
+      var loc = _this.coil_locations.data; //console.log(loc);
+
+      _this.list = [];
+      loc.forEach(_this.addToList);
+    });
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('gudang', {
+  computed: _objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('gudang', {
     selected_blok_id: function selected_blok_id(state) {
       return state.selected_blok_id;
     },
@@ -4052,8 +4060,84 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     selected_serial_code: function selected_serial_code(state) {
       return state.selected_serial_code;
     }
-  })),
-  methods: {
+  })), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('location', {
+    coil_locations: function coil_locations(state) {
+      return state.coil_locations;
+    }
+  })), {}, {
+    slot: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.location.slot;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('location/ASSIGN_SLOT', val);
+      }
+    }
+  }),
+  watch: {
+    list: function list() {//this.updatelocation()
+    },
+    selected_blok_id: function selected_blok_id() {
+      var _this2 = this;
+
+      console.log('ganti blok' + this.selected_blok_id); //console.log(this.list);
+
+      this.getlocations(this.selected_blok_id).then(function () {
+        //this.list = null;
+        var loc = _this2.coil_locations.data; //console.log(loc);
+
+        _this2.list = [];
+        loc.forEach(_this2.addToList);
+      });
+    }
+  },
+  methods: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('location', ['submitlocation', 'getlocations', 'updatelocation'])), {}, {
+    addToList: function addToList(item, index) {
+      console.log(item.slot_id);
+      console.log(index); //const id = Math.round(Math.random() * 10000).toString();          
+
+      var pos = {
+        id: item.slot_id,
+        name: item.slot_name,
+        draggable: true,
+        width: 100,
+        height: 130,
+        img: false,
+        coil_code: null,
+        serial_code: null,
+        rectext: {
+          id: item.slot_id,
+          x: 0,
+          y: 0,
+          text: item.slot_id,
+          visible: true,
+          name: 'text' + item.slot_id,
+          rotation: 0,
+          fontSize: 15
+        },
+        rect: {
+          id: item.slot_id,
+          x: item.x,
+          y: item.y,
+          fill: '#f7a7a7',
+          width: item.width,
+          height: item.height,
+          name: item.nameRect,
+          scaleX: item.scaleX,
+          scaleY: item.scaleY,
+          rotation: item.rotation,
+          draggable: true,
+          stroke: 5,
+          visible: true,
+          imgCoil: ''
+        }
+      };
+      this.list.push(pos);
+      console.log(this.list);
+    },
     fitStageIntoParentContainer: function fitStageIntoParentContainer() {
       this.container = document.querySelector('#stage-parent'); // now we need to fit stage into parent container
 
@@ -4106,15 +4190,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           imgCoil: ''
         }
       };
-      var slot = {};
+      this.slot = {
+        coil_id: null,
+        gudang_id: this.selected_gudang_id,
+        blok_id: this.selected_blok_id,
+        height: pos.rect.height,
+        width: pos.rect.width,
+        nameRect: pos.rect.name,
+        x: pos.rect.x,
+        y: pos.rect.y,
+        scaleX: pos.rect.scaleX,
+        scaleY: pos.rect.scaleY,
+        rotation: pos.rect.rotation,
+        slot_id: pos.id,
+        slot_name: pos.name
+      };
+      this.submitlocation();
       this.list.push(pos);
       this.save();
     },
     SetCoil: function SetCoil() {
-      var _this2 = this;
+      var _this3 = this;
 
       var item = this.list.find(function (i) {
-        return i.rect.name === _this2.selectedShapeName;
+        return i.rect.name === _this3.selectedShapeName;
       });
       var id = item.id;
       item.img = true;
@@ -4125,10 +4224,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.save();
     },
     removeCoil: function removeCoil() {
-      var _this3 = this;
+      var _this4 = this;
 
       var item = this.list.find(function (i) {
-        return i.rect.name === _this3.selectedShapeName;
+        return i.rect.name === _this4.selectedShapeName;
       });
       var id = item.id;
       item.img = false;
@@ -4190,7 +4289,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.save();
     },
     handleDragStart: function handleDragStart(e) {
-      var _this4 = this;
+      var _this5 = this;
 
       this.isDragging = true; // save drag element:
 
@@ -4198,7 +4297,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       console.log(this.dragItemId); // move current element to the top:
 
       var item = this.list.find(function (i) {
-        return i.id === _this4.dragItemId;
+        return i.id === _this5.dragItemId;
       });
       var index = this.list.indexOf(item); //item.fill = 'blue';
 
@@ -4217,17 +4316,25 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       item.rectext.y = item.rect.y; // item.x = item.rect.x;
       //item.y = item.rect.y;     
 
-      this.save();
+      this.coil_locations.data.x = e.target.x();
+      this.coil_locations.data.y = e.target.y();
+      var form = new FormData();
+      form.append('x', this.coil_locations.data.x);
+      form.append('y', this.coil_locations.data.y);
+      form.append('id', item.rect.id);
+      console.log(form);
+      this.updatelocation(form); //this.save();  
+
       this.isDragging = false;
       this.dragItemId = null;
     },
     handleTransformEnd: function handleTransformEnd(e) {
-      var _this5 = this;
+      var _this6 = this;
 
       // shape is transformed, let us save new attrs back to the node
       // find element in our state
       var item = this.list.find(function (r) {
-        return r.rect.name === _this5.selectedShapeName;
+        return r.rect.name === _this6.selectedShapeName;
       }); // update the state
 
       item.rect.x = e.target.x();
@@ -4242,14 +4349,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       //rect.fill = Konva.Util.getRandomColor();
     },
     handleStageMouseDown: function handleStageMouseDown(e) {
-      var _this6 = this;
+      var _this7 = this;
 
       // clicked on stage - clear selection
       if (e.target === e.target.getStage()) {
         this.selectedImg = '';
 
         var _item = this.list.find(function (r) {
-          return r.rect.name === _this6.selectedShapeName;
+          return r.rect.name === _this7.selectedShapeName;
         });
 
         this.selectedShapeName = '';
@@ -4282,7 +4389,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         name.replace("img", "");
 
         var _item2 = this.list.find(function (r) {
-          return r.rect.name === _this6.selectedShapeName;
+          return r.rect.name === _this7.selectedShapeName;
         });
 
         this.selectedImg = name;
@@ -4296,7 +4403,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (this.selectedShapeName != '') {
         if (this.selectedShapeName != name) {
           var itemtext = this.list.find(function (r) {
-            return r.rect.name === _this6.selectedShapeName;
+            return r.rect.name === _this7.selectedShapeName;
           });
           itemtext.rectext.visible = true;
           this.save();
@@ -4356,7 +4463,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     save: function save() {
       localStorage.setItem('storage', JSON.stringify(this.list));
     }
-  },
+  }),
   mounted: function mounted() {
     this.load();
   }
@@ -71445,9 +71552,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _stores_coil_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./stores/coil.js */ "./resources/js/stores/coil.js");
 /* harmony import */ var _stores_blok_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./stores/blok.js */ "./resources/js/stores/blok.js");
 /* harmony import */ var _stores_from_view_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./stores/from_view.js */ "./resources/js/stores/from_view.js");
+/* harmony import */ var _stores_location_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./stores/location.js */ "./resources/js/stores/location.js");
 
 
  //IMPORT MODULE SECTION
+
 
 
 
@@ -71470,7 +71579,8 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     coil: _stores_coil_js__WEBPACK_IMPORTED_MODULE_8__["default"],
     blok: _stores_blok_js__WEBPACK_IMPORTED_MODULE_9__["default"],
     modalModule: vuex_modal__WEBPACK_IMPORTED_MODULE_2__["modalModule"],
-    from_view: _stores_from_view_js__WEBPACK_IMPORTED_MODULE_10__["default"]
+    from_view: _stores_from_view_js__WEBPACK_IMPORTED_MODULE_10__["default"],
+    location: _stores_location_js__WEBPACK_IMPORTED_MODULE_11__["default"]
   },
   //STATE HAMPIR SERUPA DENGAN PROPERTY DATA DARI COMPONENT HANYA SAJA DAPAT DIGUNAKAN SECARA GLOBAL
   state: {
@@ -72326,6 +72436,168 @@ var state = function state() {
 
 var mutations = {};
 var actions = {};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: state,
+  actions: actions,
+  mutations: mutations
+});
+
+/***/ }),
+
+/***/ "./resources/js/stores/location.js":
+/*!*****************************************!*\
+  !*** ./resources/js/stores/location.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api.js */ "./resources/js/api.js");
+
+
+var state = function state() {
+  return {
+    coil_locations: [],
+    //UNTUK MENAMPUNG DATA OUTLETS YANG DIDAPATKAN DARI DATABASE
+    slot: {
+      coil_id: '',
+      gudang_id: '',
+      blok_id: '',
+      height: '',
+      width: '',
+      nameRect: '',
+      x: '',
+      y: '',
+      scaleX: '',
+      scaleY: '',
+      rotation: '',
+      slot_id: '',
+      slot_name: ''
+    },
+    page: 1 //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
+
+  };
+};
+
+var mutations = {
+  //MEMASUKKAN DATA KE STATE locationS
+  ASSIGN_DATA: function ASSIGN_DATA(state, payload) {
+    state.coil_locations = payload;
+  },
+  //MENGUBAH DATA STATE PAGE
+  SET_PAGE: function SET_PAGE(state, payload) {
+    state.page = payload;
+  },
+  //MENGUBAH DATA STATE location
+  ASSIGN_SLOT: function ASSIGN_SLOT(state, payload) {
+    state.location = {
+      coil_id: payload.coil_id,
+      gudang_id: payload.gudang_id,
+      blok_id: payload.blok_id,
+      height: payload.height,
+      width: payload.width,
+      nameRect: payload.nameRect,
+      x: payload.x,
+      y: payload.y,
+      scaleX: payload.scaleX,
+      scaleY: payload.scaleY,
+      rotation: payload.rotation,
+      slot_id: payload.slot_id,
+      slot_name: payload.slot_name
+    };
+  },
+  //ME-RESET STATE OUTLET MENJADI KOSONG
+  CLEAR_FORM: function CLEAR_FORM(state) {
+    state.location = {
+      item_category: '',
+      item_type: '',
+      item_code: '',
+      item_description: '',
+      serial_code: '',
+      id_location: '',
+      balance: ''
+    };
+  }
+};
+var actions = {
+  //FUNGSI INI UNTUK MELAKUKAN REQUEST DATA OUTLET DARI SERVER
+  getlocations: function getlocations(_ref, payload) {
+    var commit = _ref.commit,
+        state = _ref.state;
+    //MENGECEK PAYLOAD ADA ATAU TIDAK
+    var blok = typeof payload != 'undefined' ? payload : '';
+    return new Promise(function (resolve, reject) {
+      //REQUEST DATA DENGAN ENDPOINT /OUTLETS
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].get("/locations?page=".concat(state.page, "&q=").concat(blok)).then(function (response) {
+        //SIMPAN DATA KE STATE MELALUI MUTATIONS
+        commit('ASSIGN_DATA', response.data);
+        resolve(response.data);
+      });
+    });
+  },
+  //FUNGSI UNTUK MENAMBAHKAN DATA BARU
+  submitlocation: function submitlocation(_ref2) {
+    var dispatch = _ref2.dispatch,
+        commit = _ref2.commit,
+        state = _ref2.state;
+    return new Promise(function (resolve, reject) {
+      //MENGIRIMKAN PERMINTAAN KE SERVER DAN MELAMPIRKAN DATA YANG AKAN DISIMPAN
+      //DARI STATE OUTLET
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].post("/locations", state.location).then(function (response) {
+        //APABILA BERHASIL KITA MELAKUKAN REQUEST LAGI
+        //UNTUK MENGAMBIL DATA TERBARU
+        dispatch('getlocations').then(function () {
+          resolve(response.data);
+        });
+      })["catch"](function (error) {
+        //APABILA TERJADI ERROR VALIDASI
+        //DIMANA LARAVEL MENGGUNAKAN CODE 422
+        if (error.response.status == 422) {
+          //MAKA LIST ERROR AKAN DIASSIGN KE STATE ERRORS
+          commit('SET_ERRORS', error.response.data.errors, {
+            root: true
+          });
+        }
+      });
+    });
+  },
+  //UNTUK MENGAMBIL SINGLE DATA DARI SERVER BERDASARKAN CODE OUTLET
+  editlocation: function editlocation(_ref3, payload) {
+    var commit = _ref3.commit;
+    return new Promise(function (resolve, reject) {
+      //MELAKUKAN REQUEST DENGAN MENGIRIMKAN CODE OUTLET DI URL
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].get("/locations/".concat(payload, "/edit")).then(function (response) {
+        //APABIL BERHASIL, DI ASSIGN KE FORM
+        commit('ASSIGN_FORM', response.data.data);
+        resolve(response.data);
+      });
+    });
+  },
+  //UNTUK MENGUPDATE DATA BERDASARKAN CODE YANG SEDANG DIEDIT
+  updatelocation: function updatelocation(payload) {
+    return new Promise(function (resolve, reject) {
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].post("/locations/".concat(payload.id), payload, {}).then(function (response) {
+        resolve(response.data);
+      });
+    });
+  },
+  //MENGHAPUS DATA
+  removelocation: function removelocation(_ref4, payload) {
+    var dispatch = _ref4.dispatch;
+    return new Promise(function (resolve, reject) {
+      //MENGIRIM PERMINTAAN KE SERVER UNTUK MENGHAPUS DATA
+      //DENGAN METHOD DELETE DAN ID OUTLET DI URL
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"]("/locations/".concat(payload)).then(function (response) {
+        //APABILA BERHASIL, FETCH DATA TERBARU DARI SERVER
+        dispatch('getlocations').then(function () {
+          return resolve();
+        });
+      });
+    });
+  }
+};
 /* harmony default export */ __webpack_exports__["default"] = ({
   namespaced: true,
   state: state,

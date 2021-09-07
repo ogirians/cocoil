@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\location;
+use App\coil_location;
 
 class locationController extends Controller
 {
@@ -14,8 +16,15 @@ class locationController extends Controller
      */
     public function index()
     {
-        //
+        $location = coil_location::orderBy('created_at', 'DESC');
+        if (request()->q != '') {
+            $location = $location->where('blok_id', request()->q)->get();
+            //dd($location);
+        }
+        return response()->json(['status' => 'success', 'data' => $location], 200);
+        //return new location($location);
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -36,7 +45,7 @@ class locationController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'coil_id' => 'required',
+            'coil_id' =>'',
             'gudang_id' => 'required',
             'height' => 'required',
             'width' => 'required',
@@ -50,7 +59,7 @@ class locationController extends Controller
             'slot_name' => 'required',
         ]);
 
-        gudang::create($request->all());
+        coil_location::create($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 
@@ -85,7 +94,11 @@ class locationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
+
+        $gudang = coil_location::whereCode($id)->first();
+        $gudang->update($request);
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**

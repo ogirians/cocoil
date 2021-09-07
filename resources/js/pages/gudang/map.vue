@@ -136,6 +136,17 @@ export default {
             this.image = image;
             this.image2 = image2;
             };
+
+            this.getlocations(this.selected_blok_id).then(() => {
+
+                //this.list = null;
+          
+                var loc = this.coil_locations.data;
+                //console.log(loc);
+                this.list = [];
+                loc.forEach(this.addToList);
+            
+            });
            
   },
 
@@ -149,9 +160,77 @@ export default {
      
 		 }),
 
+     ...mapState('location', {
+          coil_locations : state => state.coil_locations,
+		 }),
+
+     slot: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.location.slot
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('location/ASSIGN_SLOT', val)
+            }
+        },
+
   },
 
+  watch: {
+
+        list(){
+          //this.updatelocation()
+        },
+
+        selected_blok_id(){
+          console.log('ganti blok'+this.selected_blok_id);
+          //console.log(this.list);
+
+          this.getlocations(this.selected_blok_id).then(() => {
+
+                //this.list = null;
+          
+                var loc = this.coil_locations.data;
+                //console.log(loc);
+                this.list = [];
+                loc.forEach(this.addToList);
+            
+            });
+          
+
+          
+        }
+       
+      },
+
   methods: {
+          ...mapActions('location',['submitlocation','getlocations','updatelocation']),
+         
+          
+          addToList(item,index){
+            
+                console.log(item.slot_id);
+                console.log(index);
+                //const id = Math.round(Math.random() * 10000).toString();          
+                const pos = {                                        
+                  id: item.slot_id,                   
+                  name: item.slot_name,
+                  draggable:true,
+                  width: 100,
+                  height: 130,
+                  img:false,
+                  coil_code: null,
+                  serial_code: null,
+                  rectext : {id: item.slot_id, x: 0, y:0, text:item.slot_id, visible:true, name:'text'+ item.slot_id, rotation: 0, fontSize :15} ,
+                  rect: {id:item.slot_id, x: item.x, y:item.y, fill : '#f7a7a7', width: item.width, height: item.height,  name: item.nameRect, scaleX: item.scaleX, scaleY: item.scaleY, rotation: item.rotation, draggable:true, stroke :5, visible: true, imgCoil:''}              
+                };
+
+                this.list.push(pos); 
+                console.log(this.list);
+          },
+
           fitStageIntoParentContainer() { 
             this.container = document.querySelector('#stage-parent');
 
@@ -182,9 +261,23 @@ export default {
               rect: {id:id, x: 0, y:0, fill : '#f7a7a7', width: 100, height: 150,  name:'group'+ id , scaleX: 1, scaleY: 1, rotation: 0, draggable:true, stroke :5, visible: true, imgCoil:''}              
             };
                    
-            const slot = {
-
+           this.slot = {
+              coil_id : null,
+              gudang_id : this.selected_gudang_id,
+              blok_id : this.selected_blok_id,
+              height : pos.rect.height,
+              width : pos.rect.width,
+              nameRect : pos.rect.name,
+              x : pos.rect.x,
+              y : pos.rect.y,
+              scaleX :pos.rect.scaleX,
+              scaleY : pos.rect.scaleY,
+              rotation : pos.rect.rotation,
+              slot_id : pos.id,
+              slot_name: pos.name,
             };
+
+            this.submitlocation();
 
             this.list.push(pos);          
            
@@ -316,8 +409,19 @@ export default {
             
            // item.x = item.rect.x;
             //item.y = item.rect.y;     
+            this.coil_locations.data.x = e.target.x();
+            this.coil_locations.data.y = e.target.y();
+
+            let form = new FormData()
+            form.append('x', this.coil_locations.data.x)
+            form.append('y', this.coil_locations.data.y)
+            form.append('id', item.rect.id)
             
-            this.save();
+            console.log(form);
+            this.updatelocation(form);
+
+            
+            //this.save();  
             this.isDragging = false;
             this.dragItemId = null;
           },
@@ -340,6 +444,7 @@ export default {
             item.rectext.rotation = item.rect.rotation;
             item.rect.scaleX = e.target.scaleX();
             item.rect.scaleY = e.target.scaleY();
+
            
             this.save();
             // change fill

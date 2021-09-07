@@ -22,7 +22,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::resource('/coils', 'API\CoilController')->except(['show']);
 
     //get coil location
-    Route::resource('/locations', 'API\CoilController')->except(['show']);
+    Route::resource('/locations', 'API\locationController')->except(['show']);
 
 
     //roles

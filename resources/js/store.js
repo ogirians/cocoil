@@ -11,6 +11,7 @@ import importExcel from './stores/import.js'
 import coil from './stores/coil.js'
 import blok from './stores/blok.js'
 import from_view from './stores/from_view.js'
+import location from './stores/location.js'
 
 Vue.use(Vuex)
 
@@ -27,6 +28,7 @@ const store = new Vuex.Store({
         blok,
         modalModule,
         from_view,
+        location,
     },
   	//STATE HAMPIR SERUPA DENGAN PROPERTY DATA DARI COMPONENT HANYA SAJA DAPAT DIGUNAKAN SECARA GLOBAL
     state: {

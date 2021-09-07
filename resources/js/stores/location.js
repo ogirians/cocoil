@@ -1,7 +1,25 @@
 import $axios from '../api.js'
 
 const state = () => ({
-    coi_locations: [], //UNTUK MENAMPUNG DATA OUTLETS YANG DIDAPATKAN DARI DATABASE
+    coil_locations: [], //UNTUK MENAMPUNG DATA OUTLETS YANG DIDAPATKAN DARI DATABASE
+
+    slot: {
+       
+        coil_id : '',
+        gudang_id : '',
+        blok_id : '',
+        height : '',
+        width : '',
+        nameRect : '',
+        x : '',
+        y : '',
+        scaleX :'',
+        scaleY : '',
+        rotation : '',
+        slot_id : '',
+        slot_name: '',
+
+    },
 
     page: 1 //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
 })
@@ -9,22 +27,28 @@ const state = () => ({
 const mutations = {
     //MEMASUKKAN DATA KE STATE locationS
     ASSIGN_DATA(state, payload) {
-        state.locations = payload
+        state.coil_locations = payload
     },
     //MENGUBAH DATA STATE PAGE
     SET_PAGE(state, payload) {
         state.page = payload
     },
     //MENGUBAH DATA STATE location
-    ASSIGN_FORM(state, payload) {
+    ASSIGN_SLOT(state, payload) {
         state.location = {
-            item_category: payload.item_category,
-            item_type: payload.item_type,
-            item_code: payload.item_code,
-            item_description: payload.item_description,
-            serial_Code: payload.serial_Code,
-            id_location: payload.id_location,
-            balance: payload.balance,
+            coil_id : payload.coil_id,
+            gudang_id : payload.gudang_id,
+            blok_id :payload.blok_id,
+            height : payload.height,
+            width : payload.width,
+            nameRect : payload.nameRect,
+            x : payload.x,
+            y : payload.y,
+            scaleX :payload.scaleX,
+            scaleY : payload.scaleY,
+            rotation : payload.rotation,
+            slot_id : payload.slot_id,
+            slot_name:payload.slot_name,
         }
     },
     //ME-RESET STATE OUTLET MENJADI KOSONG
@@ -45,10 +69,10 @@ const actions = {
     //FUNGSI INI UNTUK MELAKUKAN REQUEST DATA OUTLET DARI SERVER
     getlocations({ commit, state }, payload) {
         //MENGECEK PAYLOAD ADA ATAU TIDAK
-        let search = typeof payload != 'undefined' ? payload:''
+        let blok = typeof payload != 'undefined' ? payload :''
         return new Promise((resolve, reject) => {
             //REQUEST DATA DENGAN ENDPOINT /OUTLETS
-            $axios.get(`/locations?page=${state.page}&q=${search}`)
+            $axios.get(`/locations?page=${state.page}&q=${blok}`)
             .then((response) => {
                 //SIMPAN DATA KE STATE MELALUI MUTATIONS
                 commit('ASSIGN_DATA', response.data)
@@ -92,15 +116,12 @@ const actions = {
         })
     },
     //UNTUK MENGUPDATE DATA BERDASARKAN CODE YANG SEDANG DIEDIT
-    updatelocation({ state, commit }, payload) {
+    updatelocation(payload) {
         return new Promise((resolve, reject) => {
-            //MELAKUKAN REQUEST DENGAN MENGIRIMKAN CODE DIURL
-            //DAN MENGIRIMKAN DATA TERBARU YANG TELAH DIEDIT
-            //MELALUI STATE OUTLET
-            $axios.put(`/locations/${payload}`, state.location)
+            $axios.post(`/locations/${payload.id}`, payload, {
+               
+            })
             .then((response) => {
-                //FORM DIBERSIHKAN
-                commit('CLEAR_FORM')
                 resolve(response.data)
             })
         })
