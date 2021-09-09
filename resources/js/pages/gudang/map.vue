@@ -6,10 +6,12 @@
     <button v-if="editMode == false" @click="editSlotMode()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> edit Mode </button>
     
     <button v-if="editMode == true" @click="addSlot()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Slot </button>
-    <button v-if="editMode == true" style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Object </button>
+    <button v-if="editMode == true && selectedShapeName != ''" @click="rmSlot()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-minus" ></i> Slot </button>
+    <button v-if="editMode == true " style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Object </button>
     <button v-if="setCoilButton == true && editMode == false" @click="SetCoil()"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Set COil </button>
 		<button v-if="setRemoveButton == true && editMode == false" @click="removeCoil"  style="margin: 10px 5px;margin-left: 15px;margin-right: 0px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Remove </button>
     <button  style="margin: 10px 5px;margin-left: 5px;" class="btn btn-primary btn-sm btn-sm btn-flat " type="button"><i class="glyphicon glyphicon-plus" ></i> Text </button>	   
+    <p v-if="warningCek" style="color:red">belum memilih coil</p>
     </div>
     <v-stage 
           @mousedown="handleStageMouseDown"
@@ -98,9 +100,10 @@ export default {
                 height: this.sceneHeight,
               },
               list: [],
-
+  
               listNonCoil:[{}],   
-                    
+              
+              warningCek: false,
               isDragging: false,  
               selectedShapeName: '',
               setCoilButton: false,
@@ -175,6 +178,55 @@ export default {
                 this.$store.commit('location/ASSIGN_SLOT', val)
             }
         },
+     selected_slot: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.location.selected_slot
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('location/ASSIGN_SELECTED_SLOT', val)
+            }
+        },
+
+        selected_serial_code: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.gudang.selected_serial_code
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('gudang/ASSIGN_SERIAL_CODE', val)
+            }
+        },
+
+        show_panel_coil: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.gudang.show_panel_coil
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('gudang/ASSIGN_PANEL_COIL', val)
+            }
+        },
+
+        show_panel_info: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.gudang.show_panel_info
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('gudang/ASSIGN_PANEL_INFO', val)
+            }
+        },
+
+        
 
   },
 
@@ -193,38 +245,55 @@ export default {
                 //this.list = null;
           
                 var loc = this.coil_locations.data;
-                //console.log(loc);
+                
+                //console.log(loc.);
                 this.list = [];
                 loc.forEach(this.addToList);
-            
+                this.selectedShapeName='';
+                this.updateTransformer();
+                this.editMode= false;
             });
-          
 
-          
-        }
+        },
+
+        
        
       },
 
   methods: {
-          ...mapActions('location',['submitlocation','getlocations','updatelocation']),
+          ...mapActions('location',['submitlocation','getlocations','updatelocation','removelocation','SetCoilDb']),
+          ...mapActions('coil',['getcoilsnoplace','detailcoil']),
          
           
           addToList(item,index){
-            
-                console.log(item.slot_id);
+                let editMode = this.editMode;
+                //console.log(item.coil.id);
                 console.log(index);
-                //const id = Math.round(Math.random() * 10000).toString();          
+                //const id = Math.round(Math.random() * 10000).toString();   
+                if (item.coil != null){
+                  var coil_code = item.coil.item_code;
+                  var serial_code = item.coil.serial_Code;
+                  var imgtrue = true;
+                  var rectVisible = false;
+                } else {
+                  var coil_code = null;
+                  var serial_code = null;
+                  var imgtrue = false;
+                  var rectVisible = true;
+                }
+                
+                console.log(coil_code);
                 const pos = {                                        
                   id: item.slot_id,                   
                   name: item.slot_name,
                   draggable:true,
                   width: 100,
                   height: 130,
-                  img:false,
-                  coil_code: null,
-                  serial_code: null,
-                  rectext : {id: item.slot_id, x: 0, y:0, text:item.slot_id, visible:true, name:'text'+ item.slot_id, rotation: 0, fontSize :15} ,
-                  rect: {id:item.slot_id, x: item.x, y:item.y, fill : '#f7a7a7', width: item.width, height: item.height,  name: item.nameRect, scaleX: item.scaleX, scaleY: item.scaleY, rotation: item.rotation, draggable:true, stroke :5, visible: true, imgCoil:''}              
+                  img: imgtrue,
+                  coil_code: coil_code,
+                  serial_code: serial_code,
+                  rectext : {id: item.slot_id, x: item.x, y:item.y, text:item.slot_id, visible:true, name:'text'+ item.slot_id, rotation: item.rotation, fontSize :15} ,
+                  rect: {id:item.slot_id, x: item.x, y:item.y, fill : '#f7a7a7', width: item.width, height: item.height,  name: item.nameRect, scaleX: item.scaleX, scaleY: item.scaleY, rotation: item.rotation, draggable: editMode ? true : false, stroke :5, visible: rectVisible, imgCoil:''}              
                 };
 
                 this.list.push(pos); 
@@ -247,7 +316,7 @@ export default {
           },
         
           addSlot() {  
-          const id = Math.round(Math.random() * 10000).toString();          
+            const id = Math.round(Math.random() * 10000).toString();          
             const pos = {                                        
               id: id,                   
               name: 'gr'+ id,
@@ -284,18 +353,45 @@ export default {
             this.save();
           },
 
+          rmSlot(){
+              const item = this.list.find(i => i.rect.name === this.selectedShapeName);
+              const id = item.id;
+              const index = this.list.indexOf(item);
+              //item.fill = 'blue';
+              this.list.splice(index, 1);
+              this.removelocation(id);
+              this.selectedShapeName='';
+              this.updateTransformer();
+          },
+
           SetCoil() { 
             
-            const item = this.list.find(i => i.rect.name === this.selectedShapeName);
-            const id = item.id;
-            item.img =  true;
-            item.rect.visible = false;
-            item.serial_code = this.selected_coil_id;
+            if (this.selected_serial_code != '') {
+              const item = this.list.find(i => i.rect.name === this.selectedShapeName);
+              const id = item.id;
+              item.img =  true;
+              item.rect.visible = false;
+
+              item.coil_code = this.selected_coil_id;
+              item.serial_code = this.selected_serial_code;
+
+              let form = new FormData();
+              form.append('serial_code', item.serial_code);
+              form.append('delete', false);
+  
+              console.log(form);
+              this.SetCoilDb(form);
+              this.getcoilsnoplace();
+              this.selected_serial_code = ''  
+            // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
               
-         // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+            // this.list.push(img);
+            // this.save();
+              this.warningCek = false;
             
-           // this.list.push(img);
-            this.save();
+            } else {
+              this.warningCek = true;
+            }
           },
 
           removeCoil(){
@@ -304,12 +400,21 @@ export default {
             const id = item.id;
             item.img =  false;
             item.rect.visible = true;
+
+            let form = new FormData();
+            form.append('serial_code', item.serial_code);
+            form.append('delete', 'true');
+
+            this.SetCoilDb(form);
+
+            item.coil_code = null;
             item.serial_code = null;
+            this.getcoilsnoplace();
             //item.rect.draggable = false;
          // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
             
            // this.list.push(img);
-            this.save();
+           // this.save();
       
 
 
@@ -355,7 +460,7 @@ export default {
            // this.list.push(img);
             this.updateTransformer();
 
-            this.save();
+            //this.save();
             return;
 
           },
@@ -393,6 +498,7 @@ export default {
             //item.fill = 'blue';
             this.list.splice(index, 1);
             this.list.push(item);
+            this.selected_slot = item.id;
 
           },
           handleDragEnd(e) {
@@ -411,11 +517,17 @@ export default {
             //item.y = item.rect.y;     
             this.coil_locations.data.x = e.target.x();
             this.coil_locations.data.y = e.target.y();
+           
+
 
             let form = new FormData()
-            form.append('x', this.coil_locations.data.x)
-            form.append('y', this.coil_locations.data.y)
-            form.append('id', item.rect.id)
+            form.append('x',  item.rect.x)
+            form.append('y',  item.rect.y)
+            form.append('scaleX',  item.rect.scaleX)
+            form.append('scaleY',   item.rect.scaleY)
+            form.append('rotation',   item.rect.rotation)
+            form.append('pindah',  true)
+            //form.append('id', item.rect.id)
             
             console.log(form);
             this.updatelocation(form);
@@ -424,17 +536,21 @@ export default {
             //this.save();  
             this.isDragging = false;
             this.dragItemId = null;
+            //this.selected_slot = '';
           },
 
           handleTransformEnd(e) {
            
             // shape is transformed, let us save new attrs back to the node
             // find element in our state
-            
+           
+
             const item = this.list.find(
               (r) => r.rect.name === this.selectedShapeName
             );
             // update the state
+            this.selected_slot = item.id;
+
             item.rect.x = e.target.x();
             item.rect.y = e.target.y();
             item.rectext.x = item.rect.x;
@@ -445,7 +561,16 @@ export default {
             item.rect.scaleX = e.target.scaleX();
             item.rect.scaleY = e.target.scaleY();
 
-           
+            let form = new FormData()
+            form.append('x',  item.rect.x)
+            form.append('y',  item.rect.y)
+            form.append('scaleX',  item.rect.scaleX)
+            form.append('scaleY',   item.rect.scaleY)
+            form.append('rotation',   item.rect.rotation)
+            form.append('transform',  true)
+            
+            this.updatelocation(form);
+            
             this.save();
             // change fill
             //rect.fill = Konva.Util.getRandomColor();
@@ -455,7 +580,7 @@ export default {
            
             // clicked on stage - clear selection
             if (e.target === e.target.getStage()) {
-              this.selectedImg = '';
+               this.selectedImg = '';
 
                const item = this.list.find((r) => r.rect.name ===  this.selectedShapeName); 
                this.selectedShapeName =  ''; 
@@ -463,10 +588,15 @@ export default {
                this.setCoilButton= false;
                this.setRemoveButton= false;
                this.brightness = 0;
+               this.warningCek = false;
+               this.selected_serial_code = '';
+               this.selected_slot='';
+                this.show_panel_coil = false;
+                this.show_panel_info = false;
                
                if (item) {
                 item.rectext.visible = true;
-                this.save();
+                //this.save();
                };
                
               this.updateTransformer();
@@ -496,7 +626,7 @@ export default {
                 console.log(name);
                 this.brightness = 0.8;
                 
-                this.save();
+               // this.save();
                 this.selectCoilImg();
             }
 
@@ -507,7 +637,7 @@ export default {
               if (this.selectedShapeName != name) {
                     const itemtext = this.list.find((r) => r.rect.name === this.selectedShapeName);
                     itemtext.rectext.visible = true;
-                    this.save();
+                   // this.save();
               }    
             }
             
@@ -518,6 +648,8 @@ export default {
 
                 this.selectedShapeName = name;
                 
+                this.selected_slot = item.id;
+
                 this.selectedShapeNameSerialcode = item.serial_code
                 
                 //cek apakah sudah ada serial code
@@ -526,12 +658,17 @@ export default {
                     this.setRemoveButton = false;
                     this.selectedWidth = item.rect.width;
                     this.selectedHeigth = item.rect.height;
+                    this.show_panel_info = false;
+                    this.show_panel_coil = true;
                 } else {
                     this.setCoilButton= false;
                     this.setRemoveButton = true;
+                    this.show_panel_coil = false;
+                    this.show_panel_info = true;
+                    this.detailcoil(item.serial_code);
                 }
                 item.rectext.visible = false;
-              
+                
             } else {
               this.selectedShapeName = '';
               
@@ -563,6 +700,8 @@ export default {
               if (selectedNode) {
                 // attach to another node
                 transformerNode.nodes([selectedNode]);
+              } else if(this.selectedShapeName == ''){
+                transformerNode.nodes([]);
               } else {
                 // remove transformer
                 transformerNode.nodes([]);

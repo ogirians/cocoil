@@ -21,6 +21,8 @@ const state = () => ({
 
     },
 
+    selected_slot:'',
+
     page: 1 //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
 })
 
@@ -29,6 +31,11 @@ const mutations = {
     ASSIGN_DATA(state, payload) {
         state.coil_locations = payload
     },
+
+    ASSIGN_SELECTED_SLOT(state, payload) {
+        state.selected_slot = payload
+    },
+
     //MENGUBAH DATA STATE PAGE
     SET_PAGE(state, payload) {
         state.page = payload
@@ -116,10 +123,25 @@ const actions = {
         })
     },
     //UNTUK MENGUPDATE DATA BERDASARKAN CODE YANG SEDANG DIEDIT
-    updatelocation(payload) {
+    updatelocation({ state }, payload) {
         return new Promise((resolve, reject) => {
-            $axios.post(`/locations/${payload.id}`, payload, {
-               
+            $axios.post(`/locations/${state.selected_slot}`, payload, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+            })
+            .then((response) => {
+                resolve(response.data)
+            })
+        })
+    } ,
+
+    SetCoilDb({ state }, payload) {
+        return new Promise((resolve, reject) => {
+            $axios.post(`/locations/setCoil/${state.selected_slot}`, payload, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
             })
             .then((response) => {
                 resolve(response.data)

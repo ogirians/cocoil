@@ -20,6 +20,20 @@ class coilController extends Controller
         return new CoilCollection($coil->paginate(10));
     }
 
+    public function coilnoplace()
+    {
+        $coil = coil_detail::with('location')->orderBy('created_at', 'DESC')->where('location_id', null);
+
+        if (request()->q != '') {
+            $coil = $coil->where('serial_Code', 'LIKE', '%' . request()->q . '%')->orWhere('item_code', 'LIKE', '%' . request()->q . '%')->get();    
+        } else {
+            $coil = $coil->get();    
+        }
+
+       //return new CoilCollection($coil->paginate(10));
+        return response()->json(['status' => 'success', 'data' => $coil], 200);
+    }
+
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -49,6 +63,12 @@ class coilController extends Controller
     public function edit($id)
     {
         $coil = coil_detail::whereid($id)->first();
+        return response()->json(['status' => 'success', 'data' => $coil], 200);
+    }
+
+    public function detail($id)
+    {
+        $coil = coil_detail::where('serial_code', $id)->first();
         return response()->json(['status' => 'success', 'data' => $coil], 200);
     }
 

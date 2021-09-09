@@ -59,9 +59,9 @@ const actions = {
     updateEmployee({ state }, payload) {
         return new Promise((resolve, reject) => {
             $axios.post(`/Employees/${state.id}`, payload, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
             })
             .then((response) => {
                 resolve(response.data)

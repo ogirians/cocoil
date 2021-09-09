@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\location;
 use App\coil_location;
+use App\coil_detail;
 
 class locationController extends Controller
 {
@@ -16,10 +17,12 @@ class locationController extends Controller
      */
     public function index()
     {
-        $location = coil_location::orderBy('created_at', 'DESC');
+        $location = coil_location::with('coil')->orderBy('updated_at', 'ASC');
         if (request()->q != '') {
             $location = $location->where('blok_id', request()->q)->get();
-            //dd($location);
+            //dd($location->coil->item_description);
+        } else {
+            $location = $location->get();
         }
         return response()->json(['status' => 'success', 'data' => $location], 200);
         //return new location($location);
@@ -94,10 +97,50 @@ class locationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
 
-        $gudang = coil_location::whereCode($id)->first();
-        $gudang->update($request);
+        //dd($request->x);
+       
+        //dd($coil->id);
+
+        $gudang = coil_location::where('slot_id', $id)->first();
+        $gudang->update([
+            'x' => $request->x,
+            'y' => $request->y,
+            'scaleX' => $request->scaleX,
+            'scaleY' => $request->scaleY,
+            'rotation' => $request->rotation,
+        ]);
+
+        return response()->json(['status' => 'success'], 200);
+    }
+
+    public function SetCoil(Request $request, $id)
+    {   
+        //dd($request->serial_code);
+        $gudang = coil_location::where('slot_id', $id)->first();
+        
+        
+        if($request->serial_code != ''){
+            $coil= coil_detail::where('serial_Code', $request->serial_code)->first();
+            //dd($coil->id);
+            $gudang->update([
+                'coil_id' => $coil->id,
+            ]);
+            $coil->update([
+                'location_id' => $gudang->id,
+            ]);
+        } 
+        
+        if ($request->delete == 'true'){
+            $coil= coil_detail::where('serial_Code', $request->serial_code)->first();
+            $gudang->update([
+                'coil_id' => null,
+            ]);
+            $coil->update([
+                'location_id' => null,
+            ]);
+        }
+
         return response()->json(['status' => 'success'], 200);
     }
 
@@ -109,6 +152,9 @@ class locationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $slot = coil_location::where('slot_id', $id);
+       
+        $slot->delete();
+        return response()->json(['status' => 'success']);
     }
 }

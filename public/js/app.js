@@ -3692,6 +3692,39 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3714,14 +3747,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     search: function search() {
       //APABILA VALUE DARI SEARCH BERUBAH MAKA AKAN MEMINTA DATA
       //SESUAI DENGAN DATA YANG SEDANG DICARI
-      this.getcoils(this.search);
+      this.getcoilsnoplace(this.search);
     }
   },
   created: function created() {
-    this.getGudangs(), this.getBloks();
-    this.getcoils();
+    this.getGudangs(), this.getBloks(); //this.getcoils()
+
+    this.getcoilsnoplace();
   },
-  computed: _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])(['errors'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])('blok', {
+  computed: _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])(['errors'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])('blok', {
     blok: function blok(state) {
       return state.blok;
     }
@@ -3736,6 +3770,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   })), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])('coil', {
     coils: function coils(state) {
       return state.coils;
+    }
+  })), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])('coil', {
+    coil: function coil(state) {
+      return state.coil;
     }
   })), {}, {
     selected_blok_id: {
@@ -3781,9 +3819,42 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         //DI VUEX JUGA AKAN DIUBAH
         this.$store.commit('gudang/ASSIGN_SERIAL_CODE', val);
       }
+    },
+    selected_slot: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.location.selected_slot;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('location/ASSIGN_SELECTED_SLOT', val);
+      }
+    },
+    show_panel_coil: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.show_panel_coil;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_PANEL_COIL', val);
+      }
+    },
+    show_panel_info: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.show_panel_info;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_PANEL_INFO', val);
+      }
     }
   }),
-  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('gudang', ['getGudangs'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapMutations"])('blok', ['CLEAR_FORM'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('blok', ['submitBlok', 'getBloks', 'editBlok', 'removeBlok', 'updateBlok'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('coil', ['getcoils'])), {}, {
+  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('gudang', ['getGudangs'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapMutations"])('blok', ['CLEAR_FORM'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('blok', ['submitBlok', 'getBloks', 'editBlok', 'removeBlok', 'updateBlok'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('coil', ['getcoils', 'getcoilsnoplace', 'detailcoil'])), {}, {
     open: function open(id) {
       this.$store.dispatch(vuex_modal__WEBPACK_IMPORTED_MODULE_2__["PUSH"], {
         name: 'example'
@@ -3995,6 +4066,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -4009,6 +4082,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       },
       list: [],
       listNonCoil: [{}],
+      warningCek: false,
       isDragging: false,
       selectedShapeName: '',
       setCoilButton: false,
@@ -4075,6 +4149,50 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         //DI VUEX JUGA AKAN DIUBAH
         this.$store.commit('location/ASSIGN_SLOT', val);
       }
+    },
+    selected_slot: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.location.selected_slot;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('location/ASSIGN_SELECTED_SLOT', val);
+      }
+    },
+    selected_serial_code: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_serial_code;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_SERIAL_CODE', val);
+      }
+    },
+    show_panel_coil: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.show_panel_coil;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_PANEL_COIL', val);
+      }
+    },
+    show_panel_info: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.show_panel_info;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_PANEL_INFO', val);
+      }
     }
   }),
   watch: {
@@ -4087,35 +4205,54 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       this.getlocations(this.selected_blok_id).then(function () {
         //this.list = null;
-        var loc = _this2.coil_locations.data; //console.log(loc);
+        var loc = _this2.coil_locations.data; //console.log(loc.);
 
         _this2.list = [];
         loc.forEach(_this2.addToList);
+        _this2.selectedShapeName = '';
+
+        _this2.updateTransformer();
+
+        _this2.editMode = false;
       });
     }
   },
-  methods: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('location', ['submitlocation', 'getlocations', 'updatelocation'])), {}, {
+  methods: _objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('location', ['submitlocation', 'getlocations', 'updatelocation', 'removelocation', 'SetCoilDb'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('coil', ['getcoilsnoplace', 'detailcoil'])), {}, {
     addToList: function addToList(item, index) {
-      console.log(item.slot_id);
-      console.log(index); //const id = Math.round(Math.random() * 10000).toString();          
+      var editMode = this.editMode; //console.log(item.coil.id);
 
+      console.log(index); //const id = Math.round(Math.random() * 10000).toString();   
+
+      if (item.coil != null) {
+        var coil_code = item.coil.item_code;
+        var serial_code = item.coil.serial_Code;
+        var imgtrue = true;
+        var rectVisible = false;
+      } else {
+        var coil_code = null;
+        var serial_code = null;
+        var imgtrue = false;
+        var rectVisible = true;
+      }
+
+      console.log(coil_code);
       var pos = {
         id: item.slot_id,
         name: item.slot_name,
         draggable: true,
         width: 100,
         height: 130,
-        img: false,
-        coil_code: null,
-        serial_code: null,
+        img: imgtrue,
+        coil_code: coil_code,
+        serial_code: serial_code,
         rectext: {
           id: item.slot_id,
-          x: 0,
-          y: 0,
+          x: item.x,
+          y: item.y,
           text: item.slot_id,
           visible: true,
           name: 'text' + item.slot_id,
-          rotation: 0,
+          rotation: item.rotation,
           fontSize: 15
         },
         rect: {
@@ -4129,9 +4266,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           scaleX: item.scaleX,
           scaleY: item.scaleY,
           rotation: item.rotation,
-          draggable: true,
+          draggable: editMode ? true : false,
           stroke: 5,
-          visible: true,
+          visible: rectVisible,
           imgCoil: ''
         }
       };
@@ -4209,34 +4346,66 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.list.push(pos);
       this.save();
     },
-    SetCoil: function SetCoil() {
+    rmSlot: function rmSlot() {
       var _this3 = this;
 
       var item = this.list.find(function (i) {
         return i.rect.name === _this3.selectedShapeName;
       });
       var id = item.id;
-      item.img = true;
-      item.rect.visible = false;
-      item.serial_code = this.selected_coil_id; // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
-      // this.list.push(img);
+      var index = this.list.indexOf(item); //item.fill = 'blue';
 
-      this.save();
+      this.list.splice(index, 1);
+      this.removelocation(id);
+      this.selectedShapeName = '';
+      this.updateTransformer();
     },
-    removeCoil: function removeCoil() {
+    SetCoil: function SetCoil() {
       var _this4 = this;
 
+      if (this.selected_serial_code != '') {
+        var item = this.list.find(function (i) {
+          return i.rect.name === _this4.selectedShapeName;
+        });
+        var id = item.id;
+        item.img = true;
+        item.rect.visible = false;
+        item.coil_code = this.selected_coil_id;
+        item.serial_code = this.selected_serial_code;
+        var form = new FormData();
+        form.append('serial_code', item.serial_code);
+        form.append('delete', false);
+        console.log(form);
+        this.SetCoilDb(form);
+        this.getcoilsnoplace();
+        this.selected_serial_code = ''; // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
+        // this.list.push(img);
+        // this.save();
+
+        this.warningCek = false;
+      } else {
+        this.warningCek = true;
+      }
+    },
+    removeCoil: function removeCoil() {
+      var _this5 = this;
+
       var item = this.list.find(function (i) {
-        return i.rect.name === _this4.selectedShapeName;
+        return i.rect.name === _this5.selectedShapeName;
       });
       var id = item.id;
       item.img = false;
       item.rect.visible = true;
-      item.serial_code = null; //item.rect.draggable = false;
+      var form = new FormData();
+      form.append('serial_code', item.serial_code);
+      form.append('delete', 'true');
+      this.SetCoilDb(form);
+      item.coil_code = null;
+      item.serial_code = null;
+      this.getcoilsnoplace(); //item.rect.draggable = false;
       // const  img = {src: '/coil.png', x:item.rect.x, y:item.rect.y} ;         
       // this.list.push(img);
-
-      this.save();
+      // this.save();
     },
     editSlotMode: function editSlotMode() {
       this.editMode = true;
@@ -4267,8 +4436,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       // this.list.push(img);
 
 
-      this.updateTransformer();
-      this.save();
+      this.updateTransformer(); //this.save();
+
       return;
     },
     addNonCoil: function addNonCoil() {
@@ -4289,7 +4458,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.save();
     },
     handleDragStart: function handleDragStart(e) {
-      var _this5 = this;
+      var _this6 = this;
 
       this.isDragging = true; // save drag element:
 
@@ -4297,12 +4466,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       console.log(this.dragItemId); // move current element to the top:
 
       var item = this.list.find(function (i) {
-        return i.id === _this5.dragItemId;
+        return i.id === _this6.dragItemId;
       });
       var index = this.list.indexOf(item); //item.fill = 'blue';
 
       this.list.splice(index, 1);
       this.list.push(item);
+      this.selected_slot = item.id;
     },
     handleDragEnd: function handleDragEnd(e) {
       //this.dragItemId = e.target.name();
@@ -4319,24 +4489,29 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.coil_locations.data.x = e.target.x();
       this.coil_locations.data.y = e.target.y();
       var form = new FormData();
-      form.append('x', this.coil_locations.data.x);
-      form.append('y', this.coil_locations.data.y);
-      form.append('id', item.rect.id);
+      form.append('x', item.rect.x);
+      form.append('y', item.rect.y);
+      form.append('scaleX', item.rect.scaleX);
+      form.append('scaleY', item.rect.scaleY);
+      form.append('rotation', item.rect.rotation);
+      form.append('pindah', true); //form.append('id', item.rect.id)
+
       console.log(form);
       this.updatelocation(form); //this.save();  
 
       this.isDragging = false;
-      this.dragItemId = null;
+      this.dragItemId = null; //this.selected_slot = '';
     },
     handleTransformEnd: function handleTransformEnd(e) {
-      var _this6 = this;
+      var _this7 = this;
 
       // shape is transformed, let us save new attrs back to the node
       // find element in our state
       var item = this.list.find(function (r) {
-        return r.rect.name === _this6.selectedShapeName;
+        return r.rect.name === _this7.selectedShapeName;
       }); // update the state
 
+      this.selected_slot = item.id;
       item.rect.x = e.target.x();
       item.rect.y = e.target.y();
       item.rectext.x = item.rect.x;
@@ -4345,18 +4520,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       item.rectext.rotation = item.rect.rotation;
       item.rect.scaleX = e.target.scaleX();
       item.rect.scaleY = e.target.scaleY();
+      var form = new FormData();
+      form.append('x', item.rect.x);
+      form.append('y', item.rect.y);
+      form.append('scaleX', item.rect.scaleX);
+      form.append('scaleY', item.rect.scaleY);
+      form.append('rotation', item.rect.rotation);
+      form.append('transform', true);
+      this.updatelocation(form);
       this.save(); // change fill
       //rect.fill = Konva.Util.getRandomColor();
     },
     handleStageMouseDown: function handleStageMouseDown(e) {
-      var _this7 = this;
+      var _this8 = this;
 
       // clicked on stage - clear selection
       if (e.target === e.target.getStage()) {
         this.selectedImg = '';
 
         var _item = this.list.find(function (r) {
-          return r.rect.name === _this7.selectedShapeName;
+          return r.rect.name === _this8.selectedShapeName;
         });
 
         this.selectedShapeName = '';
@@ -4364,10 +4547,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.setCoilButton = false;
         this.setRemoveButton = false;
         this.brightness = 0;
+        this.warningCek = false;
+        this.selected_serial_code = '';
+        this.selected_slot = '';
+        this.show_panel_coil = false;
+        this.show_panel_info = false;
 
         if (_item) {
-          _item.rectext.visible = true;
-          this.save();
+          _item.rectext.visible = true; //this.save();
         }
 
         ;
@@ -4389,13 +4576,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         name.replace("img", "");
 
         var _item2 = this.list.find(function (r) {
-          return r.rect.name === _this7.selectedShapeName;
+          return r.rect.name === _this8.selectedShapeName;
         });
 
         this.selectedImg = name;
         console.log(name);
-        this.brightness = 0.8;
-        this.save();
+        this.brightness = 0.8; // this.save();
+
         this.selectCoilImg();
       } // cek jika pindah ke objec lain tanpa klik stage
 
@@ -4403,10 +4590,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (this.selectedShapeName != '') {
         if (this.selectedShapeName != name) {
           var itemtext = this.list.find(function (r) {
-            return r.rect.name === _this7.selectedShapeName;
+            return r.rect.name === _this8.selectedShapeName;
           });
-          itemtext.rectext.visible = true;
-          this.save();
+          itemtext.rectext.visible = true; // this.save();
         }
       }
 
@@ -4416,6 +4602,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (item) {
         this.selectedShapeName = name;
+        this.selected_slot = item.id;
         this.selectedShapeNameSerialcode = item.serial_code; //cek apakah sudah ada serial code
 
         if (!this.selectedShapeNameSerialcode) {
@@ -4423,9 +4610,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           this.setRemoveButton = false;
           this.selectedWidth = item.rect.width;
           this.selectedHeigth = item.rect.height;
+          this.show_panel_info = false;
+          this.show_panel_coil = true;
         } else {
           this.setCoilButton = false;
           this.setRemoveButton = true;
+          this.show_panel_coil = false;
+          this.show_panel_info = true;
+          this.detailcoil(item.serial_code);
         }
 
         item.rectext.visible = false;
@@ -4450,6 +4642,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (selectedNode) {
         // attach to another node
         transformerNode.nodes([selectedNode]);
+      } else if (this.selectedShapeName == '') {
+        transformerNode.nodes([]);
       } else {
         // remove transformer
         transformerNode.nodes([]);
@@ -51402,84 +51596,164 @@ var render = function() {
           ]
         ),
         _vm._v(" "),
-        _c(
-          "nav",
-          {
-            staticClass: "navbar-inverse sidebar ",
-            staticStyle: { width: "100%" },
-            attrs: { role: "navigation" }
-          },
-          [
-            _c("div", { staticClass: "container-fluid" }, [
-              _vm._m(1),
-              _vm._v(" "),
-              _c("div", {}, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.search,
-                      expression: "search"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text", placeholder: "Cari..." },
-                  domProps: { value: _vm.search },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+        _vm.show_panel_coil == true
+          ? _c(
+              "nav",
+              {
+                staticClass: "navbar-inverse sidebar ",
+                staticStyle: { width: "100%" },
+                attrs: { role: "navigation" }
+              },
+              [
+                _c("div", { staticClass: "container-fluid" }, [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c("div", {}, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.search,
+                          expression: "search"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "text", placeholder: "Cari..." },
+                      domProps: { value: _vm.search },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.search = $event.target.value
+                        }
                       }
-                      _vm.search = $event.target.value
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("br"),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "collapse navbar-collapse",
-                  attrs: { id: "bs-sidebar-navbar-collapse-2" }
-                },
-                [
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("br"),
+                  _vm._v(" "),
                   _c(
-                    "ul",
+                    "div",
                     {
-                      staticClass: "nav navbar-nav  coil-data",
-                      staticStyle: { width: "100%" },
-                      attrs: { id: "listgudang" }
+                      staticClass: "collapse navbar-collapse",
+                      attrs: { id: "bs-sidebar-navbar-collapse-2" }
                     },
-                    _vm._l(_vm.coils.data, function(coil, index) {
-                      return _c("li", { key: index }, [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "dropdown-toggle",
-                            attrs: { href: "#", "data-toggle": "dropdown" },
-                            on: {
-                              click: function($event) {
-                                return _vm.selectCoil(
-                                  coil.item_code,
-                                  coil.serial_Code
+                    [
+                      _c(
+                        "ul",
+                        {
+                          staticClass: "nav navbar-nav  coil-data",
+                          staticStyle: { width: "100%" },
+                          attrs: { id: "listgudang" }
+                        },
+                        _vm._l(_vm.coils.data, function(coildata, index) {
+                          return _c("li", { key: index }, [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "dropdown-toggle",
+                                attrs: { href: "#", "data-toggle": "dropdown" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.selectCoil(
+                                      coildata.item_code,
+                                      coildata.serial_Code
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  " " + _vm._s(coildata.serial_Code) + "  "
                                 )
-                              }
-                            }
-                          },
-                          [_vm._v(" " + _vm._s(coil.item_code) + "  ")]
-                        )
-                      ])
-                    }),
-                    0
+                              ]
+                            )
+                          ])
+                        }),
+                        0
+                      )
+                    ]
                   )
-                ]
-              )
-            ])
-          ]
-        )
+                ])
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.show_panel_info == true
+          ? _c(
+              "nav",
+              {
+                staticClass: "navbar-inverse sidebar ",
+                staticStyle: { width: "100%" },
+                attrs: { role: "navigation" }
+              },
+              [
+                _c("div", { staticClass: "container-fluid" }, [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "collapse navbar-collapse",
+                      attrs: { id: "bs-sidebar-navbar-collapse-2" }
+                    },
+                    [
+                      _c(
+                        "ul",
+                        {
+                          staticClass: "nav navbar-nav  coil-data",
+                          staticStyle: { width: "100%" },
+                          attrs: { id: "listgudang" }
+                        },
+                        [
+                          _c("li", [
+                            _c("a", [
+                              _c("b", [_vm._v("item kategori")]),
+                              _vm._v(" : " + _vm._s(_vm.coil.item_category))
+                            ]),
+                            _vm._v(" "),
+                            _c("a", [
+                              _c("b", [_vm._v("item tipe")]),
+                              _vm._v(" : " + _vm._s(_vm.coil.item_type))
+                            ]),
+                            _vm._v(" "),
+                            _c("a", [
+                              _c("b", [_vm._v("item code")]),
+                              _vm._v(" : " + _vm._s(_vm.coil.item_code))
+                            ]),
+                            _vm._v(" "),
+                            _c("a", [
+                              _c("b", [_vm._v("deskripsi")]),
+                              _vm._v(" : " + _vm._s(_vm.coil.item_description))
+                            ]),
+                            _vm._v(" "),
+                            _c("a", [
+                              _c("b", [_vm._v("serial code")]),
+                              _vm._v(" : " + _vm._s(_vm.coil.serial_Code))
+                            ]),
+                            _vm._v(" "),
+                            _c("a", [
+                              _c("b", [_vm._v("id coil")]),
+                              _vm._v(" : " + _vm._s(_vm.coil.ID_coil))
+                            ]),
+                            _vm._v(" "),
+                            _c("a", [
+                              _c("b", [_vm._v("balance")]),
+                              _vm._v(" : " + _vm._s(_vm.coil.balance))
+                            ])
+                          ])
+                        ]
+                      )
+                    ]
+                  )
+                ])
+              ]
+            )
+          : _vm._e()
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-md-9" }, [
@@ -51626,6 +51900,39 @@ var staticRenderFns = [
         [_vm._v("Unsetted Coil")]
       )
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "navbar-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "navbar-toggle",
+          attrs: {
+            type: "button",
+            "data-toggle": "collapse",
+            "data-target": "#bs-sidebar-navbar-collapse-2"
+          }
+        },
+        [
+          _c("span", { staticClass: "sr-only" }, [_vm._v("Toggle navigation")]),
+          _vm._v(" "),
+          _c("span", { staticClass: "icon-bar" }),
+          _vm._v(" "),
+          _c("span", { staticClass: "icon-bar" }),
+          _vm._v(" "),
+          _c("span", { staticClass: "icon-bar" })
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "a",
+        { staticClass: "navbar-brand", staticStyle: { "margin-top": "20px" } },
+        [_vm._v("Info Coil")]
+      )
+    ])
   }
 ]
 render._withStripped = true
@@ -51725,6 +52032,30 @@ var render = function() {
             )
           : _vm._e(),
         _vm._v(" "),
+        _vm.editMode == true && _vm.selectedShapeName != ""
+          ? _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-sm btn-sm btn-flat ",
+                staticStyle: {
+                  margin: "10px 5px",
+                  "margin-left": "15px",
+                  "margin-right": "0px"
+                },
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    return _vm.rmSlot()
+                  }
+                }
+              },
+              [
+                _c("i", { staticClass: "glyphicon glyphicon-minus" }),
+                _vm._v(" Slot ")
+              ]
+            )
+          : _vm._e(),
+        _vm._v(" "),
         _vm.editMode == true
           ? _c(
               "button",
@@ -51788,7 +52119,13 @@ var render = function() {
             )
           : _vm._e(),
         _vm._v(" "),
-        _vm._m(0)
+        _vm._m(0),
+        _vm._v(" "),
+        _vm.warningCek
+          ? _c("p", { staticStyle: { color: "red" } }, [
+              _vm._v("belum memilih coil")
+            ])
+          : _vm._e()
       ]),
       _vm._v(" "),
       _c(
@@ -71858,7 +72195,7 @@ var state = function state() {
       item_code: '',
       item_description: '',
       serial_Code: '',
-      id_coil: '',
+      ID_coil: '',
       balance: ''
     },
     page: 1 //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
@@ -71883,7 +72220,7 @@ var mutations = {
       item_code: payload.item_code,
       item_description: payload.item_description,
       serial_Code: payload.serial_Code,
-      id_coil: payload.id_coil,
+      ID_coil: payload.ID_coil,
       balance: payload.balance
     };
   },
@@ -71895,7 +72232,7 @@ var mutations = {
       item_code: '',
       item_description: '',
       serial_code: '',
-      id_coil: '',
+      ID_coil: '',
       balance: ''
     };
   }
@@ -71916,11 +72253,25 @@ var actions = {
       });
     });
   },
-  //FUNGSI UNTUK MENAMBAHKAN DATA BARU
-  submitcoil: function submitcoil(_ref2) {
-    var dispatch = _ref2.dispatch,
-        commit = _ref2.commit,
+  getcoilsnoplace: function getcoilsnoplace(_ref2, payload) {
+    var commit = _ref2.commit,
         state = _ref2.state;
+    //MENGECEK PAYLOAD ADA ATAU TIDAK
+    var search = typeof payload != 'undefined' ? payload : '';
+    return new Promise(function (resolve, reject) {
+      //REQUEST DATA DENGAN ENDPOINT /OUTLETS
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].get("/coils/noplace?page=".concat(state.page, "&q=").concat(search)).then(function (response) {
+        //SIMPAN DATA KE STATE MELALUI MUTATIONS
+        commit('ASSIGN_DATA', response.data);
+        resolve(response.data);
+      });
+    });
+  },
+  //FUNGSI UNTUK MENAMBAHKAN DATA BARU
+  submitcoil: function submitcoil(_ref3) {
+    var dispatch = _ref3.dispatch,
+        commit = _ref3.commit,
+        state = _ref3.state;
     return new Promise(function (resolve, reject) {
       //MENGIRIMKAN PERMINTAAN KE SERVER DAN MELAMPIRKAN DATA YANG AKAN DISIMPAN
       //DARI STATE OUTLET
@@ -71943,8 +72294,8 @@ var actions = {
     });
   },
   //UNTUK MENGAMBIL SINGLE DATA DARI SERVER BERDASARKAN CODE OUTLET
-  editcoil: function editcoil(_ref3, payload) {
-    var commit = _ref3.commit;
+  editcoil: function editcoil(_ref4, payload) {
+    var commit = _ref4.commit;
     return new Promise(function (resolve, reject) {
       //MELAKUKAN REQUEST DENGAN MENGIRIMKAN CODE OUTLET DI URL
       _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].get("/coils/".concat(payload, "/edit")).then(function (response) {
@@ -71954,10 +72305,21 @@ var actions = {
       });
     });
   },
+  detailcoil: function detailcoil(_ref5, payload) {
+    var commit = _ref5.commit;
+    return new Promise(function (resolve, reject) {
+      //MELAKUKAN REQUEST DENGAN MENGIRIMKAN CODE OUTLET DI URL
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].get("/coils/detail/".concat(payload)).then(function (response) {
+        //APABIL BERHASIL, DI ASSIGN KE FORM
+        commit('ASSIGN_FORM', response.data.data);
+        resolve(response.data);
+      });
+    });
+  },
   //UNTUK MENGUPDATE DATA BERDASARKAN CODE YANG SEDANG DIEDIT
-  updatecoil: function updatecoil(_ref4, payload) {
-    var state = _ref4.state,
-        commit = _ref4.commit;
+  updatecoil: function updatecoil(_ref6, payload) {
+    var state = _ref6.state,
+        commit = _ref6.commit;
     return new Promise(function (resolve, reject) {
       //MELAKUKAN REQUEST DENGAN MENGIRIMKAN CODE DIURL
       //DAN MENGIRIMKAN DATA TERBARU YANG TELAH DIEDIT
@@ -71970,8 +72332,8 @@ var actions = {
     });
   },
   //MENGHAPUS DATA
-  removecoil: function removecoil(_ref5, payload) {
-    var dispatch = _ref5.dispatch;
+  removecoil: function removecoil(_ref7, payload) {
+    var dispatch = _ref7.dispatch;
     return new Promise(function (resolve, reject) {
       //MENGIRIM PERMINTAAN KE SERVER UNTUK MENGHAPUS DATA
       //DENGAN METHOD DELETE DAN ID OUTLET DI URL
@@ -72278,6 +72640,8 @@ var state = function state() {
     selected_gudang_id: '',
     selected_coil_id: '',
     selected_serial_code: '',
+    show_panel_coil: '',
+    show_panel_info: '',
     page: 1 //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
 
   };
@@ -72299,6 +72663,12 @@ var mutations = {
   },
   ASSIGN_SERIAL_CODE: function ASSIGN_SERIAL_CODE(state, payload) {
     state.selected_serial_code = payload;
+  },
+  ASSIGN_PANEL_COIL: function ASSIGN_PANEL_COIL(state, payload) {
+    state.show_panel_coil = payload;
+  },
+  ASSIGN_PANEL_INFO: function ASSIGN_PANEL_INFO(state, payload) {
+    state.show_panel_info = payload;
   },
   //MENGUBAH DATA STATE PAGE
   SET_PAGE: function SET_PAGE(state, payload) {
@@ -72476,6 +72846,7 @@ var state = function state() {
       slot_id: '',
       slot_name: ''
     },
+    selected_slot: '',
     page: 1 //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
 
   };
@@ -72485,6 +72856,9 @@ var mutations = {
   //MEMASUKKAN DATA KE STATE locationS
   ASSIGN_DATA: function ASSIGN_DATA(state, payload) {
     state.coil_locations = payload;
+  },
+  ASSIGN_SELECTED_SLOT: function ASSIGN_SELECTED_SLOT(state, payload) {
+    state.selected_slot = payload;
   },
   //MENGUBAH DATA STATE PAGE
   SET_PAGE: function SET_PAGE(state, payload) {
@@ -72576,16 +72950,33 @@ var actions = {
     });
   },
   //UNTUK MENGUPDATE DATA BERDASARKAN CODE YANG SEDANG DIEDIT
-  updatelocation: function updatelocation(payload) {
+  updatelocation: function updatelocation(_ref4, payload) {
+    var state = _ref4.state;
     return new Promise(function (resolve, reject) {
-      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].post("/locations/".concat(payload.id), payload, {}).then(function (response) {
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].post("/locations/".concat(state.selected_slot), payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(function (response) {
+        resolve(response.data);
+      });
+    });
+  },
+  SetCoilDb: function SetCoilDb(_ref5, payload) {
+    var state = _ref5.state;
+    return new Promise(function (resolve, reject) {
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].post("/locations/setCoil/".concat(state.selected_slot), payload, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(function (response) {
         resolve(response.data);
       });
     });
   },
   //MENGHAPUS DATA
-  removelocation: function removelocation(_ref4, payload) {
-    var dispatch = _ref4.dispatch;
+  removelocation: function removelocation(_ref6, payload) {
+    var dispatch = _ref6.dispatch;
     return new Promise(function (resolve, reject) {
       //MENGIRIM PERMINTAAN KE SERVER UNTUK MENGHAPUS DATA
       //DENGAN METHOD DELETE DAN ID OUTLET DI URL

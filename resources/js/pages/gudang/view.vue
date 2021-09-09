@@ -71,7 +71,7 @@
 					
 				</div>
 			</nav>
-			<nav class="navbar-inverse sidebar " role="navigation" style="width:100%;">
+			<nav v-if="show_panel_coil == true" class="navbar-inverse sidebar "  role="navigation" style="width:100%;">
 				<div class="container-fluid">
 					<!-- Brand and toggle get grouped for better mobile display -->
 					<div class="navbar-header">
@@ -91,8 +91,41 @@
 					
 					<div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-2">
 						<ul class="nav navbar-nav  coil-data" style="width:100%;" id="listgudang">				
-							<li v-for="(coil,index) in coils.data" :key="index"> 
-									<a @click="selectCoil(coil.item_code,coil.serial_Code)" href="#" class="dropdown-toggle" data-toggle="dropdown"> {{ coil.item_code }}  </a>
+							<li v-for="(coildata,index) in coils.data" :key="index"> 
+									<a @click="selectCoil(coildata.item_code,coildata.serial_Code)" href="#" class="dropdown-toggle" data-toggle="dropdown"> {{ coildata.serial_Code }}  </a>
+									
+							</li>					
+						</ul>
+					</div>
+					
+				</div>
+			</nav>
+			<nav v-if="show_panel_info == true" class="navbar-inverse sidebar " role="navigation" style="width:100%;">
+				<div class="container-fluid">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-2">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+							<a class="navbar-brand" style="margin-top: 20px;">Info Coil</a>
+					</div>
+					
+					<br>
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					
+					<div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-2">
+						<ul class="nav navbar-nav  coil-data" style="width:100%;" id="listgudang">				
+							<li> 
+									<a><b>item kategori</b> : {{coil.item_category}}</a>
+									<a><b>item tipe</b> : {{coil.item_type}}</a>
+									<a><b>item code</b> : {{coil.item_code}}</a>
+									<a><b>deskripsi</b> : {{coil.item_description}}</a>
+									<a><b>serial code</b> : {{coil.serial_Code}}</a>
+									<a><b>id coil</b> : {{coil.ID_coil}}</a>
+									<a><b>balance</b> : {{coil.balance}}</a>
 									
 							</li>					
 						</ul>
@@ -161,14 +194,15 @@ export default {
         search() {
             //APABILA VALUE DARI SEARCH BERUBAH MAKA AKAN MEMINTA DATA
             //SESUAI DENGAN DATA YANG SEDANG DICARI
-            this.getcoils(this.search)
+            this.getcoilsnoplace(this.search)
         }
     },
 
 	 created(){
 		 this.getGudangs(),
 		 this.getBloks()
-		 this.getcoils()
+		 //this.getcoils()
+		 this.getcoilsnoplace()
 	 },
 
 	 computed: {
@@ -188,6 +222,10 @@ export default {
 
 		  ...mapState('coil', {
 			 coils : state => state.coils
+		 }),
+
+		  ...mapState('coil', {
+			 coil : state => state.coil
 		 }),
 
 		selected_blok_id: {
@@ -234,6 +272,40 @@ export default {
                 this.$store.commit('gudang/ASSIGN_SERIAL_CODE', val)
             }
         },
+		selected_slot: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.location.selected_slot
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('location/ASSIGN_SELECTED_SLOT', val)
+            }
+        },
+		 show_panel_coil: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.gudang.show_panel_coil
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('gudang/ASSIGN_PANEL_COIL', val)
+            }
+        },
+
+        show_panel_info: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.gudang.show_panel_info
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('gudang/ASSIGN_PANEL_INFO', val)
+            }
+        },
 
 		
 	 },
@@ -242,7 +314,7 @@ export default {
 		 ...mapActions('gudang',['getGudangs']),
 		 ...mapMutations('blok',['CLEAR_FORM']),
 		 ...mapActions('blok',['submitBlok', 'getBloks','editBlok','removeBlok','updateBlok']),
-		 ...mapActions('coil',['getcoils']),
+		 ...mapActions('coil',['getcoils','getcoilsnoplace','detailcoil']),
 		 
 		 
 

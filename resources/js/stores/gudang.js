@@ -18,7 +18,9 @@ const state = () => ({
     selected_gudang_id :'',
     selected_coil_id :'',
     selected_serial_code :'',
-  
+    
+    show_panel_coil:'',
+    show_panel_info:'',
 
     page: 1 //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
 })
@@ -43,6 +45,14 @@ const mutations = {
 
     ASSIGN_SERIAL_CODE(state, payload) {
         state.selected_serial_code = payload
+    },
+
+    ASSIGN_PANEL_COIL(state, payload) {
+        state.show_panel_coil = payload
+    },
+
+    ASSIGN_PANEL_INFO(state, payload) {
+        state.show_panel_info = payload
     },
 
     //MENGUBAH DATA STATE PAGE

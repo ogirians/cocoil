@@ -15,15 +15,20 @@ use Illuminate\Http\Request;
 Route::post('/login', 'Auth\LoginController@login');
 Route::resource('/bloks', 'API\BlokController')->except(['show']);
 Route::resource('/gudangs', 'API\GudangController')->except(['show']);
-    
+Route::resource('/locations', 'API\locationController')->except(['create', 'show', 'update']);
+Route::resource('/coils', 'API\CoilController')->except(['show']);
+Route::get('/coils/noplace', 'API\CoilController@coilnoplace')->name('coil.noplace');
+Route::get('/coils/detail/{id}', 'API\CoilController@detail')->name('coil.detail');
+
 Route::group(['middleware' => 'auth:api'], function() {
    
     //get coil data
-    Route::resource('/coils', 'API\CoilController')->except(['show']);
+    
 
     //get coil location
-    Route::resource('/locations', 'API\locationController')->except(['show']);
-
+   
+    Route::post('/locations/{id}', 'API\locationController@update')->name('locations.update');
+    Route::post('/locations/setCoil/{id}', 'API\locationController@SetCoil')->name('locations.setCoil');
 
     //roles
     Route::get('roles', 'API\RolePermissionController@getAllRole')->name('roles');

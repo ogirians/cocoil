@@ -11,7 +11,7 @@ const state = () => ({
         item_code: '',
         item_description: '',
         serial_Code: '',
-        id_coil: '',
+        ID_coil: '',
         balance: '',
     },
 
@@ -36,7 +36,7 @@ const mutations = {
             item_code: payload.item_code,
             item_description: payload.item_description,
             serial_Code: payload.serial_Code,
-            id_coil: payload.id_coil,
+            ID_coil: payload.ID_coil,
             balance: payload.balance,
         }
     },
@@ -48,7 +48,7 @@ const mutations = {
             item_code: '',
             item_description: '',
             serial_code: '',
-            id_coil:'',
+            ID_coil:'',
             balance: '',
         }
     }
@@ -62,6 +62,19 @@ const actions = {
         return new Promise((resolve, reject) => {
             //REQUEST DATA DENGAN ENDPOINT /OUTLETS
             $axios.get(`/coils?page=${state.page}&q=${search}`)
+            .then((response) => {
+                //SIMPAN DATA KE STATE MELALUI MUTATIONS
+                commit('ASSIGN_DATA', response.data)
+                resolve(response.data)
+            })
+        })
+    },
+    getcoilsnoplace({ commit, state }, payload) {
+        //MENGECEK PAYLOAD ADA ATAU TIDAK
+        let search = typeof payload != 'undefined' ? payload:''
+        return new Promise((resolve, reject) => {
+            //REQUEST DATA DENGAN ENDPOINT /OUTLETS
+            $axios.get(`/coils/noplace?page=${state.page}&q=${search}`)
             .then((response) => {
                 //SIMPAN DATA KE STATE MELALUI MUTATIONS
                 commit('ASSIGN_DATA', response.data)
@@ -97,6 +110,18 @@ const actions = {
         return new Promise((resolve, reject) => {
             //MELAKUKAN REQUEST DENGAN MENGIRIMKAN CODE OUTLET DI URL
             $axios.get(`/coils/${payload}/edit`)
+            .then((response) => {
+                //APABIL BERHASIL, DI ASSIGN KE FORM
+                commit('ASSIGN_FORM', response.data.data)
+                resolve(response.data)
+            })
+        })
+    },
+
+    detailcoil({ commit }, payload) {
+        return new Promise((resolve, reject) => {
+            //MELAKUKAN REQUEST DENGAN MENGIRIMKAN CODE OUTLET DI URL
+            $axios.get(`/coils/detail/${payload}`)
             .then((response) => {
                 //APABIL BERHASIL, DI ASSIGN KE FORM
                 commit('ASSIGN_FORM', response.data.data)
