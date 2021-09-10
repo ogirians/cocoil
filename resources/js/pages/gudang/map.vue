@@ -226,6 +226,18 @@ export default {
             }
         },
 
+        selected_gudang_id: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.gudang.selected_gudang_id
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('gudang/ASSIGN_GUDANG_ID', val)
+            }
+        },
+
         
 
   },
@@ -713,9 +725,7 @@ export default {
             const data = localStorage.getItem('storage') || '[]';
            
             this.list = JSON.parse(data);    
-            
-            this.list
-                      
+                     
             
           },
 
@@ -730,8 +740,13 @@ export default {
       },
       mounted() {
           
-          this.load();
+         // this.load();
 
+      },
+
+      destroyed(){
+         this.selected_gudang_id = '';
+         this.list = [];
       },
      
 };

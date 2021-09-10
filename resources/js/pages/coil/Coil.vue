@@ -67,7 +67,7 @@ export default {
     computed: {
         //MENGAMBIL DATA OUTLETS DARI STATE OUTLETS
         ...mapState('coil', {
-            coils: state => state.coils
+            coils: state => state.coils_data
         }),
 
         page: {

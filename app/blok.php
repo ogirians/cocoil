@@ -14,4 +14,10 @@ class blok extends Model
         return $this->belongsTo('App\gudang');
        
     }
+
+    public function coil_location()
+    {
+        return $this->hasMany('App\coil_location','blok_id','id');
+       
+    }
 }

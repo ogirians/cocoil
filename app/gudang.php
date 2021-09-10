@@ -15,9 +15,10 @@ class gudang extends Model
        
     }
 
-    public function slot()
+   /* public function coil_location()
     {
-        return $this->hasMany('App\slot');
-       
-    }
+    return $this->hasManyThrough('App\coil_location', 'App\blok');
+    }*/
+
+  
 }

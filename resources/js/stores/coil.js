@@ -3,6 +3,7 @@ import $axios from '../api.js'
 const state = () => ({
     coils: [], //UNTUK MENAMPUNG DATA OUTLETS YANG DIDAPATKAN DARI DATABASE
 
+    coils_data: [],
     //UNTUK MENAMPUNG VALUE DARI FORM INPUTAN NANTINYA
     //STATE INI AKAN DIGUNAKAN PADA FORM ADD OUTLET YANG AKAN DIBAHAS KEMUDIAN
     coil: {
@@ -21,6 +22,10 @@ const state = () => ({
 
 const mutations = {
     //MEMASUKKAN DATA KE STATE coilS
+    ASSIGN_DATA_COIL(state, payload) {
+        state.coils_data = payload
+    },
+
     ASSIGN_DATA(state, payload) {
         state.coils = payload
     },
@@ -64,7 +69,7 @@ const actions = {
             $axios.get(`/coils?page=${state.page}&q=${search}`)
             .then((response) => {
                 //SIMPAN DATA KE STATE MELALUI MUTATIONS
-                commit('ASSIGN_DATA', response.data)
+                commit('ASSIGN_DATA_COIL', response.data)
                 resolve(response.data)
             })
         })

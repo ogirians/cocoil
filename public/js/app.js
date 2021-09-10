@@ -2830,7 +2830,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('coil', {
     coils: function coils(state) {
-      return state.coils;
+      return state.coils_data;
     }
   })), {}, {
     page: {
@@ -3725,6 +3725,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3740,7 +3754,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       //selected_gudang_id :'',
       selected_gudang_name: '',
       modal_stat: false,
-      search: ''
+      search: '',
+      hitung: []
     };
   },
   watch: {
@@ -3854,7 +3869,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     }
   }),
-  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('gudang', ['getGudangs'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapMutations"])('blok', ['CLEAR_FORM'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('blok', ['submitBlok', 'getBloks', 'editBlok', 'removeBlok', 'updateBlok'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('coil', ['getcoils', 'getcoilsnoplace', 'detailcoil'])), {}, {
+  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('gudang', ['getGudangs'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapMutations"])(['CLEAR_ERRORS'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapMutations"])('blok', ['CLEAR_FORM'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('blok', ['submitBlok', 'getBloks', 'editBlok', 'removeBlok', 'updateBlok'])), Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('coil', ['getcoils', 'getcoilsnoplace', 'detailcoil'])), {}, {
+    counting: function counting(coil) {
+      //this.count.push(coil);
+      console.log(coil);
+      this.hitung.push(coil); //return this.count;
+    },
     open: function open(id) {
       this.$store.dispatch(vuex_modal__WEBPACK_IMPORTED_MODULE_2__["PUSH"], {
         name: 'example'
@@ -3864,9 +3884,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     close: function close() {
       this.$store.dispatch(vuex_modal__WEBPACK_IMPORTED_MODULE_2__["POP"]);
-      this.$store.commit('blok/CLEAR_FORM');
-      this.selected_blok_id = '';
+      this.$store.commit('blok/CLEAR_FORM'); // /this.selected_blok_id ='';
+
       this.modal_stat = false;
+      this.CLEAR_ERRORS();
     },
     submit: function submit() {
       var _this = this;
@@ -3904,6 +3925,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.open(this.idGudang);
     },
     openBaru: function openBaru(idblok) {
+      this.selected_gudang_id = '';
       this.selected_blok_id = '';
       this.$store.commit('blok/CLEAR_FORM');
       this.open(idblok);
@@ -4192,6 +4214,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
         //DI VUEX JUGA AKAN DIUBAH
         this.$store.commit('gudang/ASSIGN_PANEL_INFO', val);
+      }
+    },
+    selected_gudang_id: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_gudang_id;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_GUDANG_ID', val);
       }
     }
   }),
@@ -4652,14 +4685,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     load: function load() {
       var data = localStorage.getItem('storage') || '[]';
       this.list = JSON.parse(data);
-      this.list;
     },
     save: function save() {
       localStorage.setItem('storage', JSON.stringify(this.list));
     }
   }),
-  mounted: function mounted() {
-    this.load();
+  mounted: function mounted() {// this.load();
+  },
+  destroyed: function destroyed() {
+    this.selected_gudang_id = '';
+    this.list = [];
   }
 });
 
@@ -51539,28 +51574,62 @@ var render = function() {
                           },
                           [
                             _vm._l(gudang.blok, function(blo, index) {
-                              return _c("li", { key: index }, [
-                                _c(
-                                  "a",
-                                  {
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.selectBlok(
-                                          blo.name,
-                                          blo.id,
-                                          gudang.id,
-                                          gudang.name
-                                        )
+                              return _c(
+                                "li",
+                                { key: index },
+                                [
+                                  _vm._l(blo.coil_location, function(
+                                    coile,
+                                    index
+                                  ) {
+                                    return _c("div", { key: index }, [
+                                      coile.coil_id != null
+                                        ? _c("div", [
+                                            _vm._v(
+                                              "\n\t\t\t\t\t\t\t\t\t\t\t\t\t" +
+                                                _vm._s(
+                                                  (_vm.counting[index] =
+                                                    coile.coil.item_code)
+                                                ) +
+                                                " - " +
+                                                _vm._s(index) +
+                                                " \n\t\t\t\t\t\t\t\t\t\t\t\t"
+                                            )
+                                          ])
+                                        : _vm._e()
+                                    ])
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
+                                    {
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.selectBlok(
+                                            blo.name,
+                                            blo.id,
+                                            gudang.id,
+                                            gudang.name
+                                          )
+                                        }
                                       }
-                                    }
-                                  },
-                                  [
-                                    _vm._v(
-                                      _vm._s(blo.name) + "-" + _vm._s(blo.id)
-                                    )
-                                  ]
-                                )
-                              ])
+                                    },
+                                    [
+                                      _vm._v(
+                                        _vm._s(blo.name) +
+                                          "-" +
+                                          _vm._s(blo.id) +
+                                          " -  ( " +
+                                          _vm._s(_vm.hitung.length) +
+                                          "/" +
+                                          _vm._s(blo.coil_location.length) +
+                                          ")\n\t\t\t\t\t\t\t\t\t\t\t"
+                                      )
+                                    ]
+                                  )
+                                ],
+                                2
+                              )
                             }),
                             _vm._v(" "),
                             _c(
@@ -72098,6 +72167,9 @@ var actions = {
     var dispatch = _ref2.dispatch,
         commit = _ref2.commit,
         state = _ref2.state;
+    commit('CLEAR_ERRORS', '', {
+      root: true
+    });
     return new Promise(function (resolve, reject) {
       //MENGIRIMKAN PERMINTAAN KE SERVER DAN MELAMPIRKAN DATA YANG AKAN DISIMPAN
       //DARI STATE OUTLET
@@ -72187,6 +72259,7 @@ var state = function state() {
   return {
     coils: [],
     //UNTUK MENAMPUNG DATA OUTLETS YANG DIDAPATKAN DARI DATABASE
+    coils_data: [],
     //UNTUK MENAMPUNG VALUE DARI FORM INPUTAN NANTINYA
     //STATE INI AKAN DIGUNAKAN PADA FORM ADD OUTLET YANG AKAN DIBAHAS KEMUDIAN
     coil: {
@@ -72205,6 +72278,9 @@ var state = function state() {
 
 var mutations = {
   //MEMASUKKAN DATA KE STATE coilS
+  ASSIGN_DATA_COIL: function ASSIGN_DATA_COIL(state, payload) {
+    state.coils_data = payload;
+  },
   ASSIGN_DATA: function ASSIGN_DATA(state, payload) {
     state.coils = payload;
   },
@@ -72248,7 +72324,7 @@ var actions = {
       //REQUEST DATA DENGAN ENDPOINT /OUTLETS
       _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].get("/coils?page=".concat(state.page, "&q=").concat(search)).then(function (response) {
         //SIMPAN DATA KE STATE MELALUI MUTATIONS
-        commit('ASSIGN_DATA', response.data);
+        commit('ASSIGN_DATA_COIL', response.data);
         resolve(response.data);
       });
     });

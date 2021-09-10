@@ -12,7 +12,7 @@ class GudangController extends Controller
 {
     public function index()
     {
-        $gudang = gudang::with('blok')->orderBy('created_at', 'DESC');
+        $gudang = gudang::with('blok.coil_location.coil')->orderBy('created_at', 'DESC');
         if (request()->q != '') {
             $gudang = $gudang->where('name', 'LIKE', '%' . request()->q . '%');
         }

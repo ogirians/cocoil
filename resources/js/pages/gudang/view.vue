@@ -60,7 +60,21 @@
 							<li v-for="(gudang,index) in gudangs.data" :key="index"> 
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown"> {{ gudang.name }}  <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a>
 									<ul class="dropdown-menu forAnimate" role="menu">
-										<li v-for="(blo, index) in gudang.blok" :key="index"><a @click="selectBlok(blo.name, blo.id, gudang.id, gudang.name)">{{ blo.name }}-{{blo.id}}</a></li> 
+
+										
+										<li v-for="(blo, index) in gudang.blok" :key="index">
+											
+											<div v-for="(coile, index) in blo.coil_location" :key="index" >
+												<div v-if="coile.coil_id != null">
+													{{counting[index]= coile.coil.item_code }} - {{index}} 
+												</div>
+											</div>
+
+										
+											<a @click="selectBlok(blo.name, blo.id, gudang.id, gudang.name)">{{ blo.name }}-{{blo.id}} -  ( {{hitung.length}}/{{blo.coil_location.length}})
+											</a>
+										
+										</li> 
 										
 										<button style="margin:5px" class="btn btn-secondary btn-sm btn-sm btn-flat " type="button" @click="openBaru(gudang.id)" href="#"><i class="glyphicon glyphicon-plus" ></i> blok baru {{gudang.id}}</button>
 										
@@ -186,6 +200,7 @@ export default {
 			 modal_stat: false,
 
 			 search: '',
+			 hitung : [],
 		 }
 	 },
 
@@ -227,6 +242,8 @@ export default {
 		  ...mapState('coil', {
 			 coil : state => state.coil
 		 }),
+
+		
 
 		selected_blok_id: {
             get() {
@@ -312,11 +329,20 @@ export default {
 
 	 methods : {
 		 ...mapActions('gudang',['getGudangs']),
+		 ...mapMutations(['CLEAR_ERRORS']),
 		 ...mapMutations('blok',['CLEAR_FORM']),
 		 ...mapActions('blok',['submitBlok', 'getBloks','editBlok','removeBlok','updateBlok']),
 		 ...mapActions('coil',['getcoils','getcoilsnoplace','detailcoil']),
 		 
 		 
+
+		counting(coil){
+
+			//this.count.push(coil);
+			console.log(coil);
+			this.hitung.push(coil);
+			//return this.count;
+		},
 
 		open (id) {
       		this.$store.dispatch(PUSH, { name: 'example' })
@@ -329,8 +355,9 @@ export default {
 		close () {
 			this.$store.dispatch(POP)
 			this.$store.commit('blok/CLEAR_FORM')
-			this.selected_blok_id ='';
+			// /this.selected_blok_id ='';
 			this.modal_stat =false;
+			this.CLEAR_ERRORS()
 			 
 		},
 
@@ -373,7 +400,8 @@ export default {
 		},
 
 		openBaru(idblok){
-			this.selected_blok_id ='';
+			this.selected_gudang_id = '';
+			this.selected_blok_id = '';
 			this.$store.commit('blok/CLEAR_FORM');
 			this.open(idblok);
 			
