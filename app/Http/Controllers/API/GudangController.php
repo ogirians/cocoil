@@ -12,11 +12,26 @@ class GudangController extends Controller
 {
     public function index()
     {
-        $gudang = gudang::with('blok.coil_location.coil')->orderBy('created_at', 'DESC');
+        $gudang = gudang::orderBy('created_at', 'DESC');
         if (request()->q != '') {
             $gudang = $gudang->where('name', 'LIKE', '%' . request()->q . '%');
         }
+
         return new GudangCollection($gudang->paginate(10));
+       // return response()->json(['status' => 'success', 'data' => $gudang], 200);
+    }
+
+    public function getData()
+    {
+        $gudang = gudang::with('blok.coil_location.coil')->orderBy('created_at', 'DESC');
+        if (request()->q != '') {
+            $gudang = $gudang->where('name', 'LIKE', '%' . request()->q . '%');
+        }else {
+            $gudang = $gudang->get();
+        }
+
+        //return new GudangCollection($gudang->paginate(10));
+        return response()->json(['status' => 'success', 'data' => $gudang], 200);
     }
 
     public function store(Request $request)

@@ -3,6 +3,7 @@ import $axios from '../api.js'
 const state = () => ({
     gudangs: [], //UNTUK MENAMPUNG DATA OUTLETS YANG DIDAPATKAN DARI DATABASE
 
+    gudangs_detail: [],
     //UNTUK MENAMPUNG VALUE DARI FORM INPUTAN NANTINYA
     //STATE INI AKAN DIGUNAKAN PADA FORM ADD OUTLET YANG AKAN DIBAHAS KEMUDIAN
     gudang: {
@@ -29,6 +30,10 @@ const mutations = {
     //MEMASUKKAN DATA KE STATE GUDANGS
     ASSIGN_DATA(state, payload) {
         state.gudangs = payload
+    },
+
+    ASSIGN_DATA_DETAIL(state, payload) {
+        state.gudangs_detail = payload
     },
 
     ASSIGN_BLOK_ID(state, payload) {
@@ -92,6 +97,20 @@ const actions = {
             .then((response) => {
                 //SIMPAN DATA KE STATE MELALUI MUTATIONS
                 commit('ASSIGN_DATA', response.data)
+                resolve(response.data)
+            })
+        })
+    },
+
+    getDataGudangs({ commit, state }, payload) {
+        //MENGECEK PAYLOAD ADA ATAU TIDAK
+        let search = typeof payload != 'undefined' ? payload:''
+        return new Promise((resolve, reject) => {
+            //REQUEST DATA DENGAN ENDPOINT /OUTLETS
+            $axios.get(`/gudangs/getData/?page=${state.page}&q=${search}`)
+            .then((response) => {
+                //SIMPAN DATA KE STATE MELALUI MUTATIONS
+                commit('ASSIGN_DATA_DETAIL', response.data)
                 resolve(response.data)
             })
         })

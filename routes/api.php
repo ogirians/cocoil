@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 Route::post('/login', 'Auth\LoginController@login');
 Route::resource('/bloks', 'API\BlokController')->except(['show']);
 Route::resource('/gudangs', 'API\GudangController')->except(['show']);
+Route::get('/gudangs/getData', 'API\GudangController@getData')->name('getData');
 Route::resource('/locations', 'API\locationController')->except(['create', 'show', 'update']);
 Route::resource('/coils', 'API\CoilController')->except(['show']);
 Route::get('/coils/noplace', 'API\CoilController@coilnoplace')->name('coil.noplace');

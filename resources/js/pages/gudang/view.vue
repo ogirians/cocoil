@@ -57,23 +57,15 @@
 					
 					<div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
 						<ul class="nav navbar-nav" id="listgudang">				
-							<li v-for="(gudang,index) in gudangs.data" :key="index"> 
+							<li v-for="(gudang,index) in gudangs_detail.data" :key="index"> 
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown"> {{ gudang.name }}  <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a>
 									<ul class="dropdown-menu forAnimate" role="menu">
 
 										
-										<li v-for="(blo, index) in gudang.blok" :key="index">
+										<li v-for="(blo, index2) in gudang.blok" :key="index2" >
 											
-											<div v-for="(coile, index) in blo.coil_location" :key="index" >
-												<div v-if="coile.coil_id != null">
-													{{counting[index]= coile.coil.item_code }} - {{index}} 
-												</div>
-											</div>
-
-										
-											<a @click="selectBlok(blo.name, blo.id, gudang.id, gudang.name)">{{ blo.name }}-{{blo.id}} -  ( {{hitung.length}}/{{blo.coil_location.length}})
+											<a @click="selectBlok(blo.name, blo.id, gudang.id, gudang.name)">{{ blo.name }}-{{blo.id}} - ( {{counting(blo)}}/{{blo.coil_location.length}})
 											</a>
-										
 										</li> 
 										
 										<button style="margin:5px" class="btn btn-secondary btn-sm btn-sm btn-flat " type="button" @click="openBaru(gudang.id)" href="#"><i class="glyphicon glyphicon-plus" ></i> blok baru {{gudang.id}}</button>
@@ -200,7 +192,8 @@ export default {
 			 modal_stat: false,
 
 			 search: '',
-			 hitung : [],
+			 total : 0,
+			 hitung_total : 0,
 		 }
 	 },
 
@@ -215,12 +208,16 @@ export default {
 
 	 created(){
 		 this.getGudangs(),
-		 this.getBloks()
+		 this.getBloks(),
+		 this.getDataGudangs(),
 		 //this.getcoils()
 		 this.getcoilsnoplace()
 	 },
 
 	 computed: {
+
+
+
 		 ...mapState (['errors']),
 
 		 ...mapState('blok', {
@@ -235,6 +232,10 @@ export default {
 			 gudangs : state => state.gudangs
 		 }),
 
+		  ...mapState('gudang', {
+			 gudangs_detail : state => state.gudangs_detail
+		 }),
+
 		  ...mapState('coil', {
 			 coils : state => state.coils
 		 }),
@@ -244,6 +245,16 @@ export default {
 		 }),
 
 		
+		hitung_tambah : function () {
+		// `this` points to the vm instance
+		 var total = this.hitung_total;
+
+		 total = total+1;
+
+		 this.hitung_total = total;
+
+		 return total;
+		},
 
 		selected_blok_id: {
             get() {
@@ -328,7 +339,7 @@ export default {
 	 },
 
 	 methods : {
-		 ...mapActions('gudang',['getGudangs']),
+		 ...mapActions('gudang',['getGudangs','getDataGudangs']),
 		 ...mapMutations(['CLEAR_ERRORS']),
 		 ...mapMutations('blok',['CLEAR_FORM']),
 		 ...mapActions('blok',['submitBlok', 'getBloks','editBlok','removeBlok','updateBlok']),
@@ -336,12 +347,32 @@ export default {
 		 
 		 
 
-		counting(coil){
-
+		counting(dataLoc){
+			
 			//this.count.push(coil);
-			console.log(coil);
-			this.hitung.push(coil);
-			//return this.count;
+			//console.log(dataLoc.coil_location);
+			//this.total = 0;
+			var berhitung = 0 ;
+
+			let data = dataLoc.coil_location;
+
+			for (let i = 0; i < data.length; i++) {
+				 console.log(data[i].coil_id);
+				 if (data[i].coil_id != null){
+					berhitung = berhitung + 1;
+				 }
+			} 
+			
+			return berhitung;
+		},
+
+		hitungini(item, index){
+			console.log(item.coil_id);
+
+		//	   if (item.coil_location.coil_id != null) {
+		//			this.total = this.total+1;
+		//	   }
+		//	console.log(this.total);
 		},
 
 		open (id) {
