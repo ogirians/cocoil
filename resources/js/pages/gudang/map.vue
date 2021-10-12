@@ -150,6 +150,9 @@ export default {
                 loc.forEach(this.addToList);
             
             });
+
+            
+           
            
   },
 
@@ -238,6 +241,18 @@ export default {
             }
         },
 
+         selected_slot_name: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.gudang.selected_slot_name;
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('gudang/ASSIGN_SLOT_NAME', val);
+            }
+        },
+
         
 
   },
@@ -267,6 +282,8 @@ export default {
             });
 
         },
+
+       
 
         
        
@@ -355,7 +372,7 @@ export default {
               scaleY : pos.rect.scaleY,
               rotation : pos.rect.rotation,
               slot_id : pos.id,
-              slot_name: pos.name,
+              slot_name: pos.rect.name,
             };
 
             this.submitlocation();
@@ -605,6 +622,7 @@ export default {
                this.selected_slot='';
                 this.show_panel_coil = false;
                 this.show_panel_info = false;
+                this.selected_slot_name = '';
                
                if (item) {
                 item.rectext.visible = true;
@@ -693,7 +711,33 @@ export default {
 
           },
 
+          attachTransformer() {
+              console.log('attach transforner');
+              // here we need to manually attach or detach Transformer node
+              const transformerNode = this.$refs.transformer.getNode();
+
+              const stage = transformerNode.getStage();
+              
+              const { selectedShapeName } = this;
+  
+              const selectedNode = stage.findOne('.' + selectedShapeName);
+            
+              // do nothing if selected node is already attached
+              //if (selectedNode === transformerNode.node()) {
+             //   return;
+              //}
+
+              if (selectedNode) {
+                // attach to another node
+                transformerNode.nodes([selectedNode]);
+              } else {
+                // remove transformer
+                transformerNode.nodes([]);
+              }
+          },
+
           updateTransformer() {
+              console.log('transformet');
               // here we need to manually attach or detach Transformer node
               const transformerNode = this.$refs.transformer.getNode();
 
@@ -733,13 +777,19 @@ export default {
             localStorage.setItem('storage', JSON.stringify(this.list));
            
             
-          },
-          
-        
+          }, 
 
+      },
+
+      updated(){  
+           if(this.selected_slot_name){
+               this.selectedShapeName = this.selected_slot_name;
+               this.updateTransformer();
+            }
       },
       mounted() {
           
+         
          // this.load();
 
       },

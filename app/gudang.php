@@ -8,6 +8,7 @@ class gudang extends Model
 {
     protected $guarded = [];
 
+    protected $primaryKey = 'id';
     
     public function blok()
     {

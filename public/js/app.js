@@ -2108,6 +2108,57 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('user', {
+    authenticated: function authenticated(state) {
+      return state.authenticated;
+    } //ME-LOAD STATE AUTHENTICATED
+
+  })),
+  methods: {
+    //KETIKA TOMBOL LOGOUT DITEKAN, FUNGSI INI DIJALANKAN
+    logout: function logout() {
+      var _this = this;
+
+      return new Promise(function (resolve, reject) {
+        localStorage.removeItem('token'); //MENGHAPUS TOKEN DARI LOCALSTORAGE
+
+        resolve();
+      }).then(function () {
+        //MEMPERBAHARUI STATE TOKEN
+        _this.$store.state.token = localStorage.getItem('token');
+
+        _this.$router.push('/login'); //REDIRECT KE PAGE LOGIN
+
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/Action.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/pages/Action.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2157,29 +2208,51 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('user', {
-    authenticated: function authenticated(state) {
-      return state.authenticated;
-    } //ME-LOAD STATE AUTHENTICATED
-
+  data: function data() {
+    return {
+      data: {
+        email: '',
+        password: '',
+        remember_me: false
+      }
+    };
+  },
+  //SEBELUM COMPONENT DI-RENDER
+  created: function created() {
+    //KITA MELAKUKAN PENGECEKAN JIKA SUDAH LOGIN DIMANA VALUE isAuth BERNILAI TRUE
+    //if (this.isAuth) {
+    //    //MAKA DI-DIRECT KE ROUTE DENGAN NAME home
+    //    this.$router.push({ name: 'home' })
+    //}
+    this.detailcoil(this.$route.params.id);
+  },
+  computed: _objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['isAuth'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['errors'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('coil', {
+    coil: function coil(state) {
+      return state.coil;
+    }
   })),
-  methods: {
-    //KETIKA TOMBOL LOGOUT DITEKAN, FUNGSI INI DIJALANKAN
-    logout: function logout() {
+  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('auth', ['submit'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])(['CLEAR_ERRORS'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('user', ['getUserLogin'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('coil', ['getcoils', 'getcoilsnoplace', 'detailcoil'])), {}, {
+    //KETIKA TOMBOL LOGIN DITEKAN, MAKA AKAN MEMINCU METHODS postLogin()
+    postLogin: function postLogin() {
       var _this = this;
 
-      return new Promise(function (resolve, reject) {
-        localStorage.removeItem('token'); //MENGHAPUS TOKEN DARI LOCALSTORAGE
+      //DIMANA TOMBOL INI AKAN MENJALANKAN FUNGSI submit() DENGAN MENGIRIMKAN DATA YANG DIBUTUHKAN
+      this.submit(this.data).then(function () {
+        //KEMUDIAN DI CEK VALUE DARI isAuth
+        //APABILA BERNILAI TRUE
+        if (_this.isAuth) {
+          _this.CLEAR_ERRORS(); //MAKA AKAN DI-DIRECT KE ROUTE DENGAN NAME home
 
-        resolve();
-      }).then(function () {
-        //MEMPERBAHARUI STATE TOKEN
-        _this.$store.state.token = localStorage.getItem('token');
 
-        _this.$router.push('/login'); //REDIRECT KE PAGE LOGIN
-
+          _this.$router.push({
+            name: 'home'
+          });
+        }
       });
     }
+  }),
+  destroyed: function destroyed() {
+    this.getUserLogin();
   }
 });
 
@@ -2783,6 +2856,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Datacoil',
@@ -2816,16 +2895,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         key: 'balance',
         label: 'balance'
       }, {
-        key: 'gudang_id',
-        label: 'gudang'
+        key: 'location.gudang.name',
+        label: 'gudang',
+        formatter: 'formatGudang'
       }, {
-        key: 'blok_id',
-        label: 'blok'
+        key: 'location.blok.name',
+        label: 'blok',
+        formatter: 'formatBlok'
       }, {
         key: 'actions',
         label: 'aksi'
       }],
-      search: ''
+      search: '',
+      url: ''
     };
   },
   computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('coil', {
@@ -2842,6 +2924,95 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
         //DI VUEX JUGA AKAN DIUBAH
         this.$store.commit('coil/SET_PAGE', val);
+      }
+    },
+    selected_blok_id: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_blok_id;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_BLOK_ID', val);
+      }
+    },
+    selected_gudang_id: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_gudang_id;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_GUDANG_ID', val);
+      }
+    },
+    selected_coil_id: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_coil_id;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_COIL_ID', val);
+      }
+    },
+    selected_serial_code: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_serial_code;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_SERIAL_CODE', val);
+      }
+    },
+    selected_slot: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.location.selected_slot;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('location/ASSIGN_SELECTED_SLOT', val);
+      }
+    },
+    selected_slot_name: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_slot_name;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_SLOT_NAME', val);
+      }
+    },
+    //UNTUK NAME GUDANG DAN BL0K KETIKA KLIK VIEWW
+    selected_blok: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_blok;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_BLOK', val);
+      }
+    },
+    selected_gudang_name: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_gudang_name;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_GUDANG_NAME', val);
       }
     }
   }),
@@ -2877,6 +3048,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           _this.removecoil(id);
         }
       });
+    },
+    formatGudang: function formatGudang(value) {
+      return value || '-';
+    },
+    formatBlok: function formatBlok(value) {
+      return value || '-';
+    },
+    setView: function setView(gudang_name, blok_name, gudang_id, blok_id, slot_id) {
+      console.log(gudang_id);
+      this.selected_gudang_name = gudang_name;
+      this.selected_blok = blok_name;
+      this.selected_gudang_id = gudang_id;
+      this.selected_blok_id = blok_id;
+      this.selected_slot_name = 'group' + slot_id;
+    },
+    setURl: function setURl(serial_code) {
+      this.url = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:8000/action/" + serial_code;
     }
   })
 });
@@ -3740,11 +3928,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   name: 'viewGudang',
   data: function data() {
     return {
-      selected_blok: '',
+      //selected_blok:'',
       //selected_blok_id:'',
       blok_id: '',
       //selected_gudang_id :'',
-      selected_gudang_name: '',
+      //selected_gudang_name : '',
       modal_stat: false,
       search: '',
       total: 0,
@@ -3794,6 +3982,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.hitung_total = total;
       return total;
     },
+    selected_blok: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_blok;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_BLOK', val);
+      }
+    },
     selected_blok_id: {
       get: function get() {
         //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
@@ -3814,6 +4013,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
         //DI VUEX JUGA AKAN DIUBAH
         this.$store.commit('gudang/ASSIGN_GUDANG_ID', val);
+      }
+    },
+    selected_gudang_name: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_gudang_name;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_GUDANG_NAME', val);
       }
     },
     selected_coil_id: {
@@ -3881,20 +4091,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var data = dataLoc.coil_location;
 
       for (var i = 0; i < data.length; i++) {
-        console.log(data[i].coil_id);
-
+        //console.log(data[i].coil_id);
         if (data[i].coil_id != null) {
           berhitung = berhitung + 1;
         }
       }
 
       return berhitung;
-    },
-    hitungini: function hitungini(item, index) {
-      console.log(item.coil_id); //	   if (item.coil_location.coil_id != null) {
-      //			this.total = this.total+1;
-      //	   }
-      //	console.log(this.total);
     },
     open: function open(id) {
       this.$store.dispatch(vuex_modal__WEBPACK_IMPORTED_MODULE_2__["PUSH"], {
@@ -4247,6 +4450,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         //DI VUEX JUGA AKAN DIUBAH
         this.$store.commit('gudang/ASSIGN_GUDANG_ID', val);
       }
+    },
+    selected_slot_name: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.gudang.selected_slot_name;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('gudang/ASSIGN_SLOT_NAME', val);
+      }
     }
   }),
   watch: {
@@ -4394,7 +4608,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         scaleY: pos.rect.scaleY,
         rotation: pos.rect.rotation,
         slot_id: pos.id,
-        slot_name: pos.name
+        slot_name: pos.rect.name
       };
       this.submitlocation();
       this.list.push(pos);
@@ -4606,6 +4820,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.selected_slot = '';
         this.show_panel_coil = false;
         this.show_panel_info = false;
+        this.selected_slot_name = '';
 
         if (_item) {
           _item.rectext.visible = true; //this.save();
@@ -4682,8 +4897,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.updateTransformer();
     },
     selectCoilImg: function selectCoilImg() {},
+    attachTransformer: function attachTransformer() {
+      console.log('attach transforner'); // here we need to manually attach or detach Transformer node
+
+      var transformerNode = this.$refs.transformer.getNode();
+      var stage = transformerNode.getStage();
+      var selectedShapeName = this.selectedShapeName;
+      var selectedNode = stage.findOne('.' + selectedShapeName); // do nothing if selected node is already attached
+      //if (selectedNode === transformerNode.node()) {
+      //   return;
+      //}
+
+      if (selectedNode) {
+        // attach to another node
+        transformerNode.nodes([selectedNode]);
+      } else {
+        // remove transformer
+        transformerNode.nodes([]);
+      }
+    },
     updateTransformer: function updateTransformer() {
-      // here we need to manually attach or detach Transformer node
+      console.log('transformet'); // here we need to manually attach or detach Transformer node
+
       var transformerNode = this.$refs.transformer.getNode();
       var stage = transformerNode.getStage();
       var selectedShapeName = this.selectedShapeName;
@@ -4711,6 +4946,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       localStorage.setItem('storage', JSON.stringify(this.list));
     }
   }),
+  updated: function updated() {
+    if (this.selected_slot_name) {
+      this.selectedShapeName = this.selected_slot_name;
+      this.updateTransformer();
+    }
+  },
   mounted: function mounted() {// this.load();
   },
   destroyed: function destroyed() {
@@ -48909,10 +49150,6 @@ var render = function() {
           _c("ul", { staticClass: "nav navbar-nav" }, [
             _vm._m(3),
             _vm._v(" "),
-            _vm._m(4),
-            _vm._v(" "),
-            _vm._m(5),
-            _vm._v(" "),
             _c("li", { staticClass: "dropdown user user-menu" }, [
               _c(
                 "a",
@@ -48948,10 +49185,10 @@ var render = function() {
                   _c("p", [_vm._v(_vm._s(_vm.authenticated.name))])
                 ]),
                 _vm._v(" "),
-                _vm._m(6),
+                _vm._m(4),
                 _vm._v(" "),
                 _c("li", { staticClass: "user-footer" }, [
-                  _vm._m(7),
+                  _vm._m(5),
                   _vm._v(" "),
                   _c("div", { staticClass: "pull-right" }, [
                     _c(
@@ -49033,63 +49270,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "dropdown messages-menu" }, [
-      _c(
-        "a",
-        {
-          staticClass: "dropdown-toggle",
-          attrs: { href: "#", "data-toggle": "dropdown" }
-        },
-        [
-          _c("i", { staticClass: "fa fa-envelope-o" }),
-          _vm._v(" "),
-          _c("span", { staticClass: "label label-success" }, [_vm._v("4")])
-        ]
-      ),
-      _vm._v(" "),
-      _c("ul", { staticClass: "dropdown-menu" }, [
-        _c("li", { staticClass: "header" }, [_vm._v("You have 4 messages")]),
-        _vm._v(" "),
-        _c("li", [
-          _c("ul", { staticClass: "menu" }, [
-            _c("li", [
-              _c("a", { attrs: { href: "#" } }, [
-                _c("div", { staticClass: "pull-left" }, [
-                  _c("img", {
-                    staticClass: "img-circle",
-                    attrs: {
-                      src: "https://via.placeholder.com/160",
-                      alt: "User Image"
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("h4", [
-                  _vm._v(
-                    "\n                                                Support Team\n                                                "
-                  ),
-                  _c("small", [
-                    _c("i", { staticClass: "fa fa-clock-o" }),
-                    _vm._v(" 5 mins")
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("p", [_vm._v("Why not buy a new awesome theme?")])
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "footer" }, [
-          _c("a", { attrs: { href: "#" } }, [_vm._v("See All Messages")])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("li", { staticClass: "dropdown notifications-menu" }, [
       _c(
         "a",
@@ -49100,13 +49280,13 @@ var staticRenderFns = [
         [
           _c("i", { staticClass: "fa fa-bell-o" }),
           _vm._v(" "),
-          _c("span", { staticClass: "label label-warning" }, [_vm._v("10")])
+          _c("span", { staticClass: "label label-danger" }, [_vm._v("3")])
         ]
       ),
       _vm._v(" "),
       _c("ul", { staticClass: "dropdown-menu" }, [
         _c("li", { staticClass: "header" }, [
-          _vm._v("You have 10 notifications")
+          _vm._v("You have 3 notifications")
         ]),
         _vm._v(" "),
         _c("li", [
@@ -49115,7 +49295,21 @@ var staticRenderFns = [
               _c("a", { attrs: { href: "#" } }, [
                 _c("i", { staticClass: "fa fa-users text-aqua" }),
                 _vm._v(
-                  " 5 new members joined today\n                                        "
+                  " coil 2012-2000 di scan untuk dijual\n                                        "
+                )
+              ]),
+              _vm._v(" "),
+              _c("a", { attrs: { href: "#" } }, [
+                _c("i", { staticClass: "fa fa-users text-aqua" }),
+                _vm._v(
+                  " coil 2012-2004 di scan untuk dipindah\n                                        "
+                )
+              ]),
+              _vm._v(" "),
+              _c("a", { attrs: { href: "#" } }, [
+                _c("i", { staticClass: "fa fa-users text-aqua" }),
+                _vm._v(
+                  " coil 2012-2003 di scan untuk diproduksi\n                                        "
                 )
               ])
             ])
@@ -49124,69 +49318,6 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("li", { staticClass: "footer" }, [
           _c("a", { attrs: { href: "#" } }, [_vm._v("View all")])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "dropdown tasks-menu" }, [
-      _c(
-        "a",
-        {
-          staticClass: "dropdown-toggle",
-          attrs: { href: "#", "data-toggle": "dropdown" }
-        },
-        [
-          _c("i", { staticClass: "fa fa-flag-o" }),
-          _vm._v(" "),
-          _c("span", { staticClass: "label label-danger" }, [_vm._v("9")])
-        ]
-      ),
-      _vm._v(" "),
-      _c("ul", { staticClass: "dropdown-menu" }, [
-        _c("li", { staticClass: "header" }, [_vm._v("You have 9 tasks")]),
-        _vm._v(" "),
-        _c("li", [
-          _c("ul", { staticClass: "menu" }, [
-            _c("li", [
-              _c("a", { attrs: { href: "#" } }, [
-                _c("h3", [
-                  _vm._v(
-                    "\n                                                Design some buttons\n                                                "
-                  ),
-                  _c("small", { staticClass: "pull-right" }, [_vm._v("20%")])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "progress xs" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "progress-bar progress-bar-aqua",
-                      staticStyle: { width: "20%" },
-                      attrs: {
-                        role: "progressbar",
-                        "aria-valuenow": "20",
-                        "aria-valuemin": "0",
-                        "aria-valuemax": "100"
-                      }
-                    },
-                    [
-                      _c("span", { staticClass: "sr-only" }, [
-                        _vm._v("20% Complete")
-                      ])
-                    ]
-                  )
-                ])
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "footer" }, [
-          _c("a", { attrs: { href: "#" } }, [_vm._v("View all tasks")])
         ])
       ])
     ])
@@ -49209,6 +49340,183 @@ var staticRenderFns = [
         { staticClass: "btn btn-default btn-flat", attrs: { href: "#" } },
         [_vm._v("Profile")]
       )
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/Action.vue?vue&type=template&id=0b1cc5ff&":
+/*!****************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/pages/Action.vue?vue&type=template&id=0b1cc5ff& ***!
+  \****************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "login-box" }, [
+      _c(
+        "div",
+        { staticClass: "login-logo" },
+        [
+          _c("router-link", { attrs: { to: { name: "home" } } }, [
+            _vm._v("Serial Code  "),
+            _c("b", [_vm._v(_vm._s(this.$route.params.id))])
+          ])
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "panel" }, [
+        _c(
+          "ul",
+          {
+            staticClass: "nav",
+            staticStyle: { width: "100%" },
+            attrs: { id: "listgudang" }
+          },
+          [
+            _c("li", [
+              _c("a", [
+                _c("b", [_vm._v("item kategori")]),
+                _vm._v(" : " + _vm._s(_vm.coil.item_category))
+              ]),
+              _vm._v(" "),
+              _c("a", [
+                _c("b", [_vm._v("item tipe")]),
+                _vm._v(" : " + _vm._s(_vm.coil.item_type))
+              ]),
+              _vm._v(" "),
+              _c("a", [
+                _c("b", [_vm._v("item code")]),
+                _vm._v(" : " + _vm._s(_vm.coil.item_code))
+              ]),
+              _vm._v(" "),
+              _c("a", [
+                _c("b", [_vm._v("deskripsi")]),
+                _vm._v(" : " + _vm._s(_vm.coil.item_description))
+              ]),
+              _vm._v(" "),
+              _c("a", [
+                _c("b", [_vm._v("serial code")]),
+                _vm._v(" : " + _vm._s(_vm.coil.serial_Code))
+              ]),
+              _vm._v(" "),
+              _c("a", [
+                _c("b", [_vm._v("id coil")]),
+                _vm._v(" : " + _vm._s(_vm.coil.ID_coil))
+              ]),
+              _vm._v(" "),
+              _c("a", [
+                _c("b", [_vm._v("balance")]),
+                _vm._v(" : " + _vm._s(_vm.coil.balance))
+              ])
+            ])
+          ]
+        ),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "panel-body" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "" } }, [_vm._v("password")]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "form-group has-feedback",
+              class: { "has-error": _vm.errors.password }
+            },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.data.password,
+                    expression: "data.password"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "password", placeholder: "Password" },
+                domProps: { value: _vm.data.password },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.data, "password", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("span", {
+                staticClass: "glyphicon glyphicon-lock form-control-feedback"
+              }),
+              _vm._v(" "),
+              _vm.errors.password
+                ? _c("p", { staticClass: "text-danger" }, [
+                    _vm._v(_vm._s(_vm.errors.password[0]))
+                  ])
+                : _vm._e()
+            ]
+          ),
+          _vm._v(" "),
+          _vm._m(2)
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "panel-heading" }, [
+      _c("h3", { staticClass: "panel-title" }, [_vm._v("pilih aksi")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group" }, [
+      _c("label", { attrs: { for: "" } }, [_vm._v("aksi")]),
+      _vm._v(" "),
+      _c("select", { staticClass: "form-control" }, [
+        _c("option", { attrs: { value: "" } }, [_vm._v("Pilih")]),
+        _vm._v(" "),
+        _c("option", { attrs: { value: "jual" } }, [_vm._v("jual")]),
+        _vm._v(" "),
+        _c("option", { attrs: { value: "produksi" } }, [_vm._v("produksi")]),
+        _vm._v(" "),
+        _c("option", { attrs: { value: "pindah" } }, [_vm._v("pindah gudang")])
+      ]),
+      _vm._v(" "),
+      _c("p", { staticClass: "text-danger" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group" }, [
+      _c("button", { staticClass: "btn btn-danger btn-sm" }, [_vm._v("Simpan")])
     ])
   }
 ]
@@ -49813,8 +50121,8 @@ var staticRenderFns = [
     return _c("div", { staticClass: "container" }, [
       _c("section", { staticClass: "content-header" }, [
         _c("h1", [
-          _vm._v("\n            Top Navigation\n            "),
-          _c("small", [_vm._v("Example 2.0")])
+          _vm._v("\n           Selamat datang di COcoil\n            "),
+          _c("small", [_vm._v("0.1")])
         ]),
         _vm._v(" "),
         _c("ol", { staticClass: "breadcrumb" }, [
@@ -50138,6 +50446,28 @@ var render = function() {
                 key: "actions",
                 fn: function(row) {
                   return [
+                    row.item.location_id
+                      ? _c(
+                          "router-link",
+                          {
+                            staticClass: "btn btn-success btn-sm",
+                            attrs: { to: { name: "gudang.view" } },
+                            nativeOn: {
+                              click: function($event) {
+                                return _vm.setView(
+                                  row.item.location.gudang.name,
+                                  row.item.location.blok.name,
+                                  row.item.location.gudang.id,
+                                  row.item.location.blok.id,
+                                  row.item.location.slot_id
+                                )
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fa fa-eye" })]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
                     _c(
                       "router-link",
                       {
@@ -50160,6 +50490,20 @@ var render = function() {
                         }
                       },
                       [_c("i", { staticClass: "fa fa-trash" })]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "b-link",
+                      {
+                        staticClass: "btn btn-info btn-sm",
+                        attrs: {
+                          href:
+                            "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:8000/action/" +
+                            row.item.serial_Code,
+                          target: "_blank"
+                        }
+                      },
+                      [_c("i", { staticClass: "fa fa-qrcode" })]
                     )
                   ]
                 }
@@ -70239,6 +70583,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/pages/Action.vue":
+/*!***************************************!*\
+  !*** ./resources/js/pages/Action.vue ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Action_vue_vue_type_template_id_0b1cc5ff___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Action.vue?vue&type=template&id=0b1cc5ff& */ "./resources/js/pages/Action.vue?vue&type=template&id=0b1cc5ff&");
+/* harmony import */ var _Action_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Action.vue?vue&type=script&lang=js& */ "./resources/js/pages/Action.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Action_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Action_vue_vue_type_template_id_0b1cc5ff___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Action_vue_vue_type_template_id_0b1cc5ff___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/pages/Action.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/pages/Action.vue?vue&type=script&lang=js&":
+/*!****************************************************************!*\
+  !*** ./resources/js/pages/Action.vue?vue&type=script&lang=js& ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Action_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Action.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/Action.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Action_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/pages/Action.vue?vue&type=template&id=0b1cc5ff&":
+/*!**********************************************************************!*\
+  !*** ./resources/js/pages/Action.vue?vue&type=template&id=0b1cc5ff& ***!
+  \**********************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Action_vue_vue_type_template_id_0b1cc5ff___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Action.vue?vue&type=template&id=0b1cc5ff& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/pages/Action.vue?vue&type=template&id=0b1cc5ff&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Action_vue_vue_type_template_id_0b1cc5ff___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Action_vue_vue_type_template_id_0b1cc5ff___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/pages/Employee/Add.vue":
 /*!*********************************************!*\
   !*** ./resources/js/pages/Employee/Add.vue ***!
@@ -71756,22 +72169,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _pages_Home_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pages/Home.vue */ "./resources/js/pages/Home.vue");
 /* harmony import */ var _pages_Login_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pages/Login.vue */ "./resources/js/pages/Login.vue");
-/* harmony import */ var _store_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./store.js */ "./resources/js/store.js");
-/* harmony import */ var _pages_gudang_Index_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./pages/gudang/Index.vue */ "./resources/js/pages/gudang/Index.vue");
-/* harmony import */ var _pages_gudang_Add_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./pages/gudang/Add.vue */ "./resources/js/pages/gudang/Add.vue");
-/* harmony import */ var _pages_gudang_Gudang_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./pages/gudang/Gudang.vue */ "./resources/js/pages/gudang/Gudang.vue");
-/* harmony import */ var _pages_gudang_Edit_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./pages/gudang/Edit.vue */ "./resources/js/pages/gudang/Edit.vue");
-/* harmony import */ var _pages_gudang_View_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./pages/gudang/View.vue */ "./resources/js/pages/gudang/View.vue");
-/* harmony import */ var _pages_setting_Index_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./pages/setting/Index.vue */ "./resources/js/pages/setting/Index.vue");
-/* harmony import */ var _pages_setting_roles_SetPermission_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./pages/setting/roles/SetPermission.vue */ "./resources/js/pages/setting/roles/SetPermission.vue");
-/* harmony import */ var _pages_coil_Index_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./pages/coil/Index.vue */ "./resources/js/pages/coil/Index.vue");
-/* harmony import */ var _pages_coil_Coil_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./pages/coil/Coil.vue */ "./resources/js/pages/coil/Coil.vue");
-/* harmony import */ var _pages_coil_Edit_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./pages/coil/Edit.vue */ "./resources/js/pages/coil/Edit.vue");
-/* harmony import */ var _pages_Employee_Index_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./pages/Employee/Index.vue */ "./resources/js/pages/Employee/Index.vue");
-/* harmony import */ var _pages_Employee_Employee_vue__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./pages/Employee/Employee.vue */ "./resources/js/pages/Employee/Employee.vue");
-/* harmony import */ var _pages_Employee_Add_vue__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./pages/Employee/Add.vue */ "./resources/js/pages/Employee/Add.vue");
-/* harmony import */ var _pages_Employee_Edit_vue__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./pages/Employee/Edit.vue */ "./resources/js/pages/Employee/Edit.vue");
+/* harmony import */ var _pages_Action_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./pages/Action.vue */ "./resources/js/pages/Action.vue");
+/* harmony import */ var _store_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./store.js */ "./resources/js/store.js");
+/* harmony import */ var _pages_gudang_Index_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./pages/gudang/Index.vue */ "./resources/js/pages/gudang/Index.vue");
+/* harmony import */ var _pages_gudang_Add_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./pages/gudang/Add.vue */ "./resources/js/pages/gudang/Add.vue");
+/* harmony import */ var _pages_gudang_Gudang_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./pages/gudang/Gudang.vue */ "./resources/js/pages/gudang/Gudang.vue");
+/* harmony import */ var _pages_gudang_Edit_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./pages/gudang/Edit.vue */ "./resources/js/pages/gudang/Edit.vue");
+/* harmony import */ var _pages_gudang_View_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./pages/gudang/View.vue */ "./resources/js/pages/gudang/View.vue");
+/* harmony import */ var _pages_setting_Index_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./pages/setting/Index.vue */ "./resources/js/pages/setting/Index.vue");
+/* harmony import */ var _pages_setting_roles_SetPermission_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./pages/setting/roles/SetPermission.vue */ "./resources/js/pages/setting/roles/SetPermission.vue");
+/* harmony import */ var _pages_coil_Index_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./pages/coil/Index.vue */ "./resources/js/pages/coil/Index.vue");
+/* harmony import */ var _pages_coil_Coil_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./pages/coil/Coil.vue */ "./resources/js/pages/coil/Coil.vue");
+/* harmony import */ var _pages_coil_Edit_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./pages/coil/Edit.vue */ "./resources/js/pages/coil/Edit.vue");
+/* harmony import */ var _pages_Employee_Index_vue__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./pages/Employee/Index.vue */ "./resources/js/pages/Employee/Index.vue");
+/* harmony import */ var _pages_Employee_Employee_vue__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./pages/Employee/Employee.vue */ "./resources/js/pages/Employee/Employee.vue");
+/* harmony import */ var _pages_Employee_Add_vue__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./pages/Employee/Add.vue */ "./resources/js/pages/Employee/Add.vue");
+/* harmony import */ var _pages_Employee_Edit_vue__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./pages/Employee/Edit.vue */ "./resources/js/pages/Employee/Edit.vue");
 //IMPORT SECTION
+
 
 
 
@@ -71807,99 +72222,103 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     name: 'login',
     component: _pages_Login_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   }, {
+    path: '/action/:id',
+    name: 'action',
+    component: _pages_Action_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
+  }, {
     path: '/gudang',
-    component: _pages_gudang_Index_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+    component: _pages_gudang_Index_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
     meta: {
       requiresAuth: true
     },
     children: [{
       path: '',
       name: 'gudang.data',
-      component: _pages_gudang_Gudang_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+      component: _pages_gudang_Gudang_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
       meta: {
         title: 'Manage gudang'
       }
     }, {
       path: 'add',
       name: 'gudang.add',
-      component: _pages_gudang_Add_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+      component: _pages_gudang_Add_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
       meta: {
         title: 'Add New gudang'
       }
     }, {
       path: 'edit/:id',
       name: 'gudang.edit',
-      component: _pages_gudang_Edit_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
+      component: _pages_gudang_Edit_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
       meta: {
         title: 'Edit gudang'
       }
     }, {
       path: 'view',
       name: 'gudang.view',
-      component: _pages_gudang_View_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
+      component: _pages_gudang_View_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
       meta: {
         title: 'View gudang'
       }
     }]
   }, {
     path: '/setting',
-    component: _pages_setting_Index_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
+    component: _pages_setting_Index_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
     meta: {
       requiresAuth: true
     },
     children: [{
       path: 'role-permission',
       name: 'role.permissions',
-      component: _pages_setting_roles_SetPermission_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
+      component: _pages_setting_roles_SetPermission_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
       meta: {
         title: 'Set Permissions'
       }
     }]
   }, {
     path: '/coil',
-    component: _pages_coil_Index_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
+    component: _pages_coil_Index_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
     meta: {
       requiresAuth: true
     },
     children: [{
       path: '',
       name: 'coil.data',
-      component: _pages_coil_Coil_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
+      component: _pages_coil_Coil_vue__WEBPACK_IMPORTED_MODULE_14__["default"],
       meta: {
         title: 'Coil data'
       }
     }, {
       path: 'edit/:id',
       name: 'coil.edit',
-      component: _pages_coil_Edit_vue__WEBPACK_IMPORTED_MODULE_14__["default"],
+      component: _pages_coil_Edit_vue__WEBPACK_IMPORTED_MODULE_15__["default"],
       meta: {
         title: 'Edit Coil'
       }
     }]
   }, {
     path: '/employee',
-    component: _pages_Employee_Index_vue__WEBPACK_IMPORTED_MODULE_15__["default"],
+    component: _pages_Employee_Index_vue__WEBPACK_IMPORTED_MODULE_16__["default"],
     meta: {
       requiresAuth: true
     },
     children: [{
       path: '',
       name: 'employee.data',
-      component: _pages_Employee_Employee_vue__WEBPACK_IMPORTED_MODULE_16__["default"],
+      component: _pages_Employee_Employee_vue__WEBPACK_IMPORTED_MODULE_17__["default"],
       meta: {
         title: 'employee data'
       }
     }, {
       path: 'add',
       name: 'employee.add',
-      component: _pages_Employee_Add_vue__WEBPACK_IMPORTED_MODULE_17__["default"],
+      component: _pages_Employee_Add_vue__WEBPACK_IMPORTED_MODULE_18__["default"],
       meta: {
         title: 'Add New Employee'
       }
     }, {
       path: 'edit/:id',
       name: 'employee.edit',
-      component: _pages_Employee_Edit_vue__WEBPACK_IMPORTED_MODULE_18__["default"],
+      component: _pages_Employee_Edit_vue__WEBPACK_IMPORTED_MODULE_19__["default"],
       meta: {
         title: 'Edit Employee'
       }
@@ -71908,12 +72327,12 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 }); //Navigation Guards
 
 router.beforeEach(function (to, from, next) {
-  _store_js__WEBPACK_IMPORTED_MODULE_4__["default"].commit('CLEAR_ERRORS'); //TAMBAHKAN BARIS INI
+  _store_js__WEBPACK_IMPORTED_MODULE_5__["default"].commit('CLEAR_ERRORS'); //TAMBAHKAN BARIS INI
 
   if (to.matched.some(function (record) {
     return record.meta.requiresAuth;
   })) {
-    var auth = _store_js__WEBPACK_IMPORTED_MODULE_4__["default"].getters.isAuth;
+    var auth = _store_js__WEBPACK_IMPORTED_MODULE_5__["default"].getters.isAuth;
 
     if (!auth) {
       next({
@@ -72708,7 +73127,10 @@ var state = function state() {
       phone: ''
     },
     selected_blok_id: '',
+    selected_blok: '',
     selected_gudang_id: '',
+    selected_gudang_name: '',
+    selected_slot_name: '',
     selected_coil_id: '',
     selected_serial_code: '',
     show_panel_coil: '',
@@ -72726,11 +73148,20 @@ var mutations = {
   ASSIGN_DATA_DETAIL: function ASSIGN_DATA_DETAIL(state, payload) {
     state.gudangs_detail = payload;
   },
+  ASSIGN_SLOT_NAME: function ASSIGN_SLOT_NAME(state, payload) {
+    state.selected_slot_name = payload;
+  },
   ASSIGN_BLOK_ID: function ASSIGN_BLOK_ID(state, payload) {
     state.selected_blok_id = payload;
   },
+  ASSIGN_BLOK: function ASSIGN_BLOK(state, payload) {
+    state.selected_blok = payload;
+  },
   ASSIGN_GUDANG_ID: function ASSIGN_GUDANG_ID(state, payload) {
     state.selected_gudang_id = payload;
+  },
+  ASSIGN_GUDANG_NAME: function ASSIGN_GUDANG_NAME(state, payload) {
+    state.selected_gudang_name = payload;
   },
   ASSIGN_COIL_ID: function ASSIGN_COIL_ID(state, payload) {
     state.selected_coil_id = payload;

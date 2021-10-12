@@ -15,8 +15,12 @@ const state = () => ({
     },
 
     selected_blok_id:'',
+    selected_blok:'',
     
     selected_gudang_id :'',
+    selected_gudang_name :'',
+
+    selected_slot_name :'',
     selected_coil_id :'',
     selected_serial_code :'',
     
@@ -36,12 +40,23 @@ const mutations = {
         state.gudangs_detail = payload
     },
 
+    ASSIGN_SLOT_NAME(state, payload) {
+        state.selected_slot_name  = payload
+    },
+
     ASSIGN_BLOK_ID(state, payload) {
         state.selected_blok_id = payload
     },
 
+    ASSIGN_BLOK(state, payload) {
+        state.selected_blok = payload
+    },
+
     ASSIGN_GUDANG_ID(state, payload) {
         state.selected_gudang_id = payload
+    },
+    ASSIGN_GUDANG_NAME(state, payload) {
+        state.selected_gudang_name = payload
     },
 
     ASSIGN_COIL_ID(state, payload) {

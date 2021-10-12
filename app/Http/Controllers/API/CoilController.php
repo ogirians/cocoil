@@ -13,10 +13,12 @@ class coilController extends Controller
 {
     public function index()
     {
-        $coil = coil_detail::with('location')->orderBy('created_at', 'DESC');
+        $coil = coil_detail::with('location.gudang','location.blok')->orderBy('created_at', 'DESC');
         if (request()->q != '') {
             $coil = $coil->where('serial_Code', 'LIKE', '%' . request()->q . '%')->orWhere('item_code', 'LIKE', '%' . request()->q . '%');
         }
+       
+
         return new CoilCollection($coil->paginate(10));
     }
 

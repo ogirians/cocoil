@@ -3,6 +3,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './pages/Home.vue'
 import Login from './pages/Login.vue'
+import Action from './pages/Action.vue'
 import store from './store.js'
 
 import Indexgudang from './pages/gudang/Index.vue'
@@ -42,6 +43,11 @@ const router = new Router({
             path: '/login',
             name: 'login',
             component: Login
+        },
+        {
+            path: '/action/:id',
+            name: 'action',
+            component: Action
         },
         {
             path: '/gudang',

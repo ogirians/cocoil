@@ -184,11 +184,11 @@ export default {
 
 	 data(){
 		 return{
-			 selected_blok:'',
+			 //selected_blok:'',
 			 //selected_blok_id:'',
 			 blok_id:'',
 			 //selected_gudang_id :'',
-			 selected_gudang_name : '',
+			 //selected_gudang_name : '',
 			 modal_stat: false,
 
 			 search: '',
@@ -256,6 +256,18 @@ export default {
 		 return total;
 		},
 
+		selected_blok: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.gudang.selected_blok
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('gudang/ASSIGN_BLOK', val)
+            }
+        },
+
 		selected_blok_id: {
             get() {
                 //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
@@ -278,6 +290,18 @@ export default {
                 this.$store.commit('gudang/ASSIGN_GUDANG_ID', val)
             }
         },
+		selected_gudang_name: {
+            get() {
+                //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                return this.$store.state.gudang.selected_gudang_name
+            },
+            set(val) {
+                //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                //DI VUEX JUGA AKAN DIUBAH
+                this.$store.commit('gudang/ASSIGN_GUDANG_NAME', val)
+            }
+        },
+
 		selected_coil_id: {
             get() {
                 //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
@@ -357,7 +381,7 @@ export default {
 			let data = dataLoc.coil_location;
 
 			for (let i = 0; i < data.length; i++) {
-				 console.log(data[i].coil_id);
+				 //console.log(data[i].coil_id);
 				 if (data[i].coil_id != null){
 					berhitung = berhitung + 1;
 				 }
@@ -366,14 +390,7 @@ export default {
 			return berhitung;
 		},
 
-		hitungini(item, index){
-			console.log(item.coil_id);
-
-		//	   if (item.coil_location.coil_id != null) {
-		//			this.total = this.total+1;
-		//	   }
-		//	console.log(this.total);
-		},
+	
 
 		open (id) {
       		this.$store.dispatch(PUSH, { name: 'example' })

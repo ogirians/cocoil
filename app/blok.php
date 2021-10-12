@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class blok extends Model
 {
+    protected $primaryKey = 'id';
     protected $guarded = [];
 
     public function gudang()

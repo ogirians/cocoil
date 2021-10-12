@@ -16,12 +16,13 @@ class coil_location extends Model
         
         }
 
-        public function coil_not_empty()
+        public function gudang()
         {
-            return $this->belongsTo('App\coil_detail','coil_id','id');  
+            return $this->belongsTo('App\gudang', 'gudang_id','id');  
         
         }
 
+        
         public function blok()
         {
             return $this->belongsTo('App\blok', 'blok_id','id');  

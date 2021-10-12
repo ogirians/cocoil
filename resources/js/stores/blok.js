@@ -64,6 +64,7 @@ const actions = {
     submitBlok({ dispatch, commit, state }) {
 
         commit('CLEAR_ERRORS', '', {root: true})
+        
         return new Promise((resolve, reject) => {
             //MENGIRIMKAN PERMINTAAN KE SERVER DAN MELAMPIRKAN DATA YANG AKAN DISIMPAN
             //DARI STATE OUTLET

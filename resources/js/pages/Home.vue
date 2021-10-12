@@ -2,8 +2,8 @@
     <div class="container">
         <section class="content-header">
             <h1>
-                Top Navigation
-                <small>Example 2.0</small>
+               Selamat datang di COcoil
+                <small>0.1</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
