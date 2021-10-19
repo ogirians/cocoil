@@ -14,6 +14,8 @@ const state = () => ({
         serial_Code: '',
         ID_coil: '',
         balance: '',
+        gudang: '',
+        blok: '',
     },
 
 
@@ -43,6 +45,8 @@ const mutations = {
             serial_Code: payload.serial_Code,
             ID_coil: payload.ID_coil,
             balance: payload.balance,
+            gudang: payload.location.gudang.name,
+            blok: payload.location.blok.name,
         }
     },
     //ME-RESET STATE OUTLET MENJADI KOSONG

@@ -8,6 +8,11 @@ use App\Http\Resources\GudangCollection;
 use App\gudang;
 use App\blok;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\gudangNotification;
+use App\User;
+
 class GudangController extends Controller
 {
     public function index()
@@ -43,7 +48,22 @@ class GudangController extends Controller
             'phone' => 'required|max:13'
         ]);
 
-        gudang::create($request->all());
+       //$user = Auth::user();
+       $user = $request->user();
+
+        //dd($user);
+
+        $dataGudang = gudang::create($request->all());
+
+        $tipe = 'gudang';
+
+        //GET USER YANG ROLE-NYA SUPERADMIN DAN FINANCE
+        //KENAPA? KARENA HANYA ROLE ITULAH YANG AKAN MENDAPATKAN NOTIFIKASI
+        $users = User::whereIn('role', [0, 1])->get();
+        //KIRIM NOTIFIKASINYA MENGGUNAKAN FACADE NOTIFICATION
+        Notification::send($users, new gudangNotification($dataGudang, $user,  $tipe));
+        
+       
         return response()->json(['status' => 'success'], 200);
     }
 

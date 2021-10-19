@@ -13,21 +13,36 @@ use Illuminate\Http\Request;
 |
 */
 Route::post('/login', 'Auth\LoginController@login');
-Route::resource('/bloks', 'API\BlokController')->except(['show']);
-Route::resource('/gudangs', 'API\GudangController')->except(['show']);
-Route::get('/gudangs/getData', 'API\GudangController@getData')->name('getData');
-Route::resource('/locations', 'API\locationController')->except(['create', 'show', 'update']);
+
+//actions
+Route::post('/action-coil/store','API\ActionController@store')->name('action-store');
+Route::get('/action-coil-get/{id?}','API\ActionController@getAction')->name('action-get');
+Route::get('/action-coil-detail/{id?}','API\ActionController@getActionDetail')->name('action-get-detail');
+Route::post('/action-coil/terima/','API\ActionController@confirm')->name('action-confirm');
+Route::post('/action-coil/tolak/','API\ActionController@tolak')->name('action-tolak');  
+
+//get coil data
 Route::resource('/coils', 'API\CoilController')->except(['show']);
 Route::get('/coils/noplace', 'API\CoilController@coilnoplace')->name('coil.noplace');
 Route::get('/coils/detail/{id}', 'API\CoilController@detail')->name('coil.detail');
 
+
 Route::group(['middleware' => 'auth:api'], function() {
    
-    //get coil data
     
 
+
+
+    //gudangs
+    Route::resource('/gudangs', 'API\GudangController')->except(['show']);
+    Route::get('/gudangs/getData', 'API\GudangController@getData')->name('getData');
+
+
+    //blok
+    Route::resource('/bloks', 'API\BlokController')->except(['show']);
+
     //get coil location
-   
+    Route::resource('/locations', 'API\locationController')->except(['create', 'show', 'update']);
     Route::post('/locations/{id}', 'API\locationController@update')->name('locations.update');
     Route::post('/locations/setCoil/{id}', 'API\locationController@SetCoil')->name('locations.setCoil');
 
@@ -51,4 +66,10 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     //import
     Route::post('/import','ImportController@import')->name('import');
+
+    //notifikasi
+    Route::resource('notification-gudang', 'API\NotificationGudangController')->except(['create', 'destroy']);
+    Route::resource('notification-action', 'API\NotificationActionController')->except(['create', 'destroy']);
+
+   
 });

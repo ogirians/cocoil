@@ -4,7 +4,11 @@ import Router from 'vue-router'
 import Home from './pages/Home.vue'
 import Login from './pages/Login.vue'
 import Action from './pages/Action.vue'
+import post_Action from './pages/post-Action.vue'
 import store from './store.js'
+
+import konfirmasi from './pages/konfirmasi/index.vue'
+import konfirmasiView from './pages/konfirmasi/View.vue'
 
 import Indexgudang from './pages/gudang/Index.vue'
 import AddGudang from './pages/gudang/Add.vue'
@@ -50,6 +54,31 @@ const router = new Router({
             component: Action
         },
         {
+            path: '/post-action',
+            name: 'post_Action',
+            component: post_Action
+        },
+        {
+            path: '/konfirmasi',
+            component: konfirmasi,
+            meta: { requiresAuth: true },
+            children: [
+                /*{
+                    path: 'data',
+                    name: 'konfirmasi.data',
+                    component: konfirmasiData,
+                    meta: { title: 'konfirmasi history' }
+                },*/
+                {
+                    path: 'view/:id',
+                    name: 'konfirmasi.view',
+                    component: konfirmasiView,
+                    meta: { title: 'konfirmasi aksi' }
+                },
+            ]
+        },
+        {
+           
             path: '/gudang',
             component: Indexgudang,
             meta: { requiresAuth: true },

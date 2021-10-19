@@ -12,6 +12,9 @@ import coil from './stores/coil.js'
 import blok from './stores/blok.js'
 import from_view from './stores/from_view.js'
 import location from './stores/location.js'
+import notification from './stores/notification.js'
+import action_coil from './stores/action-coil.js'
+
 
 Vue.use(Vuex)
 
@@ -29,6 +32,8 @@ const store = new Vuex.Store({
         modalModule,
         from_view,
         location,
+        notification,
+        action_coil,
     },
   	//STATE HAMPIR SERUPA DENGAN PROPERTY DATA DARI COMPONENT HANYA SAJA DAPAT DIGUNAKAN SECARA GLOBAL
     state: {

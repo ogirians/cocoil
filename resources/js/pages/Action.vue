@@ -26,22 +26,31 @@
                         
                         <div class="form-group">
                             <label for="">aksi</label>
-                            <select class="form-control" >
+                            <select v-model="action_detail.action_tipe" class="form-control" >
                                 <option value="">Pilih</option>
                                 <option value="jual">jual</option>
                                 <option value="produksi">produksi</option>
                                 <option value="pindah">pindah gudang</option>
                             </select>
                             <p class="text-danger" ></p>
+                             <p class="text-danger" v-if="errors.action_tipe">{{ errors.action_tipe[0] }}</p>
+                        </div>
+                        <label for="">NO Dokumen</label>
+                        <div class="form-group has-feedback" :class="{'has-error': errors.no_dokumen}">
+                            <input v-model="action_detail.no_dokumen" type="text" class="form-control">
+                           <p class="text-danger" v-if="errors.no_dokumen">{{ errors.no_dokumen [0] }}</p>
+                            
                         </div>
                          <label for="">password</label>
                         <div class="form-group has-feedback" :class="{'has-error': errors.password}">
-                            <input type="password" class="form-control" placeholder="Password" v-model="data.password">
+                            <input v-model="action_detail.password" type="password" class="form-control" placeholder="Password" >
                             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                             <p class="text-danger" v-if="errors.password">{{ errors.password[0] }}</p>
                         </div>
+                        <div class="alert alert-danger" v-if="errors.invalid">{{ errors.invalid }}</div>
                         <div class="form-group">
-                            <button class="btn btn-danger btn-sm">Simpan</button>
+                            
+                            <button class="btn btn-success btn-sm" @click.prevent="simpanAct">Simpan</button>
                         </div>
                     </div>
                 </div>
@@ -55,11 +64,7 @@ import { mapActions, mapMutations, mapGetters, mapState } from 'vuex';
 export default {
     data() {
         return {
-            data: {
-                email: '',
-                password: '',
-                remember_me: false
-            }
+            
         }
     },
     //SEBELUM COMPONENT DI-RENDER
@@ -71,6 +76,8 @@ export default {
         //}
         
         this.detailcoil(this.$route.params.id);
+        this.ASSIGN_ACTION_SERIALCODE(this.$route.params.id);
+        
     },
     computed: {
         ...mapGetters(['isAuth']), //MENGAMBIL GETTERS isAuth DARI VUEX
@@ -80,6 +87,10 @@ export default {
 			 coil : state => state.coil
 		 }),  
 
+          ...mapState('action_coil', { 
+            action_detail: state => state.action_detail //MENGAMBIL STATE gudang
+        })
+
     },
     methods: {
         ...mapActions('auth', ['submit']), //MENGISIASI FUNGSI submit() DARI VUEX AGAR DAPAT DIGUNAKAN PADA COMPONENT TERKAIT. submit() BERASAL DARI ACTION PADA FOLDER STORES/auth.js
@@ -87,22 +98,23 @@ export default {
         ...mapActions('user', ['getUserLogin']),
         ...mapActions('coil',['getcoils','getcoilsnoplace','detailcoil']),
 
+        ...mapMutations('action_coil', ['ASSIGN_ACTION_SERIALCODE']), //PANGGIL MUTATIONS CLEAR_FORM
+        ...mapActions('action_coil',['simpanAction']),
+
       	//KETIKA TOMBOL LOGIN DITEKAN, MAKA AKAN MEMINCU METHODS postLogin()
-        postLogin() {
-            //DIMANA TOMBOL INI AKAN MENJALANKAN FUNGSI submit() DENGAN MENGIRIMKAN DATA YANG DIBUTUHKAN
-            this.submit(this.data).then(() => {
-                //KEMUDIAN DI CEK VALUE DARI isAuth
-                //APABILA BERNILAI TRUE
-                if (this.isAuth) {
+      
+        simpanAct(){
+            this.simpanAction().then(() => {
+                    //APABILA BERHASIL MAKA AKAN DI-DIRECT KE HALAMAN /outlets
+                    this.$router.push({ name: 'post_Action' })
                     this.CLEAR_ERRORS()
-                    //MAKA AKAN DI-DIRECT KE ROUTE DENGAN NAME home
-                    this.$router.push({ name: 'home' })
-                }
-            })
+                });
         }
+
+
     },
     destroyed() {
-    this.getUserLogin()
+    //this.getUserLogin()
     }
 }
 </script>

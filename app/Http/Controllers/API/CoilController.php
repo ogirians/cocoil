@@ -64,13 +64,13 @@ class coilController extends Controller
 
     public function edit($id)
     {
-        $coil = coil_detail::whereid($id)->first();
+        $coil = coil_detail::with('location.gudang','location.blok')->whereid($id)->first();
         return response()->json(['status' => 'success', 'data' => $coil], 200);
     }
 
     public function detail($id)
     {
-        $coil = coil_detail::where('serial_code', $id)->first();
+        $coil = coil_detail::with('location.gudang','location.blok')->where('serial_code', $id)->first();
         return response()->json(['status' => 'success', 'data' => $coil], 200);
     }
 

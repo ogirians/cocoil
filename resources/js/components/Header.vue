@@ -28,34 +28,77 @@
                         </div>
                     </form>
                 </div>
+                
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        
-                        <li class="dropdown notifications-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bell-o"></i>
-                                <span class="label label-danger">3</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="header">You have 3 notifications</li>
-                                <li>
-                                    <ul class="menu">
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-users text-aqua"></i> coil 2012-2000 di scan untuk dijual
-                                            </a>
-                                             <a href="#">
-                                                <i class="fa fa-users text-aqua"></i> coil 2012-2004 di scan untuk dipindah
-                                            </a>
-                                             <a href="#">
-                                                <i class="fa fa-users text-aqua"></i> coil 2012-2003 di scan untuk diproduksi
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="footer"><a href="#">View all</a></li>
-                            </ul>
-                        </li>
+                       
+                            <li class="dropdown messages-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-newspaper-o"></i>
+                                    
+                                    <!-- FUNGSI INI UNTUK MENGHITUNG JUMLAH DATA NOTIFIKASI YANG ADA -->
+                                    <span v-if="notifications_gudang.length > 0" class="label label-success">{{ notifications_gudang.length }}</span>
+                                </a>
+                               
+                                <ul class="dropdown-menu">
+                                    <li class="header">ada {{ notifications_gudang.length }} Berita </li>
+                                    <li>
+                                        <ul class="menu" v-if="notifications_gudang.length > 0">
+                                            
+                                            <!-- KITA MELAKUKAN LOOPING TERHADAP DATA NOTIFIKASI YANG DISIMPAN KE DALAM STATE NOTIFICATIONS -->
+                                            <li v-for="(row, index) in notifications_gudang" :key="index">
+                                                <a href="javascript:void(0)" @click="readNotif(row)">
+                                                    <div class="pull-left">
+                                                        <img src="https://via.placeholder.com/160" class="img-circle" alt="User Image">
+                                                    </div>
+                                                    <h4>
+                                                        <!-- TAMPILKAN NAMA PENGIRIM NOTIFIKASI -->
+                                                        {{ row.data.sender_name }}
+                                                        <!-- TAMPILKAN WAKTU NOTIFIKASI -->
+                                                        <small><i class="fa fa-clock-o"></i> {{ row.created_at | formatDate }}</small>
+                                                    </h4>
+                                                    <!-- TAMPILKAN JENIS PERMINTAAN NOTIFIKASI -->
+                                                    <p>menambahkan gudang baru : {{ row.data.dataNotif.name.substr(0, 30) }}</p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <!-- <li class="footer"><a href="#">See All Messages</a></li> -->
+                                </ul>
+                            </li>
+                            <li class="dropdown messages-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-bell-o"></i>
+                                   
+                                    <!-- FUNGSI INI UNTUK MENGHITUNG JUMLAH DATA NOTIFIKASI YANG ADA -->
+                                    <span v-if="notifications_action.length > 0" class="label label-danger">{{ notifications_action.length }}</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="header">ada {{ notifications_action.length }} permintaan Action untuk di konfirmasi. </li>
+                                    <li>
+                                        <ul class="menu" v-if="notifications_action.length > 0">
+                                            
+                                            <!-- KITA MELAKUKAN LOOPING TERHADAP DATA NOTIFIKASI YANG DISIMPAN KE DALAM STATE NOTIFICATIONS -->
+                                            <li v-for="(row2, index2) in notifications_action" :key="index2">
+                                                <a href="javascript:void(0)" @click="readNotifAction(row2)">
+                                                    <div class="pull-left">
+                                                        <img src="https://via.placeholder.com/160" class="img-circle" alt="User Image">
+                                                    </div>
+                                                    <h4>
+                                                        <!-- TAMPILKAN NAMA PENGIRIM NOTIFIKASI -->
+                                                        {{ row2.data.sender_name }}
+                                                        <!-- TAMPILKAN WAKTU NOTIFIKASI -->
+                                                        <small><i class="fa fa-clock-o"></i> {{ row2.created_at | formatDate }}</small>
+                                                    </h4>
+                                                    <!-- TAMPILKAN JENIS PERMINTAAN NOTIFIKASI -->
+                                                    <p>konfirmasi <b>{{ row2.data.dataNotif.action_tipe.substr(0, 30) }}</b> coil <b>{{row2.data.serial_code}}</b></p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <!-- <li class="footer"><a href="#">See All Messages</a></li> -->
+                                </ul>
+                            </li>
                         
                        <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -105,14 +148,55 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+
+import { mapState, mapActions } from 'vuex'
+import moment from 'moment'
+
+
 export default {
+
+    
     computed: {
         ...mapState('user', {
             authenticated: state => state.authenticated //ME-LOAD STATE AUTHENTICATED
+        }),
+
+         //CUKUP TAMBAHKAN BAGIAN INI
+        ...mapState('notification', {
+            notifications_gudang : state => state.notifications_gudang ,//MENGAMBIL STATE NOTIFICATIONS
+  
+        }),
+
+          ...mapState('notification', {
+            notifications_action : state => state.notifications_action
         })
+ 
     },
+
+    filters: {
+    //UNTUK MENGUBAH FORMAT TANGGAL MENJADI TIME AGO
+        formatDate(val) {
+            return moment(new Date(val)).fromNow()
+        }
+    },
+
     methods: {
+         ...mapActions('notification', ['readNotificationGudang','readNotificationAction']), //DEFINISIKAN FUNGSI UNTUK READ NOTIF
+    
+            //KETIKA NOTIFIKASI DI KLIK MAKA AKAN MENJALANKAN FUNGSI INI
+            readNotif(row) {
+                //MENGIRIMKAN REQUEST KE SERVER UNTUK MENANDAI BAHWA NOTIFIKASI TELAH DI BACA
+                //KEMUDIAN SELANJUTNYA KITA REDIRECT KE HALAMAN VIEW EXPENSES
+                this.readNotificationGudang({ id: row.id}).then(() => this.$router.push({ name: 'gudang.data' }))
+                
+                //this.readNotificationAction({ id: row.id}).then(() => this.$router.push({ name: 'gudang.data', params: {id: row.data.dataNotif.id} }))
+            },
+
+            readNotifAction(row){
+                this.readNotificationAction({ id: row.id}).then(() => this.$router.push({ name: 'konfirmasi.view', params: { id: row.data.dataNotif.id } }))
+            },
+
+
         //KETIKA TOMBOL LOGOUT DITEKAN, FUNGSI INI DIJALANKAN
         logout() {
             return new Promise((resolve, reject) => {
