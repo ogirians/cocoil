@@ -3444,6 +3444,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         if (response.status === 200) {
           // codes here after the file is upload successfully
+          //console.log(response.data.error_excell);
           _this.import_ok = true; //AKTIFKAN ALERT JIKA BERHASIL
 
           _this.$refs.import_file.value = null;
@@ -3459,13 +3460,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           }, 3000);
         }
 
-        if (response.error_excell) {
+        if (response.data.error_excell != null) {
           // codes here after the file is upload successfully
+          console.log(response.data.error_excell);
           _this.import_ok = false; //AKTIFKAN ALERT JIKA BERHASIL
 
           _this.$refs.import_file.value = null;
           _this.import_file = '';
-          _this.error_excell = response.error_excell;
+          _this.error_excell = response.data.error_excell;
 
           _this.getcoils();
 
@@ -79369,17 +79371,18 @@ var render = function() {
             ])
           : _vm._e(),
         _vm._v(" "),
-        _vm._l(_vm.error_excell, function(error, index) {
-          return _c("div", { key: index }, [
-            error
-              ? _c("p", { staticClass: "text-danger" }, [
-                  _vm._v(_vm._s(error[index]))
+        _vm.error_excell
+          ? _c(
+              "div",
+              _vm._l(_vm.error_excell, function(error, index) {
+                return _c("p", { key: index, staticClass: "text-danger" }, [
+                  _vm._v(_vm._s(error))
                 ])
-              : _vm._e()
-          ])
-        })
-      ],
-      2
+              }),
+              0
+            )
+          : _vm._e()
+      ]
     ),
     _vm._v(" "),
     _c("div", { staticClass: "col-md-3" }, [
@@ -98998,7 +99001,7 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
         //MAKA INISIASI FUNGSI BROADCASTER DENGAN KONFIGURASI BERIKUT
         window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_10__["default"]({
           broadcaster: 'pusher',
-          key: "2b170c9da4f092c2081f",
+          key: "",
           //VALUENYA DI AMBIL DARI FILE .ENV
           cluster: "mt1",
           encrypted: false,
@@ -99029,7 +99032,7 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
         //MAKA INISIASI FUNGSI BROADCASTER DENGAN KONFIGURASI BERIKUT
         window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_10__["default"]({
           broadcaster: 'pusher',
-          key: "2b170c9da4f092c2081f",
+          key: "",
           //VALUENYA DI AMBIL DARI FILE .ENV
           cluster: "mt1",
           encrypted: false,
@@ -102879,8 +102882,8 @@ var actions = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\project\cocoil\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\project\cocoil\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Users/garfidhearayes/Desktop/Documents/cocoil/cocoil/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /Users/garfidhearayes/Desktop/Documents/cocoil/cocoil/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

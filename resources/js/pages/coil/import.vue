@@ -5,8 +5,8 @@
                         <input type="file" class="form-control" :class="{ ' is-invalid' : error.message }" id="input-file-import" name="file_import" ref="import_file"  @change="onFileChange">
                         <div v-if="error.message" class="invalid-feedback"></div>
                         <p class="text-danger" v-if="error.message">{{ error.errors.import_file[0] }}</p>
-                        <div v-for="(error, index) in error_excell" :key="index">
-                            <p class="text-danger" v-if="error">{{error[index]}}</p>
+                        <div v-if="error_excell">
+                            <p class="text-danger" v-for="(error, index) in error_excell" :key="index">{{error}}</p>
                         </div>
 
                     </div>
@@ -60,7 +60,7 @@ export default {
                         this.loading = false;
                         if(response.status === 200) {
                         // codes here after the file is upload successfully
-
+                            //console.log(response.data.error_excell);
                             this.import_ok = true //AKTIFKAN ALERT JIKA BERHASIL
                             this.$refs.import_file.value = null
                             this.import_file = '';
@@ -75,14 +75,15 @@ export default {
 
                         }
 
-                        if(response.error_excell) {
+                        if(response.data.error_excell != null) {
                         // codes here after the file is upload successfully
-
+                            console.log(response.data.error_excell);
+                            
                             this.import_ok = false //AKTIFKAN ALERT JIKA BERHASIL
                             this.$refs.import_file.value = null
                             this.import_file = '';
                            
-                            this.error_excell = response.error_excell;
+                            this.error_excell = response.data.error_excell;
 
                             this.getcoils()
                             setTimeout(() => {
