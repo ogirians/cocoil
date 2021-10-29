@@ -169,7 +169,20 @@ export default {
 
           ...mapState('notification', {
             notifications_action : state => state.notifications_action
-        })
+        }),
+
+        selected_notification: {
+                get() {
+                    //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+                    return this.$store.state.notification.selected_notification
+                },
+                set(val) {
+                    //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+                    //DI VUEX JUGA AKAN DIUBAH
+                    this.$store.commit('notification/ASSIGN_SELECTED_NOTIFICATION', val)
+                }
+            },
+        
  
     },
 
@@ -193,7 +206,8 @@ export default {
             },
 
             readNotifAction(row){
-                this.readNotificationAction({ id: row.id}).then(() => this.$router.push({ name: 'konfirmasi.view', params: { id: row.data.dataNotif.id } }))
+                this.selected_notification = row.id;
+                this.readNotificationAction({ id: row.id}).then(() => this.$router.push({ name: 'employee.add', params: { id: row.data.dataNotif.id } })).then(() => this.$router.push({ name: 'konfirmasi.view', params: { id: row.data.dataNotif.id } }))
             },
 
 

@@ -67,6 +67,7 @@ export default {
         ...mapActions('auth', ['submit']), //MENGISIASI FUNGSI submit() DARI VUEX AGAR DAPAT DIGUNAKAN PADA COMPONENT TERKAIT. submit() BERASAL DARI ACTION PADA FOLDER STORES/auth.js
         ...mapMutations(['CLEAR_ERRORS']),
         ...mapActions('user', ['getUserLogin']),
+        ...mapActions('notification', ['getNotificationsAction']),
 
       	//KETIKA TOMBOL LOGIN DITEKAN, MAKA AKAN MEMINCU METHODS postLogin()
         postLogin() {
@@ -79,6 +80,8 @@ export default {
                     //MAKA AKAN DI-DIRECT KE ROUTE DENGAN NAME home
                     this.$router.push({ name: 'home' })
                 }
+            }).then(() => {
+               this.getNotificationsAction();
             })
         }
     },

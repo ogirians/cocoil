@@ -2156,7 +2156,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  computed: _objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('user', {
+  computed: _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('user', {
     authenticated: function authenticated(state) {
       return state.authenticated;
     } //ME-LOAD STATE AUTHENTICATED
@@ -2170,7 +2170,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     notifications_action: function notifications_action(state) {
       return state.notifications_action;
     }
-  })),
+  })), {}, {
+    selected_notification: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.notification.selected_notification;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('notification/ASSIGN_SELECTED_NOTIFICATION', val);
+      }
+    }
+  }),
   filters: {
     //UNTUK MENGUBAH FORMAT TANGGAL MENJADI TIME AGO
     formatDate: function formatDate(val) {
@@ -2196,8 +2208,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     readNotifAction: function readNotifAction(row) {
       var _this2 = this;
 
+      this.selected_notification = row.id;
       this.readNotificationAction({
         id: row.id
+      }).then(function () {
+        return _this2.$router.push({
+          name: 'employee.add',
+          params: {
+            id: row.data.dataNotif.id
+          }
+        });
       }).then(function () {
         return _this2.$router.push({
           name: 'konfirmasi.view',
@@ -2868,7 +2888,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['isAuth'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['errors'])),
-  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('auth', ['submit'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])(['CLEAR_ERRORS'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('user', ['getUserLogin'])), {}, {
+  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('auth', ['submit'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])(['CLEAR_ERRORS'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('user', ['getUserLogin'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('notification', ['getNotificationsAction'])), {}, {
     //KETIKA TOMBOL LOGIN DITEKAN, MAKA AKAN MEMINCU METHODS postLogin()
     postLogin: function postLogin() {
       var _this = this;
@@ -2885,6 +2905,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             name: 'home'
           });
         }
+      }).then(function () {
+        _this.getNotificationsAction();
       });
     }
   }),
@@ -3388,11 +3410,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      error_excell: [],
       error: [],
       import_file: '',
       import_ok: false,
@@ -3432,11 +3458,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             _this.import_ok = false;
           }, 3000);
         }
+
+        if (response.error_excell) {
+          // codes here after the file is upload successfully
+          _this.import_ok = false; //AKTIFKAN ALERT JIKA BERHASIL
+
+          _this.$refs.import_file.value = null;
+          _this.import_file = '';
+          _this.error_excell = response.error_excell;
+
+          _this.getcoils();
+
+          setTimeout(function () {
+            //BEBERAPA DETIK KEMUDIAN, SET DEFAULT ROLE USER
+            //MATIKAN ALERT
+            _this.import_ok = false;
+          }, 3000);
+        }
       })["catch"](function (error) {
         // code here when an upload is not valid
-        _this.uploading = false;
+        _this.loading = false;
         _this.error = error.response.data;
-        console.log('check error: ', _this.error);
+        console.log(error.response.data.errors[0][0]);
       });
     }
   })
@@ -5128,6 +5171,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -5144,14 +5192,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return moment__WEBPACK_IMPORTED_MODULE_1___default()(val).format('MMMM Do YYYY, h:mm:ss a');
     }
   },
-  computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['errors'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('action_coil', {
+  computed: _objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])(['errors'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('action_coil', {
     actions: function actions(state) {
       return state.actions;
     } //MENGAMBIL STATE coil
 
-  })),
-  methods: _objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('action_coil', ['getActionDetail', 'terimaAction', 'tolakAction'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('coil', ['editcoil'])), {}, {
-    accept: function accept(id) {
+  })), {}, {
+    selected_notification: {
+      get: function get() {
+        //MENGAMBIL VALUE PAGE DARI VUEX MODULE outlet
+        return this.$store.state.notification.selected_notification;
+      },
+      set: function set(val) {
+        //APABILA TERJADI PERUBAHAN VALUE DARI PAGE, MAKA STATE PAGE
+        //DI VUEX JUGA AKAN DIUBAH
+        this.$store.commit('notification/ASSIGN_SELECTED_NOTIFICATION', val);
+      }
+    }
+  }),
+  methods: _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('action_coil', ['getActionDetail', 'terimaAction', 'tolakAction', 'bacaAction'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('coil', ['editcoil'])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('notification', ['getNotificationsAction'])), {}, {
+    accept: function accept() {
       var _this = this;
 
       this.$swal({
@@ -5167,17 +5227,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           //JIKA YES, MAKA KITA AKAN MENGIRIMKAN PERMINTAAN KE SERVER UNTUK MENYETUJUI PERMINTAAN TERSEBUT DAN REDIRECT KE HALAMAN LIST EXPENSES
           _this.terimaAction({
             id_action: _this.$route.params.id,
-            id_notif: 'test'
+            id_notif: _this.selected_notification,
+            action_tipe: _this.actions.data.action_tipe
           }).then(function () {
             return _this.$router.push({
               name: 'coil.data'
             });
+          }).then(function () {
+            return _this.getNotificationsAction();
           });
         }
       });
     },
     //KETIKA TOMBOL RESPON PENOLAK DITEKAN, MAKA FUNGSI INI AKAN DIJALANKAN
-    tolak: function tolak(id) {
+    tolak: function tolak() {
       var _this2 = this;
 
       this.$swal({
@@ -5192,17 +5255,57 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         if (result.value) {
           //JIKA IYA, MAKA KITA AKAN MENGIRIMKAN PERMINTAAN KE BACKEND UNTUK MENGUBAH STATUS EXPENSES MENJADI DITOLAK
           _this2.tolakAction({
-            id: _this2.$route.params.id
+            id_action: _this2.$route.params.id,
+            id_notif: _this2.selected_notification,
+            action_tipe: _this2.actions.data.action_tipe
           }).then(function () {
-            _this2.$router.push({
+            return _this2.$router.push({
               name: 'coil.data'
-            }); //DAN REDIRECT KEMBALI KE HALAMAN LIST EXPENSES
+            });
+          }).then(function () {
+            return _this2.getNotificationsAction();
+          });
+        }
+      });
+    },
+    baca: function baca() {
+      var _this3 = this;
 
+      this.$swal({
+        title: 'Kamu Yakin?',
+        text: "Permintaan yang sudah dibaca tidak dapat dikembalikan!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Iya, Lanjutkan!'
+      }).then(function (result) {
+        if (result.value) {
+          _this3.bacaAction({
+            id_action: _this3.$route.params.id,
+            id_notif: _this3.selected_notification,
+            action_tipe: _this3.actions.data.action_tipe
+          }).then(function () {
+            return _this3.$router.push({
+              name: 'coil.data'
+            });
+          }).then(function () {
+            return _this3.getNotificationsAction();
           });
         }
       });
     }
-  })
+  }),
+  updated: function updated() {
+    if (this.selected_notification == '') {
+      this.$router.push({
+        name: 'home'
+      });
+    }
+  },
+  destroy: function destroy() {
+    this.selected_notification = '';
+  }
 });
 
 /***/ }),
@@ -79264,8 +79367,19 @@ var render = function() {
           ? _c("p", { staticClass: "text-danger" }, [
               _vm._v(_vm._s(_vm.error.errors.import_file[0]))
             ])
-          : _vm._e()
-      ]
+          : _vm._e(),
+        _vm._v(" "),
+        _vm._l(_vm.error_excell, function(error, index) {
+          return _c("div", { key: index }, [
+            error
+              ? _c("p", { staticClass: "text-danger" }, [
+                  _vm._v(_vm._s(error[index]))
+                ])
+              : _vm._e()
+          ])
+        })
+      ],
+      2
     ),
     _vm._v(" "),
     _c("div", { staticClass: "col-md-3" }, [
@@ -80940,48 +81054,98 @@ var render = function() {
             _vm._v(" "),
             _c("hr"),
             _vm._v(" "),
-            _c("dt", [_vm._v("gudang ")]),
+            _vm.actions.data.action_status == null
+              ? _c("dt", [_vm._v("gudang ")])
+              : _vm._e(),
             _vm._v(" "),
-            _c("dd", [
-              _vm._v(_vm._s(_vm.actions.data.coil.location.gudang.name))
-            ]),
+            _vm.actions.data.action_status == null
+              ? _c("dd", [
+                  _vm._v(_vm._s(_vm.actions.data.coil.location.gudang.name))
+                ])
+              : _vm._e(),
             _vm._v(" "),
-            _c("hr"),
+            _vm.actions.data.action_status == null ? _c("hr") : _vm._e(),
             _vm._v(" "),
-            _c("dt", [_vm._v("blok ")]),
+            _vm.actions.data.action_status == null
+              ? _c("dt", [_vm._v("blok ")])
+              : _vm._e(),
             _vm._v(" "),
-            _c("dd", [
-              _vm._v(_vm._s(_vm.actions.data.coil.location.blok.name))
-            ]),
+            _vm.actions.data.action_status == null
+              ? _c("dd", [
+                  _vm._v(_vm._s(_vm.actions.data.coil.location.blok.name))
+                ])
+              : _vm._e(),
             _vm._v(" "),
-            _c("hr"),
+            _vm.actions.data.action_status == null ? _c("hr") : _vm._e(),
+            _vm._v(" "),
+            _vm.actions.data.action_status
+              ? _c("dt", [_vm._v("Keterangan")])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.actions.data.action_status
+              ? _c("dd", [
+                  _vm._v(
+                    "coil sudah " +
+                      _vm._s(_vm.actions.data.action_status) +
+                      " oleh "
+                  ),
+                  _c("b", [
+                    _vm._v(
+                      _vm._s(
+                        _vm.actions.data.user.name != null
+                          ? _vm.actions.data.user.name
+                          : "unknown"
+                      )
+                    )
+                  ]),
+                  _vm._v(" untuk "),
+                  _c("b", [_vm._v(_vm._s(_vm.actions.data.action_tipe))])
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.actions.data.action_status ? _c("hr") : _vm._e(),
             _vm._v(" "),
             _c("div", { staticClass: "pull-right" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-danger btn-sm",
-                  on: {
-                    click: function($event) {
-                      return _vm.tolak(_vm.action.data.id)
-                    }
-                  }
-                },
-                [_vm._v("Tolak")]
-              ),
+              _vm.actions.data.action_status == null
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger btn-sm",
+                      on: {
+                        click: function($event) {
+                          return _vm.tolak(_vm.actions.data.id)
+                        }
+                      }
+                    },
+                    [_vm._v("Tolak")]
+                  )
+                : _vm._e(),
               _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary btn-sm",
-                  on: {
-                    click: function($event) {
-                      return _vm.accept(_vm.action.data.id)
-                    }
-                  }
-                },
-                [_vm._v("Terima")]
-              )
+              _vm.actions.data.action_status == null
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary btn-sm",
+                      on: {
+                        click: function($event) {
+                          return _vm.accept(_vm.actions.data.id)
+                        }
+                      }
+                    },
+                    [_vm._v("Terima")]
+                  )
+                : _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary btn-sm",
+                      on: {
+                        click: function($event) {
+                          return _vm.baca(_vm.actions.data.id)
+                        }
+                      }
+                    },
+                    [_vm._v("Baca")]
+                  )
             ])
           ]
         ],
@@ -101311,8 +101475,11 @@ var actions = {
     var dispatch = _ref4.dispatch;
     return new Promise(function (resolve, reject) {
       //UNTUK MENGUPDATE DATA NOTIFIKASI BAHWA NOTIF TERSEBUT SUDAH DIBACA
-      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].post("/action-coil/terima/", payload).then(function (response) {//AMBIL DATA NOTIFIKASI TERBARU
-        //dispatch('readAction').then(() => resolve(response.data))
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].post("/action-coil/terima/", payload).then(function (response) {
+        //AMBIL DATA NOTIFIKASI TERBARU
+        dispatch('getActionDetail').then(function () {
+          return resolve(response.status);
+        });
       });
     });
   },
@@ -101320,8 +101487,23 @@ var actions = {
     var dispatch = _ref5.dispatch;
     return new Promise(function (resolve, reject) {
       //UNTUK MENGUPDATE DATA NOTIFIKASI BAHWA NOTIF TERSEBUT SUDAH DIBACA
-      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].post("/action-coil/tolak/", payload).then(function (response) {//AMBIL DATA NOTIFIKASI TERBARU
-        //dispatch('readAction').then(() => resolve(response.data))
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].post("/action-coil/tolak/", payload).then(function (response) {
+        //AMBIL DATA NOTIFIKASI TERBARU
+        dispatch('getActionDetail').then(function () {
+          return resolve(response.data);
+        });
+      });
+    });
+  },
+  bacaAction: function bacaAction(_ref6, payload) {
+    var dispatch = _ref6.dispatch;
+    return new Promise(function (resolve, reject) {
+      //UNTUK MENGUPDATE DATA NOTIFIKASI BAHWA NOTIF TERSEBUT SUDAH DIBACA
+      _api_js__WEBPACK_IMPORTED_MODULE_0__["default"].post("/action-coil/baca/", payload).then(function (response) {
+        //AMBIL DATA NOTIFIKASI TERBARU
+        dispatch('getActionDetail').then(function () {
+          return resolve(response.data);
+        });
       });
     });
   }
@@ -102440,7 +102622,8 @@ var state = function state() {
   return {
     notifications_gudang: [],
     //MENAMPUNG DATA NOTIFIKASI
-    notifications_action: []
+    notifications_action: [],
+    selected_notification: ''
   };
 };
 
@@ -102451,6 +102634,9 @@ var mutations = {
   },
   ASSIGN_DATA_ACTION: function ASSIGN_DATA_ACTION(state, payload) {
     state.notifications_action = payload;
+  },
+  ASSIGN_SELECTED_NOTIFICATION: function ASSIGN_SELECTED_NOTIFICATION(state, payload) {
+    state.selected_notification = payload;
   }
 };
 var actions = {

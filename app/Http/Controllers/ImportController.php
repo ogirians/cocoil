@@ -19,35 +19,33 @@ class ImportController extends Controller
 
      $path = $request->file('import_file')->getRealPath();
 
-     if($request->hasFile('import_file')){
+        if($request->hasFile('import_file')){
 
-            try{
-                Excel::import(new CoilsImport, $path);
-            }
-            catch (\Exception $e) {
-                Excel::load($request->file('import_file')->getRealPath(), function ($reader) {
-                    foreach ($reader->toArray() as $key => $row) {
-                        if(!empty($row)) {
-                            $baris = new coil_detail;
-                            //$baris->name = $request->name;
-                            //DB::table('customers')->insert($data);
-                                $baris->item_category = $row['item_category'];
-                                $baris->item_type = $row['item_type'];
-                                $baris->item_code = $row['item_code'];
-                                $baris->item_description = $row['item_description'];
-                                $baris->serial_Code = $row['serial_code'];
-                                $baris->id_coil = $row['id_coil'];
-                                $baris->balance = $row['balance'];
+            $import = new CoilsImport();
+            $import->import($path);
 
-                            $baris->save();
-                        }
-                    }
-                });
+            $error_excel=[];
+            //dd($import->errors());
+            if($import->failures()){
+               // dd($import->failures()->);
+               foreach ($import->failures() as $failure) {
+                $failure->row(); // row that went wrong
+                $failure->attribute(); // either heading key (if using heading row concern) or column index
+                $failure->errors(); // Actual error messages from Laravel validator
+                $failure->values(); // The values of the row that has failed.
+                $pesan = "pada baris ke-". $failure->row()." ". $failure->attribute()." ".$failure->errors()[0];
+                array_push($error_excel, $pesan);  
+
+               
             }
             
+            //dd($error_excel);
+            }  
+                //Excel::import(new CoilsImport, $path);
+      
         }
 
-        return response()->json(['message' => 'uploaded successfully'], 200);
+        return response()->json(['message' => 'uploaded successfully', 'error_excell' => !empty($error_excel) ? $error_excel : null], 200);
         //return back()->with('success', 'Excel Data Imported successfully');
     }
 }

@@ -3,11 +3,22 @@
 namespace App\Imports;
 
 use App\coil_detail;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 
-class CoilsImport implements ToModel,WithHeadingRow
+use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\SkipsOnError;
+use Maatwebsite\Excel\Concerns\SkipsErrors;
+
+use Maatwebsite\Excel\Validators\Failure;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+
+class CoilsImport implements ToModel,WithHeadingRow,WithValidation,SkipsOnError, SkipsOnFailure
 {
+    use Importable, SkipsErrors, SkipsFailures;
     /**
     * @param array $row
     *
@@ -24,5 +35,27 @@ class CoilsImport implements ToModel,WithHeadingRow
            'id_coil'            => $row['id_coil'],
            'balance'            => $row['balance'],
         ]);
+    }
+
+    public function rules(): array
+    {
+        return [
+            'serial_code' => Rule::unique('coil_details','serial_Code'), // Table name, field in your db
+        ];
+    }
+
+    public function customValidationMessages()
+    {
+        return [
+            'serial_code.unique' => 'duplicate',
+        ];
+    }
+
+    public function customValidationAttributes()
+    {
+        return 
+        [
+            'serial_code' => 'Serial code nya'
+        ];
     }
 }

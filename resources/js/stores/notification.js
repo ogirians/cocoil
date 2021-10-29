@@ -3,7 +3,9 @@ import $axios from '../api.js'
 const state = () => ({
         notifications_gudang: [] ,//MENAMPUNG DATA NOTIFIKASI
     
-        notifications_action: []
+        notifications_action: [],
+
+        selected_notification: '',
 })
 
 const mutations = {
@@ -14,7 +16,11 @@ const mutations = {
 
     ASSIGN_DATA_ACTION(state, payload) {
         state.notifications_action = payload
-    }
+    },
+
+    ASSIGN_SELECTED_NOTIFICATION(state, payload) {
+        state.selected_notification = payload
+    },
 }
 
 const actions = {

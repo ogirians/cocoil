@@ -5,6 +5,9 @@
                         <input type="file" class="form-control" :class="{ ' is-invalid' : error.message }" id="input-file-import" name="file_import" ref="import_file"  @change="onFileChange">
                         <div v-if="error.message" class="invalid-feedback"></div>
                         <p class="text-danger" v-if="error.message">{{ error.errors.import_file[0] }}</p>
+                        <div v-for="(error, index) in error_excell" :key="index">
+                            <p class="text-danger" v-if="error">{{error[index]}}</p>
+                        </div>
 
                     </div>
 
@@ -26,6 +29,7 @@ import $axios from '../../api.js'
 export default {
     data() {
             return {
+                error_excell:[],
                 error:[],
                 import_file: '',
                 import_ok: false,
@@ -71,12 +75,33 @@ export default {
 
                         }
 
+                        if(response.error_excell) {
+                        // codes here after the file is upload successfully
+
+                            this.import_ok = false //AKTIFKAN ALERT JIKA BERHASIL
+                            this.$refs.import_file.value = null
+                            this.import_file = '';
+                           
+                            this.error_excell = response.error_excell;
+
+                            this.getcoils()
+                            setTimeout(() => {
+                                //BEBERAPA DETIK KEMUDIAN, SET DEFAULT ROLE USER
+
+                                //MATIKAN ALERT
+                                this.import_ok = false
+                            }, 3000)
+
+                        }
+
                     })
                     .catch(error => {
                         // code here when an upload is not valid
-                        this.uploading = false
+                        this.loading = false
                         this.error = error.response.data
-                        console.log('check error: ', this.error)
+                        
+                       
+                        console.log(error.response.data.errors[0][0])
 
                     });
 

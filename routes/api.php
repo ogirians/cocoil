@@ -18,8 +18,7 @@ Route::post('/login', 'Auth\LoginController@login');
 Route::post('/action-coil/store','API\ActionController@store')->name('action-store');
 Route::get('/action-coil-get/{id?}','API\ActionController@getAction')->name('action-get');
 Route::get('/action-coil-detail/{id?}','API\ActionController@getActionDetail')->name('action-get-detail');
-Route::post('/action-coil/terima/','API\ActionController@confirm')->name('action-confirm');
-Route::post('/action-coil/tolak/','API\ActionController@tolak')->name('action-tolak');  
+
 
 //get coil data
 Route::resource('/coils', 'API\CoilController')->except(['show']);
@@ -71,5 +70,11 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::resource('notification-gudang', 'API\NotificationGudangController')->except(['create', 'destroy']);
     Route::resource('notification-action', 'API\NotificationActionController')->except(['create', 'destroy']);
 
+
+    //action
+    Route::post('/action-coil/terima/','API\ActionController@confirm')->name('action-confirm');
+    Route::post('/action-coil/tolak/','API\ActionController@tolak')->name('action-tolak');  
+    Route::post('/action-coil/baca/','API\ActionController@tolak')->name('action-tolak');  
+   
    
 });

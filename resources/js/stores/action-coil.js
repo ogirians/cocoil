@@ -79,7 +79,7 @@ const actions = {
             $axios.post(`/action-coil/terima/`,payload)
             .then((response) => {
                 //AMBIL DATA NOTIFIKASI TERBARU
-                //dispatch('readAction').then(() => resolve(response.data))
+                dispatch('getActionDetail').then(() => resolve(response.status))
             })
         })   
     },
@@ -90,10 +90,22 @@ const actions = {
             $axios.post(`/action-coil/tolak/`,payload)
             .then((response) => {
                 //AMBIL DATA NOTIFIKASI TERBARU
-                //dispatch('readAction').then(() => resolve(response.data))
+                dispatch('getActionDetail').then(() => resolve(response.data))
+            })
+        })   
+    },
+
+    bacaAction({ dispatch }, payload) {
+        return new Promise((resolve, reject) => {
+            //UNTUK MENGUPDATE DATA NOTIFIKASI BAHWA NOTIF TERSEBUT SUDAH DIBACA
+            $axios.post(`/action-coil/baca/`,payload)
+            .then((response) => {
+                //AMBIL DATA NOTIFIKASI TERBARU
+                dispatch('getActionDetail').then(() => resolve(response.data))
             })
         })   
     }
+
 }
 
 export default {

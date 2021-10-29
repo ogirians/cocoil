@@ -11,6 +11,7 @@ use App\Notifications\actionNotification;
 
 use App\Action;
 use App\coil_detail;
+use App\coil_location;
 use App\User;
 
 class ActionController extends Controller
@@ -29,6 +30,9 @@ class ActionController extends Controller
             //get id coil
             $id_coil = coil_detail::where('serial_code', $request->serial_code)->first();
             $request['coil_id'] = $id_coil->id;
+           // $request['user_id'] = $request->user()->id;
+
+            //dd($request['user_id']);
             
 
             //cek apakah ada coil yg sama belum dikonfirmasi
@@ -53,7 +57,6 @@ class ActionController extends Controller
                 Notification::send($users, new actionNotification($dataAction, $user,  $tipe, $serial_code));
 
                 $belum_konfirmasi = false;
-                
                 $password = true;
         // }    
         } else {
@@ -71,29 +74,78 @@ class ActionController extends Controller
 
     public function getActionDetail($id)
     {
-        $data = Action::with('coil.location.gudang','coil.location.blok')->where('id', $id)->first();
+        $data = Action::with('coil.location.gudang','coil.location.blok','user')->where('id', $id)->first();
 
         return response()->json(['status' => 'success', 'data' => $data], 200);
     }
 
     public function confirm(Request $request)
     {
+        //dd($request->id_notif);
         $user = $request->user();
 
-        Action::where('id', $id)->update(
+        //dd($user->id);
+
+
+        $act =  Action::where('id', $request->id_action)->first();
+
+        /*coil_location::where('coil_id', $act->coil_id)->update(
             [
-                'action_status' => 'Disetujui',
+                'coil_id' => null,
+            ]
+        );*/
+
+
+        $location =  coil_location::where('coil_id', $act->coil_id)->first();
+        $location->timestamps = false;
+        $location->coil_id = null;
+        $location->save();
+
+        coil_detail::where('id', $act->coil_id)->update(
+            [
+                'location_id' => null,
+                'status' => $request->action_tipe
             ]
         );
+
+
+        Action::where('id', $request->id_action)->update(
+            [
+                'action_status' => 'Disetujui',
+                'user_id' => $user->id,
+            ]
+        );
+
         //NOTIFIKASI YANG SUDAH/BELUM DIREAD DITANDAI DENGAN read_at YANG MASIH NULL
-        $user->unreadNotifications()->where('id', $request->id)->update(['read_at' => now()]);
-        return response()->json(['status' => 'success', 'data' => $data], 200);
+        $user->unreadNotifications()->where('id', $request->id_notif)->update(['read_at' => now()]);
+       
+        return response()->json(['status' => 'success'], 200);
     }
 
     public function tolak(Request $request)
     {
-        $data = Action::with('coil.location.gudang','coil.location.blok')->where('id', $id)->first();
 
-        return response()->json(['status' => 'success', 'data' => $data], 200);
+        $user = $request->user();
+
+        Action::where('id', $request->id_action)->update(
+            [
+                'action_status' => 'Ditolak',
+            ]
+        );
+        
+        
+        $user->unreadNotifications()->where('id', $request->id_notif)->update(['read_at' => now()]);
+
+        return response()->json(['status' => 'success'], 200);
+    }
+
+    public function baca(Request $request)
+    {
+
+        $user = $request->user();
+
+        $user->unreadNotifications()->where('id', $request->id_notif)->update(['read_at' => now()]);
+
+        return response()->json(['status' => 'success'], 200);
     }
 }

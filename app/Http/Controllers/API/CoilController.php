@@ -17,7 +17,7 @@ class coilController extends Controller
         if (request()->q != '') {
             $coil = $coil->where('serial_Code', 'LIKE', '%' . request()->q . '%')->orWhere('item_code', 'LIKE', '%' . request()->q . '%');
         }
-       
+        $coil = $coil->where('status', null);
 
         return new CoilCollection($coil->paginate(10));
     }
@@ -29,7 +29,7 @@ class coilController extends Controller
         if (request()->q != '') {
             $coil = $coil->where('serial_Code', 'LIKE', '%' . request()->q . '%')->orWhere('item_code', 'LIKE', '%' . request()->q . '%')->get();    
         } else {
-            $coil = $coil->get();    
+            $coil = $coil->where('status', null)->get();
         }
 
        //return new CoilCollection($coil->paginate(10));
