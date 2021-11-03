@@ -415,6 +415,7 @@ export default {
 			this.submitBlok().then(() => {
 					this.getBloks()
 					this.getGudangs()
+					this.getDataGudangs()
 					this.close()
 
 					this.$swal({
@@ -485,6 +486,7 @@ export default {
                     this.selected_gudang_id ='';
 					this.removeBlok(id)
 					this.getGudangs()
+					this.getDataGudangs()
 					this.close()
 					this.$swal({
 					type: 'success',

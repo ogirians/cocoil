@@ -1,6 +1,15 @@
 <!-- HTML SECTION -->
 <template>
+
     <div class="container">
+         <div class="text-center">
+                                <b-spinner label="Spinning"></b-spinner>
+                                <b-spinner type="grow" label="Spinning"></b-spinner>
+                                <b-spinner variant="primary" label="Spinning"></b-spinner>
+                                <b-spinner variant="primary" type="grow" label="Spinning"></b-spinner>
+                                <b-spinner variant="success" label="Spinning"></b-spinner>
+                                <b-spinner variant="success" type="grow" label="Spinning"></b-spinner>
+                                </div>
         <div class="login-box">
             <div class="login-logo">
                 <router-link :to="{ name: 'home' }">Serial Code  <b>{{this.$route.params.id}}</b></router-link>
@@ -15,17 +24,21 @@
 									<a><b>serial code</b> : {{coil.serial_Code}}</a>
 									<a><b>id coil</b> : {{coil.ID_coil}}</a>
 									<a><b>balance</b> : {{coil.balance}}</a>
+                                   
 							</li>					
 						</ul>
                     <br>
-                    <div class="panel-heading">
+
+                    <div class="panel-heading" v-if="coil.location_id != null">
                         <h3 class="panel-title">pilih aksi</h3>
+                    </div> 
+                    <div class="panel-heading" v-else>
+                        <h3 class="panel-title">Coil belum punya lokasi</h3>
+                    </div> 
+                    <div class="panel-body" v-if="coil.location_id != null">
                       
-                    </div>
-                    <div class="panel-body">
-                        
                         <div class="form-group">
-                            <label for="">aksi</label>
+                            <label for="">aksi <span style="color:red">*</span></label>
                             <select v-model="action_detail.action_tipe" class="form-control" >
                                 <option value="">Pilih</option>
                                 <option value="jual">jual</option>
@@ -35,21 +48,27 @@
                             <p class="text-danger" ></p>
                              <p class="text-danger" v-if="errors.action_tipe">{{ errors.action_tipe[0] }}</p>
                         </div>
-                        <label for="">NO Dokumen</label>
+                        <label for="">NO Dokumen <span style="color:red">*</span></label>
                         <div class="form-group has-feedback" :class="{'has-error': errors.no_dokumen}">
                             <input v-model="action_detail.no_dokumen" type="text" class="form-control">
                            <p class="text-danger" v-if="errors.no_dokumen">{{ errors.no_dokumen [0] }}</p>
                             
                         </div>
-                         <label for="">password</label>
+                         <label for="">Catatan</label>
+                        <div class="form-group has-feedback" :class="{'has-error': errors.no_dokumen}">
+                            <textarea v-model="action_detail.catatan" type="textarea" class="form-control"></textarea>
+                           <p class="text-danger" v-if="errors.catatan">{{ errors.catatan [0] }}</p>
+                        </div>
+
+                         <label for="">password <span style="color:red">*</span></label>
                         <div class="form-group has-feedback" :class="{'has-error': errors.password}">
                             <input v-model="action_detail.password" type="password" class="form-control" placeholder="Password" >
                             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                             <p class="text-danger" v-if="errors.password">{{ errors.password[0] }}</p>
                         </div>
                         <div class="alert alert-danger" v-if="errors.invalid">{{ errors.invalid }}</div>
+                      
                         <div class="form-group">
-                            
                             <button class="btn btn-success btn-sm" @click.prevent="simpanAct">Simpan</button>
                         </div>
                     </div>

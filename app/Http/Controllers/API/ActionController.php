@@ -22,7 +22,7 @@ class ActionController extends Controller
 
         $this->validate($request, [
             'action_tipe' => 'required',
-            'no_dokumen' => 'required',
+            'no_dokumen' => 'required',  
             'password' => 'required',    
         ]);
 
@@ -101,13 +101,21 @@ class ActionController extends Controller
         $location->coil_id = null;
         $location->save();
 
-        coil_detail::where('id', $act->coil_id)->update(
-            [
-                'location_id' => null,
-                'status' => $request->action_tipe
-            ]
-        );
-
+        if ($request->action_tipe == 'pindah'){
+            coil_detail::where('id', $act->coil_id)->update(
+                [
+                    'location_id' => null,
+                    'status' => null,
+                ]
+            );
+        }  else{
+            coil_detail::where('id', $act->coil_id)->update(
+                [
+                    'location_id' => null,
+                    'status' => $request->action_tipe,
+                ]
+            );
+        }
 
         Action::where('id', $request->id_action)->update(
             [

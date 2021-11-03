@@ -7,6 +7,7 @@ const state = () => ({
         serial_code : '',
         password : '',
         no_dokumen : '',
+        catatan:'',
         action_tipe : '',
     },
 

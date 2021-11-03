@@ -2325,6 +2325,25 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -4259,6 +4278,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         _this.getGudangs();
 
+        _this.getDataGudangs();
+
         _this.close();
 
         _this.$swal({
@@ -4328,6 +4349,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           _this3.removeBlok(id);
 
           _this3.getGudangs();
+
+          _this3.getDataGudangs();
 
           _this3.close();
 
@@ -5118,6 +5141,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
 //
 //
 //
@@ -77619,6 +77646,29 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
+    _c(
+      "div",
+      { staticClass: "text-center" },
+      [
+        _c("b-spinner", { attrs: { label: "Spinning" } }),
+        _vm._v(" "),
+        _c("b-spinner", { attrs: { type: "grow", label: "Spinning" } }),
+        _vm._v(" "),
+        _c("b-spinner", { attrs: { variant: "primary", label: "Spinning" } }),
+        _vm._v(" "),
+        _c("b-spinner", {
+          attrs: { variant: "primary", type: "grow", label: "Spinning" }
+        }),
+        _vm._v(" "),
+        _c("b-spinner", { attrs: { variant: "success", label: "Spinning" } }),
+        _vm._v(" "),
+        _c("b-spinner", {
+          attrs: { variant: "success", type: "grow", label: "Spinning" }
+        })
+      ],
+      1
+    ),
+    _vm._v(" "),
     _c("div", { staticClass: "login-box" }, [
       _c(
         "div",
@@ -77682,174 +77732,236 @@ var render = function() {
         _vm._v(" "),
         _c("br"),
         _vm._v(" "),
-        _vm._m(0),
-        _vm._v(" "),
-        _c("div", { staticClass: "panel-body" }, [
-          _c("div", { staticClass: "form-group" }, [
-            _c("label", { attrs: { for: "" } }, [_vm._v("aksi")]),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.action_detail.action_tipe,
-                    expression: "action_detail.action_tipe"
-                  }
-                ],
-                staticClass: "form-control",
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.$set(
-                      _vm.action_detail,
-                      "action_tipe",
-                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                    )
-                  }
-                }
-              },
-              [
-                _c("option", { attrs: { value: "" } }, [_vm._v("Pilih")]),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "jual" } }, [_vm._v("jual")]),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "produksi" } }, [
-                  _vm._v("produksi")
-                ]),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "pindah" } }, [
-                  _vm._v("pindah gudang")
-                ])
-              ]
-            ),
-            _vm._v(" "),
-            _c("p", { staticClass: "text-danger" }),
-            _vm._v(" "),
-            _vm.errors.action_tipe
-              ? _c("p", { staticClass: "text-danger" }, [
-                  _vm._v(_vm._s(_vm.errors.action_tipe[0]))
-                ])
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c("label", { attrs: { for: "" } }, [_vm._v("NO Dokumen")]),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "form-group has-feedback",
-              class: { "has-error": _vm.errors.no_dokumen }
-            },
-            [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.action_detail.no_dokumen,
-                    expression: "action_detail.no_dokumen"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { type: "text" },
-                domProps: { value: _vm.action_detail.no_dokumen },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(
-                      _vm.action_detail,
-                      "no_dokumen",
-                      $event.target.value
-                    )
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _vm.errors.no_dokumen
-                ? _c("p", { staticClass: "text-danger" }, [
-                    _vm._v(_vm._s(_vm.errors.no_dokumen[0]))
-                  ])
-                : _vm._e()
-            ]
-          ),
-          _vm._v(" "),
-          _c("label", { attrs: { for: "" } }, [_vm._v("password")]),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "form-group has-feedback",
-              class: { "has-error": _vm.errors.password }
-            },
-            [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.action_detail.password,
-                    expression: "action_detail.password"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { type: "password", placeholder: "Password" },
-                domProps: { value: _vm.action_detail.password },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.action_detail, "password", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("span", {
-                staticClass: "glyphicon glyphicon-lock form-control-feedback"
-              }),
-              _vm._v(" "),
-              _vm.errors.password
-                ? _c("p", { staticClass: "text-danger" }, [
-                    _vm._v(_vm._s(_vm.errors.password[0]))
-                  ])
-                : _vm._e()
-            ]
-          ),
-          _vm._v(" "),
-          _vm.errors.invalid
-            ? _c("div", { staticClass: "alert alert-danger" }, [
-                _vm._v(_vm._s(_vm.errors.invalid))
+        _vm.coil.location_id != null
+          ? _c("div", { staticClass: "panel-heading" }, [
+              _c("h3", { staticClass: "panel-title" }, [_vm._v("pilih aksi")])
+            ])
+          : _c("div", { staticClass: "panel-heading" }, [
+              _c("h3", { staticClass: "panel-title" }, [
+                _vm._v("Coil belum punya lokasi")
               ])
-            : _vm._e(),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-success btn-sm",
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.simpanAct($event)
-                  }
-                }
-              },
-              [_vm._v("Simpan")]
-            )
-          ])
-        ])
+            ]),
+        _vm._v(" "),
+        _vm.coil.location_id != null
+          ? _c("div", { staticClass: "panel-body" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _vm._m(0),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.action_detail.action_tipe,
+                        expression: "action_detail.action_tipe"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.action_detail,
+                          "action_tipe",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "" } }, [_vm._v("Pilih")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "jual" } }, [
+                      _vm._v("jual")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "produksi" } }, [
+                      _vm._v("produksi")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "pindah" } }, [
+                      _vm._v("pindah gudang")
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c("p", { staticClass: "text-danger" }),
+                _vm._v(" "),
+                _vm.errors.action_tipe
+                  ? _c("p", { staticClass: "text-danger" }, [
+                      _vm._v(_vm._s(_vm.errors.action_tipe[0]))
+                    ])
+                  : _vm._e()
+              ]),
+              _vm._v(" "),
+              _vm._m(1),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "form-group has-feedback",
+                  class: { "has-error": _vm.errors.no_dokumen }
+                },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.action_detail.no_dokumen,
+                        expression: "action_detail.no_dokumen"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "text" },
+                    domProps: { value: _vm.action_detail.no_dokumen },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.action_detail,
+                          "no_dokumen",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.no_dokumen
+                    ? _c("p", { staticClass: "text-danger" }, [
+                        _vm._v(_vm._s(_vm.errors.no_dokumen[0]))
+                      ])
+                    : _vm._e()
+                ]
+              ),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "" } }, [_vm._v("Catatan")]),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "form-group has-feedback",
+                  class: { "has-error": _vm.errors.no_dokumen }
+                },
+                [
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.action_detail.catatan,
+                        expression: "action_detail.catatan"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "textarea" },
+                    domProps: { value: _vm.action_detail.catatan },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.action_detail,
+                          "catatan",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.catatan
+                    ? _c("p", { staticClass: "text-danger" }, [
+                        _vm._v(_vm._s(_vm.errors.catatan[0]))
+                      ])
+                    : _vm._e()
+                ]
+              ),
+              _vm._v(" "),
+              _vm._m(2),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "form-group has-feedback",
+                  class: { "has-error": _vm.errors.password }
+                },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.action_detail.password,
+                        expression: "action_detail.password"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "password", placeholder: "Password" },
+                    domProps: { value: _vm.action_detail.password },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.action_detail,
+                          "password",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("span", {
+                    staticClass:
+                      "glyphicon glyphicon-lock form-control-feedback"
+                  }),
+                  _vm._v(" "),
+                  _vm.errors.password
+                    ? _c("p", { staticClass: "text-danger" }, [
+                        _vm._v(_vm._s(_vm.errors.password[0]))
+                      ])
+                    : _vm._e()
+                ]
+              ),
+              _vm._v(" "),
+              _vm.errors.invalid
+                ? _c("div", { staticClass: "alert alert-danger" }, [
+                    _vm._v(_vm._s(_vm.errors.invalid))
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-success btn-sm",
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.simpanAct($event)
+                      }
+                    }
+                  },
+                  [_vm._v("Simpan")]
+                )
+              ])
+            ])
+          : _vm._e()
       ])
     ])
   ])
@@ -77859,8 +77971,27 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "panel-heading" }, [
-      _c("h3", { staticClass: "panel-title" }, [_vm._v("pilih aksi")])
+    return _c("label", { attrs: { for: "" } }, [
+      _vm._v("aksi "),
+      _c("span", { staticStyle: { color: "red" } }, [_vm._v("*")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "" } }, [
+      _vm._v("NO Dokumen "),
+      _c("span", { staticStyle: { color: "red" } }, [_vm._v("*")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "" } }, [
+      _vm._v("password "),
+      _c("span", { staticStyle: { color: "red" } }, [_vm._v("*")])
     ])
   }
 ]
@@ -79197,26 +79328,26 @@ var render = function() {
             {
               name: "model",
               rawName: "v-model",
-              value: _vm.coil.id_coil,
-              expression: "coil.id_coil"
+              value: _vm.coil.ID_coil,
+              expression: "coil.ID_coil"
             }
           ],
           staticClass: "form-control",
           attrs: { type: "text" },
-          domProps: { value: _vm.coil.id_coil },
+          domProps: { value: _vm.coil.ID_coil },
           on: {
             input: function($event) {
               if ($event.target.composing) {
                 return
               }
-              _vm.$set(_vm.coil, "id_coil", $event.target.value)
+              _vm.$set(_vm.coil, "ID_coil", $event.target.value)
             }
           }
         }),
         _vm._v(" "),
         _vm.errors.id_coil
           ? _c("p", { staticClass: "text-danger" }, [
-              _vm._v(_vm._s(_vm.errors.id_coil[0]))
+              _vm._v(_vm._s(_vm.errors.ID_coil[0]))
             ])
           : _vm._e()
       ]
@@ -81042,6 +81173,20 @@ var render = function() {
             _c("dt", [_vm._v("no Dokumen ")]),
             _vm._v(" "),
             _c("dd", [_vm._v(_vm._s(_vm.actions.data.no_dokumen))]),
+            _vm._v(" "),
+            _c("hr"),
+            _vm._v(" "),
+            _c("dt", [_vm._v("catatan")]),
+            _vm._v(" "),
+            _c("dd", [
+              _vm._v(
+                _vm._s(
+                  _vm.actions.data.catatan != null
+                    ? _vm.actions.data.catatan
+                    : "-"
+                )
+              )
+            ]),
             _vm._v(" "),
             _c("hr"),
             _vm._v(" "),
@@ -99001,7 +99146,7 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
         //MAKA INISIASI FUNGSI BROADCASTER DENGAN KONFIGURASI BERIKUT
         window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_10__["default"]({
           broadcaster: 'pusher',
-          key: "",
+          key: "2b170c9da4f092c2081f",
           //VALUENYA DI AMBIL DARI FILE .ENV
           cluster: "mt1",
           encrypted: false,
@@ -99032,7 +99177,7 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
         //MAKA INISIASI FUNGSI BROADCASTER DENGAN KONFIGURASI BERIKUT
         window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_10__["default"]({
           broadcaster: 'pusher',
-          key: "",
+          key: "2b170c9da4f092c2081f",
           //VALUENYA DI AMBIL DARI FILE .ENV
           cluster: "mt1",
           encrypted: false,
@@ -101410,6 +101555,7 @@ var state = function state() {
       serial_code: '',
       password: '',
       no_dokumen: '',
+      catatan: '',
       action_tipe: ''
     },
     status: ''
@@ -101772,7 +101918,8 @@ var state = function state() {
       ID_coil: '',
       balance: '',
       gudang: '',
-      blok: ''
+      blok: '',
+      location_id: ''
     },
     page: 1 //UNTUK MENCATAT PAGE PAGINATE YANG SEDANG DIAKSES
 
@@ -101801,8 +101948,7 @@ var mutations = {
       serial_Code: payload.serial_Code,
       ID_coil: payload.ID_coil,
       balance: payload.balance,
-      gudang: payload.location.gudang.name,
-      blok: payload.location.blok.name
+      location_id: payload.location_id
     };
   },
   //ME-RESET STATE OUTLET MENJADI KOSONG
@@ -102882,8 +103028,8 @@ var actions = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/garfidhearayes/Desktop/Documents/cocoil/cocoil/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /Users/garfidhearayes/Desktop/Documents/cocoil/cocoil/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\project\cocoil\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\project\cocoil\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

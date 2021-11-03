@@ -20,6 +20,10 @@
                             <dd>{{ actions.data.no_dokumen }}</dd>
                             <hr>
 
+                             <dt>catatan</dt>
+                            <dd>{{ actions.data.catatan != null ? actions.data.catatan : '-' }}</dd>
+                            <hr>
+
                             <dt>Tanggal </dt>
                             <dd>{{ actions.data.created_at | formatDateAction }} </dd>
                             <hr>

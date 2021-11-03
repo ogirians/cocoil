@@ -27,8 +27,8 @@
         </div>
         <div class="form-group" :class="{ 'has-error': errors.id_coil }">
             <label for="">id_coil</label>
-            <input type="text" class="form-control" v-model="coil.id_coil">
-            <p class="text-danger" v-if="errors.id_coil">{{ errors.id_coil[0] }}</p>
+            <input type="text" class="form-control" v-model="coil.ID_coil">
+            <p class="text-danger" v-if="errors.id_coil">{{ errors.ID_coil[0] }}</p>
         </div>
         <div class="form-group" :class="{ 'has-error': errors.balance }">
             <label for="">balance</label>

@@ -16,7 +16,7 @@ class BlokController extends Controller
         if (request()->q != '') {
             $blok = $blok->where('name', 'LIKE', '%' . request()->q . '%');
         }
-        return new blokCollection($blok->paginate(10));
+        return new blokCollection($blok->get());
     }
 
     public function store(Request $request)
