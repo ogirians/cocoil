@@ -43,7 +43,8 @@ class User extends Authenticatable
 
     public function gudang()
     {
-        return $this->belongsTo(Gudang::class);
+        return $this->belongsTo('App\gudang');
+       
     }
 
     public function scopeAdmin($query)

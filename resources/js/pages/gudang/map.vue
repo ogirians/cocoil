@@ -372,7 +372,7 @@ export default {
               scaleY : pos.rect.scaleY,
               rotation : pos.rect.rotation,
               slot_id : pos.id,
-              slot_name: pos.rect.name,
+              slot_name: pos.name,
             };
 
             this.submitlocation();

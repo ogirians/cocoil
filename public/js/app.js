@@ -4769,7 +4769,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         scaleY: pos.rect.scaleY,
         rotation: pos.rect.rotation,
         slot_id: pos.id,
-        slot_name: pos.rect.name
+        slot_name: pos.name
       };
       this.submitlocation();
       this.list.push(pos);
