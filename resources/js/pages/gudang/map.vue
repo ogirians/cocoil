@@ -322,7 +322,7 @@ export default {
                   coil_code: coil_code,
                   serial_code: serial_code,
                   rectext : {id: item.slot_id, x: item.x, y:item.y, text:item.slot_id, visible:true, name:'text'+ item.slot_id, rotation: item.rotation, fontSize :15} ,
-                  rect: {id:item.slot_id, x: item.x, y:item.y, fill : '#f7a7a7', width: item.width, height: item.height,  name: item.nameRect, scaleX: item.scaleX, scaleY: item.scaleY, rotation: item.rotation, draggable: editMode ? true : false, stroke :5, visible: rectVisible, imgCoil:''}              
+                  rect: {id:item.slot_id, x: Number(item.x), y: Number(item.y), fill : '#f7a7a7', width: 100, height: 150,  name: item.nameRect, scaleX: Number(item.scaleX), scaleY: Number(item.scaleY), rotation: Number(item.rotation), draggable: editMode ? true : false, stroke :5, visible: rectVisible, imgCoil:''}              
                 };
 
                 this.list.push(pos); 
